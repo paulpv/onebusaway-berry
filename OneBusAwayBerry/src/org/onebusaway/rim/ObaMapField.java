@@ -1,23 +1,14 @@
-/*
- * DemoMapField.java
- *
- * Copyright © 1998-2010 Research In Motion Ltd.
- * 
- * Note: For the sake of simplicity, this sample application may not leverage
- * resource bundles and resource strings.  However, it is STRONGLY recommended
- * that application developers make use of the localization features available
- * within the BlackBerry development platform to ensure a seamless application
- * experience across a variety of languages and geographies.  For more information
- * on localizing your application, please refer to the BlackBerry Java Development
- * Environment Development Guide associated with this release.
- */
+//#preprocess
 
 package org.onebusaway.rim;
 
 import java.util.Vector;
 
+import javax.microedition.location.Coordinates;
+
 import net.rim.device.api.lbs.MapField;
 import net.rim.device.api.system.Bitmap;
+import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.component.LabelField;
 
@@ -27,24 +18,32 @@ import net.rim.device.api.ui.component.LabelField;
 public class ObaMapField extends MapField
 {
     // Vector of sites
-    private Vector     _allSites    = new Vector();
+    private Vector      _allSites    = new Vector();
     //private MapFieldDemoSite _highlightedSite;          
 
     // For cursor
-    private Bitmap     cursor       = AppMain.getResourceBitmap("mylocation.png");
+    private Bitmap      locationMarker;
+    private Coordinates location;
 
     // For preferred height
-    private LabelField _sampleLabel;
+    private LabelField  _sampleLabel;
 
     // Instructive text
-    private int        _textHeight;
-    private boolean    _turnOffText = false;
+    private int         _textHeight;
+    private boolean     _turnOffText = false;
+    
+    private final AppMain app;
 
     /**
      * Initializes map.
      */
     public ObaMapField()
     {
+        app = AppMain.get();
+        
+        locationMarker = app.getResourceBitmap("mylocation.png");
+        location = null;
+
         // Sample label is only used to determine the instructive text height
         // and is declared null right after use.
         _sampleLabel = new LabelField();
@@ -151,7 +150,23 @@ public class ObaMapField extends MapField
 
         // Places the cursor permanently at the center of the map.
         // Logical right shift ">> 1" is equivalent to division by 2.
-        g.drawBitmap(getWidth() >> 1, getHeight() >> 1, getWidth(), getHeight(), cursor, 0, 0);
+        int bullseyeCenterX = getWidth() >> 1;
+        int bullseyeCenterY = getHeight() >> 1;
+        int bullseyeWidth = locationMarker.getWidth();
+        int bullseyeHeight = locationMarker.getHeight();
+        int bullseyeX = bullseyeCenterX - (bullseyeWidth >> 1);
+        int bullseyeY = bullseyeCenterY - (bullseyeHeight >> 1);
+        g.drawBitmap(bullseyeX, bullseyeY, bullseyeWidth, bullseyeHeight, locationMarker, 0, 0);
+
+        //#ifdef DEBUG
+        g.setColor(Color.MAGENTA);
+        g.drawLine(bullseyeCenterX, 0, bullseyeCenterX, getHeight());
+        g.drawLine(0, bullseyeCenterY, getWidth(), bullseyeCenterY);
+        g.drawLine(0, 0, getWidth(), 0); // top
+        g.drawLine(0, 0, 0, getHeight()); // left
+        g.drawLine(getWidth(), 0, getWidth(), getHeight()); // right
+        g.drawLine(0, getHeight(), getWidth(), getHeight()); // bottom
+        //#endif
 
         // Displays instructive text until turned off.
         /*
@@ -181,6 +196,15 @@ public class ObaMapField extends MapField
         moveTo(latitude, longitude);
 
         return true;
+    }
+
+    public void setLocation(Coordinates coordinates)
+    {
+        if (location == null || !location.equals(coordinates) )
+        {
+            location = coordinates;
+            invalidate();
+        }
     }
 
     /**

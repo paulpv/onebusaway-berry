@@ -9,47 +9,12 @@ import net.rim.device.api.ui.component.Dialog;
 
 public class AppMain extends UiApplication
 {
-    private static ResourceBundle resourceStrings = ResourceBundle.getBundle(BBResource.BUNDLE_ID, BBResource.BUNDLE_NAME);
-
-    public static String getResourceString(int id)
-    {
-        return resourceStrings.getString(id);
-    }
-
-    public static Bitmap getResourceBitmap(String name)
-    {
-        return Bitmap.getBitmapResource(name);
-    }
-
     public static void main(String[] args)
     {
         AppMain app = new AppMain();
         app.enterEventDispatcher();
     }
-
-    private AppMain()
-    {
-        pushScreen(new ScreenMap());
-
-        invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                initialize();
-            }
-        });
-    }
-
-    protected void initialize()
-    {
-        int locationCapability = LocationInfo.getSupportedLocationSources();
-
-        boolean gps = (locationCapability & (GPSInfo.GPS_DEVICE_INTERNAL | GPSInfo.GPS_DEVICE_BLUETOOTH)) != 0;
-
-        //gpsThread = new GPSThread();
-        //gpsThread.start();
-    }
-
+    
     public static void errorDialog(final String message)
     {
         UiApplication.getUiApplication().invokeLater(new Runnable()
@@ -59,5 +24,53 @@ public class AppMain extends UiApplication
                 Dialog.alert(message);
             }
         });
+    }
+
+    private ResourceBundle resourceStrings = ResourceBundle.getBundle(BBResource.BUNDLE_ID, BBResource.BUNDLE_NAME);
+
+    private static AppMain instance = null;
+    
+    public static AppMain get()
+    {
+        return instance;
+    }
+    
+    private AppMain()
+    {
+        instance = this;
+        pushScreen(new ScreenMap());
+    }
+
+    public String getResourceString(int id)
+    {
+        return resourceStrings.getString(id);
+    }
+
+    public Bitmap getResourceBitmap(String name)
+    {
+        return Bitmap.getBitmapResource(name);
+    }
+
+    public void log(String msg)
+    {
+        System.out.println(msg);
+    }
+
+    public void exit()
+    {
+        exit(0);
+    }
+    
+    public void exit(int exitCode)
+    {
+        //UiApplication.getUiApplication().requestClose();
+        System.exit(exitCode);
+    }
+    
+    public void activate()
+    {
+        super.activate();
+        
+        // TODO:(pv) Refresh current screen, especially ScreenMyStopList
     }
 }

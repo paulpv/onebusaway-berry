@@ -8,6 +8,7 @@ import javax.microedition.location.LocationProvider;
 
 import net.rim.device.api.gps.GPSInfo;
 import net.rim.device.api.gps.LocationInfo;
+import net.rim.device.api.system.Display;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.Manager;
@@ -21,6 +22,8 @@ import net.rim.device.api.ui.component.LabelField;
 import net.rim.device.api.ui.component.Menu;
 import net.rim.device.api.ui.container.MainScreen;
 import net.rim.device.api.ui.container.VerticalFieldManager;
+
+import org.onebusaway.rim.banner.BannerManager;
 
 public class ScreenMap extends MainScreen implements LocationListener
 {
@@ -53,6 +56,7 @@ public class ScreenMap extends MainScreen implements LocationListener
     protected static final int MENU_PRIORITY_MEDIUM      = 1;
     protected static final int MENU_PRIORITY_HIGH        = 0;
 
+    private BannerManager      banner;
     private Field              headerTODO;
     private ObaMapField        map;
     private LabelField         statusLine;
@@ -71,11 +75,23 @@ public class ScreenMap extends MainScreen implements LocationListener
 
         app = AppMain.get();
 
+        banner = new BannerManager();
+        banner.setText(app.getResourceString(BBResource.TEXT_TITLE));
+        setBanner(banner);
+
         Coordinates defaultLocation = new Coordinates(47.6063889, -122.3308333, 100);
 
-        setTitle(app.getResourceString(BBResource.TEXT_TITLE));
-
-        map = new ObaMapField();
+        map = new ObaMapField()
+        {
+            public int getPreferredHeight()
+            {
+                int height = Display.getHeight();
+                height -= banner.getPreferredHeight();
+                // TODO: subtract header height
+                height -= statusLine.getPreferredHeight();
+                return height;
+            }
+        };
         map.moveTo(defaultLocation);
         map.setZoom(map.getMinZoom() + 1);
         add(map);
@@ -126,7 +142,7 @@ public class ScreenMap extends MainScreen implements LocationListener
                 }
             };
         menu.add(menuItemMyLocation);
-        
+
         /*
         MenuItem menuItemMyReminders =
             new MenuItem(app.getResourceString(BBResource.MENU_MY_REMINDERS), MENU_ORDINAL_MY_REMINDERS, MENU_PRIORITY_MEDIUM)
@@ -169,13 +185,14 @@ public class ScreenMap extends MainScreen implements LocationListener
             };
         menu.add(menuItemMinimize);
 
-        MenuItem menuItemExit = new MenuItem(app.getResourceString(BBResource.MENU_EXIT), MENU_ORDINAL_EXIT, MENU_PRIORITY_NONE)
-        {
-            public void run()
+        MenuItem menuItemExit =
+            new MenuItem(app.getResourceString(BBResource.MENU_EXIT), MENU_ORDINAL_EXIT, MENU_PRIORITY_NONE)
             {
-                app.exit();
-            }
-        };
+                public void run()
+                {
+                    app.exit();
+                }
+            };
         menu.add(menuItemExit);
 
         //super.makeMenu(menu, instance);
@@ -370,14 +387,17 @@ public class ScreenMap extends MainScreen implements LocationListener
 
     public void locationUpdated(LocationProvider provider, Location location)
     {
-        synchronized (lockGps)
+        if (location != null && location.isValid())
         {
-            geoLocation = new GeoLocation(location);
+            synchronized (lockGps)
+            {
+                geoLocation = new GeoLocation(location);
 
-            app.log("geoLocation=" + geoLocation.toString());
-            
-            //map.setLocation(geoLocation.getCoordinates());
-            map.moveTo(geoLocation.getCoordinates());
+                app.log("geoLocation=" + geoLocation.toString());
+
+                //map.setLocation(geoLocation.getCoordinates());
+                map.moveTo(geoLocation.getCoordinates());
+            }
         }
     }
 

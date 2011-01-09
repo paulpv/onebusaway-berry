@@ -7,10 +7,10 @@ public class GeoLocation
 {
     final Coordinates coordinates;
 
-    final long timestamp;
-    final double latitude, longitude;
-    final float  altitude, speed, course;
-    
+    final long        timestamp;
+    final double      latitude, longitude;
+    final float       altitude, speed, course;
+
     public GeoLocation(Location location)
     {
         timestamp = location.getTimestamp();
@@ -19,13 +19,14 @@ public class GeoLocation
         altitude = location.getQualifiedCoordinates().getAltitude();
         speed = location.getSpeed();
         course = location.getCourse();
-        
+
         coordinates = new Coordinates(latitude, longitude, altitude);
     }
-    
+
     public String toString()
     {
-        return "GeoLocation({time=" + timestamp + ", lat=" + latitude + ", lon=" + longitude + ", alt=" + altitude + ", speed=" + speed + ", course=" + course + "})";
+        return "GeoLocation({time=" + timestamp + ", lat=" + latitude + ", lon=" + longitude + ", alt=" + altitude + ", speed="
+                        + speed + ", course=" + course + "})";
     }
 
     public long getTimestamp()
@@ -57,7 +58,7 @@ public class GeoLocation
     {
         return course;
     }
-    
+
     public Coordinates getCoordinates()
     {
         return coordinates;

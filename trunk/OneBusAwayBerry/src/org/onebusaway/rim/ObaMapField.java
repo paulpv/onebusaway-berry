@@ -18,20 +18,20 @@ import net.rim.device.api.ui.component.LabelField;
 public class ObaMapField extends MapField
 {
     // Vector of sites
-    private Vector      _allSites    = new Vector();
+    private Vector        _allSites    = new Vector();
     //private MapFieldDemoSite _highlightedSite;          
 
     // For cursor
-    private Bitmap      locationMarker;
-    private Coordinates location;
+    private Bitmap        locationMarker;
+    private Coordinates   location;
 
     // For preferred height
-    private LabelField  _sampleLabel;
+    private LabelField    _sampleLabel;
 
     // Instructive text
-    private int         _textHeight;
-    private boolean     _turnOffText = false;
-    
+    private int           _textHeight;
+    private boolean       _turnOffText = false;
+
     private final AppMain app;
 
     /**
@@ -40,7 +40,7 @@ public class ObaMapField extends MapField
     public ObaMapField()
     {
         app = AppMain.get();
-        
+
         locationMarker = app.getResourceBitmap("mylocation.png");
         location = null;
 
@@ -127,14 +127,14 @@ public class ObaMapField extends MapField
     }
     */
 
-    /**
-     * @see net.rim.device.api.lbs.MapField#paint(Graphics)
-     */
     protected void paint(Graphics g)
     {
         // Smooths out all the polygons.
         g.setDrawingStyle(Graphics.DRAWSTYLE_ANTIALIASED, true);
         super.paint(g);
+
+        int width = getPreferredWidth();
+        int height = getPreferredHeight();
 
         // Runs through all sites and determines color.
         //determineSiteColors();
@@ -150,8 +150,8 @@ public class ObaMapField extends MapField
 
         // Places the cursor permanently at the center of the map.
         // Logical right shift ">> 1" is equivalent to division by 2.
-        int bullseyeCenterX = getWidth() >> 1;
-        int bullseyeCenterY = getHeight() >> 1;
+        int bullseyeCenterX = width >> 1;
+        int bullseyeCenterY = height >> 1;
         int bullseyeWidth = locationMarker.getWidth();
         int bullseyeHeight = locationMarker.getHeight();
         int bullseyeX = bullseyeCenterX - (bullseyeWidth >> 1);
@@ -160,12 +160,9 @@ public class ObaMapField extends MapField
 
         //#ifdef DEBUG
         g.setColor(Color.MAGENTA);
-        g.drawLine(bullseyeCenterX, 0, bullseyeCenterX, getHeight());
-        g.drawLine(0, bullseyeCenterY, getWidth(), bullseyeCenterY);
-        g.drawLine(0, 0, getWidth(), 0); // top
-        g.drawLine(0, 0, 0, getHeight()); // left
-        g.drawLine(getWidth(), 0, getWidth(), getHeight()); // right
-        g.drawLine(0, getHeight(), getWidth(), getHeight()); // bottom
+        g.drawLine(bullseyeCenterX, 0, bullseyeCenterX, height); // horizontal guideline
+        g.drawLine(0, bullseyeCenterY, width, bullseyeCenterY); // vertical guideline
+        g.drawRect(0, 0, width, height);
         //#endif
 
         // Displays instructive text until turned off.
@@ -200,7 +197,7 @@ public class ObaMapField extends MapField
 
     public void setLocation(Coordinates coordinates)
     {
-        if (location == null || !location.equals(coordinates) )
+        if (location == null || !location.equals(coordinates))
         {
             location = coordinates;
             invalidate();

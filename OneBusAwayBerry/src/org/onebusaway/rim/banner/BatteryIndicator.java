@@ -8,29 +8,21 @@ import net.rim.device.api.ui.Graphics;
 
 import org.onebusaway.rim.AppMain;
 
-/**
- * Battery indicator icon for the banner.
- */
-public class BatteryIndicator extends Field implements SystemListener
+public class BatteryIndicator extends Field implements SystemListener, BannerIndicator
 {
     private final Bitmap     batteryIcon;
 
-    // The battery icon image has six different frames, each 44 pixels wide.
-    // Image is 31 px high.
-    //private static final int ICON_FRAME_WIDTH  = 44;
-    //private static final int ICON_FRAME_HEIGHT = 31;
-
-    private static final int frameCount     = 6;
+    private static final int frameCount = 6;
     private final int        frameWidth;
     private final int        frameHeight;
 
     // Icon frames from left to right...
-    private static final int BATTERY_0_BARS = 0;
-    private static final int BATTERY_1_BAR  = 44;
-    private static final int BATTERY_2_BARS = 88;
-    private static final int BATTERY_3_BARS = 132;
-    private static final int BATTERY_4_BARS = 176;
-    private static final int BATTERY_5_BARS = 220;
+    private final int        BATTERY_0_BARS;
+    private final int        BATTERY_1_BARS;
+    private final int        BATTERY_2_BARS;
+    private final int        BATTERY_3_BARS;
+    private final int        BATTERY_4_BARS;
+    private final int        BATTERY_5_BARS;
 
     // The current frame is set in update() and used in paint()
     private int              currentFrame;
@@ -46,6 +38,13 @@ public class BatteryIndicator extends Field implements SystemListener
         batteryIcon = app.getResourceBitmap("battery-icons.png");
         frameWidth = batteryIcon.getWidth() / frameCount; // should be 44
         frameHeight = batteryIcon.getHeight(); // should be 31 
+
+        BATTERY_0_BARS = 0;
+        BATTERY_1_BARS = BATTERY_0_BARS + frameWidth;
+        BATTERY_2_BARS = BATTERY_1_BARS + frameWidth;
+        BATTERY_3_BARS = BATTERY_2_BARS + frameWidth;
+        BATTERY_4_BARS = BATTERY_3_BARS + frameWidth;
+        BATTERY_5_BARS = BATTERY_4_BARS + frameWidth;
 
         currentFrame = BATTERY_0_BARS;
 
@@ -79,11 +78,7 @@ public class BatteryIndicator extends Field implements SystemListener
         update();
     }
 
-    /**
-     * Checks the battery level and determines the right number of bars to show in the indicator, then repaints.
-     * TODO: check what battery levels the different indicators appear at.
-     */
-    public void update()
+    public boolean update()
     {
         int newFrame;
 
@@ -94,7 +89,7 @@ public class BatteryIndicator extends Field implements SystemListener
         }
         else if (batteryLevel < 20)
         {
-            newFrame = BATTERY_1_BAR;
+            newFrame = BATTERY_1_BARS;
         }
         else if (batteryLevel < 40)
         {
@@ -117,7 +112,9 @@ public class BatteryIndicator extends Field implements SystemListener
         {
             currentFrame = newFrame;
             invalidate();
+            return true;
         }
+        return false;
     }
 
     public int getPreferredHeight()
@@ -137,7 +134,6 @@ public class BatteryIndicator extends Field implements SystemListener
 
     protected void paint(Graphics g)
     {
-        g.drawBitmap(0, 0, batteryIcon.getWidth(), batteryIcon.getHeight(), //
-                        batteryIcon, currentFrame, 0);
+        g.drawBitmap(0, 0, frameWidth, frameHeight, batteryIcon, currentFrame, 0);
     }
 }

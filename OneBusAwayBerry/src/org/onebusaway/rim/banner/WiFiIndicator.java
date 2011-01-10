@@ -9,7 +9,7 @@ import org.onebusaway.rim.AppMain;
 /**
  * WiFi signal strength indicator in the banner.
  */
-public class WiFiIndicator extends Field
+public class WiFiIndicator extends Field implements BannerIndicator
 {
     // WiFi icon loaded in constructor
     private Bitmap           wifiIcon;
@@ -86,7 +86,7 @@ public class WiFiIndicator extends Field
         update();
     }
 
-    public void update()
+    public boolean update()
     {
         int newFrame;
 
@@ -139,7 +139,9 @@ public class WiFiIndicator extends Field
             currentFrame = newFrame;
             currentSelectionFrame = newSelectionFrame;
             invalidate();
+            return true;
         }
+        return false;
     }
 
     public int getPreferredHeight()

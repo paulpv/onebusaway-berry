@@ -11,7 +11,7 @@ import org.onebusaway.rim.AppMain;
  * RadioInfo API calls are the source of this information. Call the update() method periodically to update the banner
  * display.
  */
-public class CellularIndicator extends Field
+public class CellularIndicator extends Field implements BannerIndicator
 {
     // network selection icon loaded in constructor
     private Bitmap           selectionIcon;
@@ -96,7 +96,7 @@ public class CellularIndicator extends Field
         update();
     }
 
-    public void update()
+    public boolean update()
     {
         int newFrame;
 
@@ -151,7 +151,9 @@ public class CellularIndicator extends Field
             currentFrame = newFrame;
             currentSelectionFrame = newSelectionFrame;
             invalidate();
+            return true;
         }
+        return false;
     }
 
     public int getPreferredHeight()

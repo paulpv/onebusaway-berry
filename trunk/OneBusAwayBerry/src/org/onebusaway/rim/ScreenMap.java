@@ -8,10 +8,10 @@ import javax.microedition.location.LocationProvider;
 
 import net.rim.device.api.gps.GPSInfo;
 import net.rim.device.api.gps.LocationInfo;
+import net.rim.device.api.i18n.ResourceBundle;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
-import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.MenuItem;
 import net.rim.device.api.ui.TouchEvent;
 import net.rim.device.api.ui.TouchGesture;
@@ -20,66 +20,66 @@ import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Dialog;
 import net.rim.device.api.ui.component.LabelField;
 import net.rim.device.api.ui.component.Menu;
-import net.rim.device.api.ui.container.MainScreen;
 import net.rim.device.api.ui.container.VerticalFieldManager;
 
 import org.onebusaway.rim.banner.BannerManager;
 
-public class ScreenMap extends MainScreen implements LocationListener
+public class ScreenMap extends ObaMainScreen implements LocationListener
 {
     // Alt-DEBG: Display Debug Dialog
-    public static final int    BACKDOOR_DEBG             = ('D' << 24) | ('E' << 16) | ('B' << 8) | 'G';
+    public static final int         BACKDOOR_DEBG             = ('D' << 24) | ('E' << 16) | ('B' << 8) | 'G';
     // Alt-DEBC: Clear the Debug Dialog
-    public static final int    BACKDOOR_DEBC             = ('D' << 24) | ('E' << 16) | ('B' << 8) | 'C';
+    public static final int         BACKDOOR_DEBC             = ('D' << 24) | ('E' << 16) | ('B' << 8) | 'C';
     // Alt-DEB0: Disable output to Debug Dialog; the default debug level
-    public static final int    BACKDOOR_DEB0             = ('D' << 24) | ('E' << 16) | ('B' << 8) | '0';
+    public static final int         BACKDOOR_DEB0             = ('D' << 24) | ('E' << 16) | ('B' << 8) | '0';
     // Alt-DEB1: Enable output to Debug Dialog
-    public static final int    BACKDOOR_DEB1             = ('D' << 24) | ('E' << 16) | ('B' << 8) | 'W';
+    public static final int         BACKDOOR_DEB1             = ('D' << 24) | ('E' << 16) | ('B' << 8) | 'W';
 
     // ----- separator -----
-    protected static final int MENU_ORDINAL_MY_LOCATION  = 0x10000;
-    protected static final int MENU_ORDINAL_MY_REMINDERS = MENU_ORDINAL_MY_LOCATION + 1;
-    protected static final int MENU_ORDINAL_MY_ROUTES    = MENU_ORDINAL_MY_REMINDERS + 1;
-    protected static final int MENU_ORDINAL_MY_STOPS     = MENU_ORDINAL_MY_ROUTES + 1;
+    protected static final int      MENU_ORDINAL_MY_LOCATION  = 0x10000;
+    protected static final int      MENU_ORDINAL_MY_REMINDERS = MENU_ORDINAL_MY_LOCATION + 1;
+    protected static final int      MENU_ORDINAL_MY_ROUTES    = MENU_ORDINAL_MY_REMINDERS + 1;
+    protected static final int      MENU_ORDINAL_MY_STOPS     = MENU_ORDINAL_MY_ROUTES + 1;
     // ----- separator -----
-    protected static final int MENU_ORDINAL_ABOUT        = MENU_ORDINAL_MY_LOCATION + 0x10000;
+    protected static final int      MENU_ORDINAL_ABOUT        = MENU_ORDINAL_MY_LOCATION + 0x10000;
     // TODO:(pv) Check For Updates, Settings, WiFi/Cellular?
-    protected static final int MENU_ORDINAL_HELP         = MENU_ORDINAL_ABOUT + 1;
+    protected static final int      MENU_ORDINAL_HELP         = MENU_ORDINAL_ABOUT + 1;
     // ----- separator -----
-    protected static final int MENU_ORDINAL_MINIMIZE     = MENU_ORDINAL_ABOUT + 0x10000;
+    protected static final int      MENU_ORDINAL_MINIMIZE     = MENU_ORDINAL_ABOUT + 0x10000;
     // ----- separator -----
-    protected static final int MENU_ORDINAL_EXIT         = MENU_ORDINAL_MINIMIZE + 0x10000;
+    protected static final int      MENU_ORDINAL_EXIT         = MENU_ORDINAL_MINIMIZE + 0x10000;
 
     // Determines which item is selected over another...
-    protected static final int MENU_PRIORITY_NONE        = Integer.MAX_VALUE;
-    protected static final int MENU_PRIORITY_LOW         = 2;
-    protected static final int MENU_PRIORITY_MEDIUM      = 1;
-    protected static final int MENU_PRIORITY_HIGH        = 0;
+    protected static final int      MENU_PRIORITY_NONE        = Integer.MAX_VALUE;
+    protected static final int      MENU_PRIORITY_LOW         = 2;
+    protected static final int      MENU_PRIORITY_MEDIUM      = 1;
+    protected static final int      MENU_PRIORITY_HIGH        = 0;
 
-    private BannerManager      banner;
-    private Field              headerTODO;
-    private ObaMapField        map;
-    private LabelField         statusLine;
+    public final static Coordinates COORDINATES_SEATTLE       = new Coordinates(47.6063889, -122.3308333, 100);
 
-    private boolean            checkedTrackballSupport   = false;
+    private BannerManager           banner;
+    private Field                   headerTODO;
+    private ObaMapField             map;
+    private LabelField              statusLine;
 
-    private final Object       lockGps                   = new Object();
-    private LocationProvider   locationProvider          = null;
-    private GeoLocation        geoLocation               = null;
+    private boolean                 checkedTrackballSupport   = false;
 
-    private final AppMain      app;
+    private final Object            lockGps                   = new Object();
+    private LocationProvider        locationProvider          = null;
+    private GeoLocation             geoLocation               = null;
+
+    private final AppMain           app;
+    private final ResourceBundle    resourceStrings;
 
     ScreenMap()
     {
-        super(Manager.NO_VERTICAL_SCROLL);
-
         app = AppMain.get();
+        resourceStrings = app.getResourceBundleStrings();
 
-        banner = new BannerManager();
-        banner.setText(app.getResourceString(BBResource.TEXT_TITLE));
+        banner = new BannerManager(app.getResourceString(BBResource.TEXT_TITLE));
         setBanner(banner);
 
-        Coordinates defaultLocation = new Coordinates(47.6063889, -122.3308333, 100);
+        headerTODO = null;
 
         map = new ObaMapField()
         {
@@ -87,20 +87,26 @@ public class ScreenMap extends MainScreen implements LocationListener
             {
                 int height = Display.getHeight();
                 height -= banner.getPreferredHeight();
-                // TODO: subtract header height
+                if (headerTODO != null)
+                {
+                    height -= headerTODO.getPreferredHeight();
+                }
                 height -= statusLine.getPreferredHeight();
                 return height;
             }
         };
-        map.moveTo(defaultLocation);
+        map.moveTo(COORDINATES_SEATTLE);
         map.setZoom(map.getMinZoom() + 1);
         add(map);
 
-        statusLine = new LabelField("statusLine... foo", LabelField.ELLIPSIS | LabelField.USE_ALL_WIDTH);
+        statusLine = new LabelField("statusLine...", LabelField.ELLIPSIS | LabelField.USE_ALL_WIDTH);
 
         VerticalFieldManager statusVfm = new VerticalFieldManager();
         statusVfm.add(statusLine);
         setStatus(statusVfm);
+
+        // Allow openProductionBackdoor(...)
+        setBackdoorAltStatus(true);
 
         UiApplication.getUiApplication().invokeLater(new Runnable()
         {
@@ -111,10 +117,14 @@ public class ScreenMap extends MainScreen implements LocationListener
         });
     }
 
+    public void onUpdateBanner()
+    {
+        banner.update();
+    }
+
     public void close()
     {
-        //UiApplication.getUiApplication().requestClose();
-        app.requestBackground();
+        UiApplication.getUiApplication().requestBackground();
     }
 
     /**
@@ -128,7 +138,7 @@ public class ScreenMap extends MainScreen implements LocationListener
     protected void makeMenu(Menu menu, int instance)
     {
         MenuItem menuItemMyLocation =
-            new MenuItem(app.getResourceString(BBResource.MENU_MY_LOCATION), MENU_ORDINAL_MY_LOCATION, MENU_PRIORITY_HIGH)
+            new MenuItem(resourceStrings, BBResource.MENU_MY_LOCATION, MENU_ORDINAL_MY_LOCATION, MENU_PRIORITY_HIGH)
             {
                 public void run()
                 {
@@ -145,7 +155,7 @@ public class ScreenMap extends MainScreen implements LocationListener
 
         /*
         MenuItem menuItemMyReminders =
-            new MenuItem(app.getResourceString(BBResource.MENU_MY_REMINDERS), MENU_ORDINAL_MY_REMINDERS, MENU_PRIORITY_MEDIUM)
+            new MenuItem(resourceStrings, BBResource.MENU_MY_REMINDERS, MENU_ORDINAL_MY_REMINDERS, MENU_PRIORITY_MEDIUM)
             {
                 public void run()
                 {
@@ -155,7 +165,7 @@ public class ScreenMap extends MainScreen implements LocationListener
         menu.add(menuItemMyReminders);
         
         MenuItem menuItemMyRoutes =
-            new MenuItem(app.getResourceString(BBResource.MENU_MY_ROUTES), MENU_ORDINAL_MY_ROUTES, MENU_PRIORITY_MEDIUM)
+            new MenuItem(resourceStrings, BBResource.MENU_MY_ROUTES, MENU_ORDINAL_MY_ROUTES, MENU_PRIORITY_MEDIUM)
             {
                 public void run()
                 {
@@ -165,7 +175,7 @@ public class ScreenMap extends MainScreen implements LocationListener
         menu.add(menuItemMyRoutes);
         
         MenuItem menuItemMyStops =
-            new MenuItem(app.getResourceString(BBResource.MENU_MY_STOPS), MENU_ORDINAL_MY_STOPS, MENU_PRIORITY_MEDIUM)
+            new MenuItem(resourceStrings, BBResource.MENU_MY_STOPS, MENU_ORDINAL_MY_STOPS, MENU_PRIORITY_MEDIUM)
             {
                 public void run()
                 {
@@ -176,7 +186,7 @@ public class ScreenMap extends MainScreen implements LocationListener
         */
 
         MenuItem menuItemMinimize =
-            new MenuItem(app.getResourceString(BBResource.MENU_MINIMIZE), MENU_ORDINAL_MINIMIZE, MENU_PRIORITY_NONE)
+            new MenuItem(resourceStrings, BBResource.MENU_MINIMIZE, MENU_ORDINAL_MINIMIZE, MENU_PRIORITY_NONE)
             {
                 public void run()
                 {
@@ -185,17 +195,14 @@ public class ScreenMap extends MainScreen implements LocationListener
             };
         menu.add(menuItemMinimize);
 
-        MenuItem menuItemExit =
-            new MenuItem(app.getResourceString(BBResource.MENU_EXIT), MENU_ORDINAL_EXIT, MENU_PRIORITY_NONE)
+        MenuItem menuItemExit = new MenuItem(resourceStrings, BBResource.MENU_EXIT, MENU_ORDINAL_EXIT, MENU_PRIORITY_NONE)
+        {
+            public void run()
             {
-                public void run()
-                {
-                    app.exit();
-                }
-            };
+                app.exit();
+            }
+        };
         menu.add(menuItemExit);
-
-        //super.makeMenu(menu, instance);
     }
 
     /**
@@ -412,5 +419,30 @@ public class ScreenMap extends MainScreen implements LocationListener
         {
             return geoLocation;
         }
+    }
+
+    public void setShowHeader(boolean showHeader)
+    {
+        Manager fieldManager = getMainManager();
+
+        if (showHeader)
+        {
+            if (headerTODO == null)
+            {
+                // Create the header and add it to the top of the screen (below the banner)
+                //incomingCallAcceptIgnoreButtons = new IncomingCallButtonManager(FIELD_BOTTOM | USE_ALL_WIDTH);
+                //fieldManager.insert(headerTODO, 0);
+            }
+        }
+        else
+        {
+            if (headerTODO != null)
+            {
+                Field temp = headerTODO;
+                headerTODO = null;
+                fieldManager.delete(temp);
+            }
+        }
+        fieldManager.invalidate();
     }
 }

@@ -4,9 +4,7 @@ package org.onebusaway.rim.banner;
 
 import net.rim.device.api.system.Display;
 import net.rim.device.api.ui.Color;
-import net.rim.device.api.ui.Font;
 import net.rim.device.api.ui.Graphics;
-import net.rim.device.api.ui.Ui;
 import net.rim.device.api.ui.component.LabelField;
 import net.rim.device.api.ui.container.HorizontalFieldManager;
 import net.rim.device.api.ui.decor.Background;
@@ -21,14 +19,14 @@ import org.onebusaway.rim.AppMain;
  */
 public class BannerManager extends HorizontalFieldManager
 {
-    private LabelField         title;
+    private LabelField         bannerTitle;
+    private BatteryIndicator   battery;
     private WiFiIndicator      wifi;
     private CellularIndicator  cellular;
-    private BatteryIndicator   battery;
 
-    // Allow this much room on far right for network activity indicator.
-    // There's not quite enough room for shift indicator, but that's true on the main banner as well.
-    private static final int   MARGIN_BANNER_RIGHT = 10; //25;
+    // Allow this much room on far right for network/shift/alt indicator.
+    // There's not quite enough room for shift/alt indicator, but that's true on the main banner as well.
+    private static final int   MARGIN_BANNER_RIGHT = 25;
 
     // We're this tall
     private static final int   BANNER_HEIGHT       = 34;
@@ -43,7 +41,7 @@ public class BannerManager extends HorizontalFieldManager
 
     private final AppMain      app;
 
-    public BannerManager()
+    public BannerManager(String bannerText)
     {
         super(USE_ALL_WIDTH);
 
@@ -55,20 +53,35 @@ public class BannerManager extends HorizontalFieldManager
         setBackground(bg);
 
         // Logo and Title in the default banner
-        title = new LabelField("", USE_ALL_HEIGHT | FIELD_VCENTER)
-        {
-            protected void paint(Graphics g)
+        bannerTitle = new LabelField()
             {
-                //#ifdef DEBUG
-                g.setBackgroundColor(Color.MAGENTA);
-                g.drawRect(0, 0, getWidth(), getHeight());
-                //#endif
-                g.setColor(Color.WHITE);
-                super.paint(g);
+                protected void paint(Graphics g)
+                {
+                    //#ifdef DEBUG
+                    g.setColor(Color.MAGENTA);
+                    g.drawRect(0, 0, getPreferredWidth(), getPreferredHeight());
+                    //#endif
+                    g.setColor(Color.WHITE);
+                    super.paint(g);
+                }
+            };
+        bannerTitle.setText(bannerText);
+        add(bannerTitle);
+
+        // Battery indicator
+        battery = new BatteryIndicator()
+        //#ifdef DEBUG
+            {
+                protected void paint(Graphics g)
+                {
+                    g.setColor(Color.YELLOW);
+                    g.drawRect(0, 0, getPreferredWidth(), getPreferredHeight());
+                    super.paint(g);
+                }
             }
-        };
-        title.setFont(title.getFont().derive(Font.PLAIN, 22, Ui.UNITS_px));
-        add(title);
+        //#endif
+        ;
+        add(battery);
 
         // WiFi indicator
         if (app.isWiFiSupported())
@@ -78,8 +91,8 @@ public class BannerManager extends HorizontalFieldManager
                 {
                     protected void paint(Graphics g)
                     {
-                        g.setBackgroundColor(Color.RED);
-                        g.drawRect(0, 0, getWidth(), getHeight());
+                        g.setColor(Color.RED);
+                        g.drawRect(0, 0, getPreferredWidth(), getPreferredHeight());
                         super.paint(g);
                     }
                 }
@@ -96,8 +109,8 @@ public class BannerManager extends HorizontalFieldManager
                 {
                     protected void paint(Graphics g)
                     {
-                        g.setBackgroundColor(Color.GREEN);
-                        g.drawRect(0, 0, getWidth(), getHeight());
+                        g.setColor(Color.GREEN);
+                        g.drawRect(0, 0, getPreferredWidth(), getPreferredHeight());
                         super.paint(g);
                     }
                 }
@@ -105,30 +118,11 @@ public class BannerManager extends HorizontalFieldManager
             ;
             add(cellular);
         }
-
-        // Battery indicator
-        battery = new BatteryIndicator()
-        //#ifdef DEBUG
-            {
-                protected void paint(Graphics g)
-                {
-                    g.setBackgroundColor(Color.YELLOW);
-                    g.drawRect(0, 0, getWidth(), getHeight());
-                    super.paint(g);
-                }
-            }
-        //#endif
-        ;
-        add(battery);
-    }
-
-    public void setText(String titleText)
-    {
-        title.setText(titleText);
     }
 
     public void update()
     {
+        battery.update();
         if (wifi != null)
         {
             wifi.update();
@@ -137,7 +131,6 @@ public class BannerManager extends HorizontalFieldManager
         {
             cellular.update();
         }
-        battery.update();
     }
 
     public int getPreferredHeight()
@@ -158,14 +151,14 @@ public class BannerManager extends HorizontalFieldManager
         // banner with logo, title, colored gradient background, full width
         int bannerHeight = height;
         setExtent(width, bannerHeight);
-        layoutChild(title, width, bannerHeight);
+        layoutChild(bannerTitle, width, bannerHeight);
         int titleX = 2;
-        int titleY = (bannerHeight - title.getHeight()) / 2;
-        setPositionChild(title, titleX, titleY);
+        int titleY = (bannerHeight - bannerTitle.getPreferredHeight()) / 2;
+        setPositionChild(bannerTitle, titleX, titleY);
 
         // NOTE remainder of metrics are calced from right edge to left...
-        int cellularWidth = cellular.getPreferredWidth();
-        int cellularHeight = cellular.getPreferredHeight();
+        int cellularWidth = (cellular == null) ? 0 : cellular.getPreferredWidth();
+        int cellularHeight = (cellular == null) ? 0 : cellular.getPreferredHeight();
         int cellularX = width - cellularWidth - MARGIN_BANNER_RIGHT;
 
         int wifiWidth = (wifi == null) ? 0 : wifi.getPreferredWidth();
@@ -176,6 +169,10 @@ public class BannerManager extends HorizontalFieldManager
         int batteryHeight = battery.getPreferredHeight();
         int batteryX = wifiX - batteryWidth - MARGIN_INDICATOR;
 
+        // battery indicator
+        layoutChild(battery, batteryWidth, batteryHeight);
+        setPositionChild(battery, batteryX, 0);
+
         // wifi indicator
         if (wifi != null)
         {
@@ -184,11 +181,10 @@ public class BannerManager extends HorizontalFieldManager
         }
 
         // cellular indicator
-        layoutChild(cellular, cellularWidth, cellularHeight);
-        setPositionChild(cellular, cellularX, 0);
-
-        // battery indicator
-        layoutChild(battery, batteryWidth, batteryHeight);
-        setPositionChild(battery, batteryX, 0);
+        if (cellular != null)
+        {
+            layoutChild(cellular, cellularWidth, cellularHeight);
+            setPositionChild(cellular, cellularX, 0);
+        }
     }
 }

@@ -54,17 +54,17 @@ public class BannerManager extends HorizontalFieldManager
 
         // Logo and Title in the default banner
         bannerTitle = new LabelField()
+        {
+            protected void paint(Graphics g)
             {
-                protected void paint(Graphics g)
-                {
-                    //#ifdef DEBUG
-                    g.setColor(Color.MAGENTA);
-                    g.drawRect(0, 0, getPreferredWidth(), getPreferredHeight());
-                    //#endif
-                    g.setColor(Color.WHITE);
-                    super.paint(g);
-                }
-            };
+                //#ifdef DEBUG
+                g.setColor(Color.MAGENTA);
+                g.drawRect(0, 0, getPreferredWidth(), getPreferredHeight());
+                //#endif
+                g.setColor(Color.WHITE);
+                super.paint(g);
+            }
+        };
         bannerTitle.setText(bannerText);
         add(bannerTitle);
 

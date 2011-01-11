@@ -2,7 +2,7 @@ package org.onebusaway.rim;
 
 import javax.microedition.location.Coordinates;
 
-public class MyStopMapMarker extends MyMapMarker
+public class ObaMapMarkerStop extends ObaMapMarker
 {
     public static class StopDirections
     {
@@ -48,7 +48,7 @@ public class MyStopMapMarker extends MyMapMarker
     protected final int    direction;
     protected boolean      favorite;
 
-    public MyStopMapMarker(String id, Coordinates coordinates, String name, int type, int direction, boolean favorite)
+    public ObaMapMarkerStop(String id, Coordinates coordinates, String name, int type, int direction, boolean favorite)
     {
         super(id, coordinates, "pin.png", "pin_focus.png");
 

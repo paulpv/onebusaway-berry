@@ -7,13 +7,13 @@ import javax.microedition.location.Coordinates;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Graphics;
 
-public class MyLocationMapMarker extends MyMapMarker
+public class ObaMapMarkerLocation extends ObaMapMarker
 {
     protected Timer   timerMarker = null;
     protected boolean isGpsLocked = false;
     protected int     colorMarker;
 
-    public MyLocationMapMarker(String id, Coordinates coordinates)
+    public ObaMapMarkerLocation(String id, Coordinates coordinates)
     {
         super(id, coordinates, "mylocation.png");
     }

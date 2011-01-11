@@ -1,5 +1,8 @@
 package org.onebusaway.rim;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
 import javax.microedition.location.Coordinates;
 
 import net.rim.device.api.system.Bitmap;
@@ -7,21 +10,39 @@ import net.rim.device.api.ui.Graphics;
 
 public class MyMapMarker
 {
+    protected MyMapField        parent         = null;
     protected final String      id;
     protected final Coordinates coordinates;
-    protected final Bitmap      imageUnfocused;
-    protected final Bitmap      imageFocused;
+    protected final Bitmap      imageMain;
+    protected final Bitmap      imageAlt;
 
-    protected boolean           focused;
+    protected final Vector      vectorOverlays = new Vector();
 
-    protected MyMapMarker(String id, Coordinates coordinates, String imageUnfocused, String imageFocused)
+    protected boolean           useImageAlt;
+
+    protected MyMapMarker(String id, Coordinates coordinates, String imageMain)
+    {
+        this(id, coordinates, imageMain, null);
+    }
+
+    protected MyMapMarker(String id, Coordinates coordinates, String imageMain, String imageAlt)
     {
         this.id = id;
         this.coordinates = coordinates;
-        this.imageUnfocused = Bitmap.getBitmapResource(imageUnfocused);
-        this.imageFocused = Bitmap.getBitmapResource(imageFocused);
+        this.imageMain = Bitmap.getBitmapResource(imageMain);
 
-        focused = false;
+        Bitmap temp = null;
+        if (imageAlt != null)
+        {
+            temp = Bitmap.getBitmapResource(imageAlt);
+            if (!isSameSize(this.imageMain, temp))
+            {
+                temp = null;
+            }
+        }
+        this.imageAlt = temp;
+
+        useImageAlt = false;
     }
 
     public String toString()
@@ -39,45 +60,64 @@ public class MyMapMarker
         return coordinates;
     }
 
-    public boolean getFocused()
+    public boolean getUseImageAlt()
     {
-        return focused;
+        return useImageAlt;
     }
 
-    public void setFocused(boolean focused)
+    public void setUseImageAlt(boolean useImageAlt)
     {
-        this.focused = focused;
+        this.useImageAlt = useImageAlt;
+    }
+
+    public void setParent(MyMapField parent)
+    {
+        this.parent = parent;
     }
 
     public Bitmap getBitmap()
     {
-        return (getFocused()) ? imageFocused : imageUnfocused;
+        return (imageAlt != null && getUseImageAlt()) ? imageAlt : imageMain;
     }
 
-    protected Bitmap getOverlay()
+    private boolean isSameSize(Bitmap a, Bitmap b)
     {
-        return null;
+        if (a != null && b != null)
+        {
+            int aWidth = a.getWidth();
+            int aHeight = a.getHeight();
+
+            int bWidth = b.getWidth();
+            int bHeight = b.getHeight();
+
+            return (aWidth == bWidth && aHeight == bHeight);
+        }
+        return false;
+    }
+
+    protected void addOverlay(String pathOverlay)
+    {
+        addOverlay(Bitmap.getBitmapResource(pathOverlay));
+    }
+
+    protected void addOverlay(Bitmap imageOverlay)
+    {
+        if (isSameSize(imageMain, imageOverlay))
+        {
+            vectorOverlays.addElement(imageOverlay);
+        }
     }
 
     protected void drawBitmap(Graphics g, int x, int y)
     {
         Bitmap bitmap = getBitmap();
-        int bitmapWidth = bitmap.getWidth();
-        int bitmapHeight = bitmap.getHeight();
-        g.drawBitmap(x, y, bitmapWidth, bitmapHeight, bitmap, 0, 0);
+        g.drawBitmap(x, y, bitmap.getWidth(), bitmap.getHeight(), bitmap, 0, 0);
 
-        Bitmap overlay = getOverlay();
-        if (overlay != null)
+        Enumeration overlays = vectorOverlays.elements();
+        while (overlays.hasMoreElements())
         {
-            int overlayWidth = overlay.getWidth();
-            int overlayHeight = overlay.getHeight();
-            if (bitmapWidth == overlayWidth && bitmapHeight == overlayHeight)
-            {
-                //MyApp.log("overlaying");
-                g.drawBitmap(x, y, overlayWidth, overlayHeight, overlay, 0, 0);
-                return;
-            }
+            bitmap = (Bitmap) overlays.nextElement();
+            g.drawBitmap(x, y, bitmap.getWidth(), bitmap.getHeight(), bitmap, 0, 0);
         }
-        //MyApp.log("not overlaying");
     }
 }

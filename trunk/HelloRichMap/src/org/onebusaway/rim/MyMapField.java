@@ -15,16 +15,17 @@ import net.rim.device.api.ui.XYPoint;
 
 public class MyMapField extends MapField
 {
-    protected final Hashtable  mapMarkers               = new Hashtable();
+    protected final Hashtable     markersStops             = new Hashtable();
+    protected MyLocationMapMarker markerLocation           = null;
 
     // Used for outputting debugging geometry during touch events.
     // The drawn geometry can be a bit buggy, but it meets my current needs. 
-    protected static final int TOUCH_INDICATOR_RADIUS   = 10;
-    protected static final int TOUCH_INDICATOR_DIAMETER = TOUCH_INDICATOR_RADIUS * 2;
-    int                        touchX1                  = -1;
-    int                        touchX2                  = -1;
-    int                        touchY1                  = -1;
-    int                        touchY2                  = -1;
+    protected static final int    TOUCH_INDICATOR_RADIUS   = 10;
+    protected static final int    TOUCH_INDICATOR_DIAMETER = TOUCH_INDICATOR_RADIUS * 2;
+    int                           touchX1                  = -1;
+    int                           touchX2                  = -1;
+    int                           touchY1                  = -1;
+    int                           touchY2                  = -1;
 
     protected void paint(Graphics g)
     {
@@ -72,9 +73,9 @@ public class MyMapField extends MapField
         int markerWidth;
         int markerHeight;
 
-        synchronized (mapMarkers)
+        synchronized (markersStops)
         {
-            Enumeration markers = mapMarkers.elements();
+            Enumeration markers = markersStops.elements();
             while (markers.hasMoreElements())
             {
                 marker = (MyMapMarker) markers.nextElement();
@@ -235,37 +236,62 @@ public class MyMapField extends MapField
 
     public void mapMarkersAdd(MyMapMarker mapMarker, boolean invalidate)
     {
-        synchronized (mapMarkers)
+        synchronized (markersStops)
         {
-            mapMarkers.put(mapMarker.getId(), mapMarker);
-        }
-        if (invalidate)
-        {
-            invalidate();
-        }
-    }
-
-    public void mapMarkersRemove(MyMapMarker mapMarker, boolean invalidate)
-    {
-        synchronized (mapMarkers)
-        {
-            mapMarkers.remove(mapMarker.getId());
-        }
-        if (invalidate)
-        {
-            invalidate();
+            mapMarker.setParent(this);
+            markersStops.put(mapMarker.getId(), mapMarker);
+            if (invalidate)
+            {
+                //mapMarker.invalidate();
+            }
         }
     }
 
-    public void mapMarkersClear(boolean invalidate)
+    public void mapMarkersRemove(String id, boolean invalidate)
     {
-        synchronized (mapMarkers)
+        synchronized (markersStops)
         {
-            mapMarkers.clear();
+            MyMapMarker mapMarker = (MyMapMarker) markersStops.remove(id);
+            mapMarker.setParent(null);
+            if (invalidate)
+            {
+                //mapMarker.invalidate();
+            }
         }
-        if (invalidate)
+    }
+
+    public void mapLocationAdd(MyLocationMapMarker markerLocation)
+    {
+        this.markerLocation = markerLocation;
+        //markerLocation.invalidate();
+    }
+
+    public void setGpsLocked(boolean locked)
+    {
+        synchronized (this)
         {
-            invalidate();
+            /*
+            isGpsLocked = locked;
+            
+            if (isGpsLocked)
+            {
+                colorMarker = Color.CADETBLUE;
+                
+                timerMarker = new Timer();
+                timerMarker.schedule(new TimerTask()
+                {
+                    public void run()
+                    {
+                        colorMarker = (colorMarker == Color.CADETBLUE) ? Color.DARKBLUE : Color.CADETBLUE;
+                    }
+                }, 0, 250);
+            }
+            else
+            {
+                timerMarker.cancel();
+                timerMarker = null;
+            }
+            */
         }
     }
 }

@@ -2,8 +2,6 @@ package org.onebusaway.rim;
 
 import javax.microedition.location.Coordinates;
 
-import net.rim.device.api.system.Bitmap;
-
 public class MyStopMapMarker extends MyMapMarker
 {
     public static class StopDirections
@@ -48,7 +46,6 @@ public class MyStopMapMarker extends MyMapMarker
     protected final String name;
     protected final int    type;
     protected final int    direction;
-    protected final Bitmap overlay;
     protected boolean      favorite;
 
     public MyStopMapMarker(String id, Coordinates coordinates, String name, int type, int direction, boolean favorite)
@@ -68,16 +65,42 @@ public class MyStopMapMarker extends MyMapMarker
         this.name = name;
         this.type = type;
         this.direction = direction;
+        setFavorite(favorite);
+
+        switch (direction)
+        {
+            case StopDirections.NORTH:
+                addOverlay("dir_n.png");
+                break;
+            case StopDirections.NORTH_EAST:
+                addOverlay("dir_ne.png");
+                break;
+            case StopDirections.EAST:
+                addOverlay("dir_e.png");
+                break;
+            case StopDirections.SOUTH_EAST:
+                addOverlay("dir_se.png");
+                break;
+            case StopDirections.SOUTH:
+                addOverlay("dir_s.png");
+                break;
+            case StopDirections.SOUTH_WEST:
+                addOverlay("dir_sw.png");
+                break;
+            case StopDirections.WEST:
+                addOverlay("dir_w.png");
+                break;
+            case StopDirections.NORTH_WEST:
+                addOverlay("dir_nw.png");
+                break;
+        }
 
         switch (type)
         {
             case StopTypes.BUS:
-                overlay = Bitmap.getBitmapResource("stop_type_bus.png");
+                addOverlay("stop_type_bus.png");
                 break;
-            default:
-                overlay = null;
         }
-        setFavorite(favorite);
     }
 
     public boolean getFavorite()
@@ -90,13 +113,8 @@ public class MyStopMapMarker extends MyMapMarker
         this.favorite = favorite;
     }
 
-    public boolean getFocused()
+    public boolean getUseImageAlt()
     {
-        return favorite || super.getFocused();
-    }
-
-    protected Bitmap getOverlay()
-    {
-        return overlay;
+        return favorite || super.getUseImageAlt();
     }
 }

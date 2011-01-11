@@ -95,22 +95,17 @@ public class MyApp extends UiApplication
 
                 Random random = new Random();
 
+                coordinates = MAPPOINT_SEATTLE.toCoordinates();
+                MyLocationMapMarker markerLocation = new MyLocationMapMarker("-1", coordinates);
+                mapVer4.mapLocationAdd(markerLocation);
+                mapVer4.setGpsLocked(true);
+
                 MyMapMarker mapMarker;
                 String id;
                 String name;
                 int type;
                 int direction;
                 boolean favorite;
-
-                id = "-1";
-                coordinates = MAPPOINT_SEATTLE.toCoordinates();
-                name = "Home";
-                type = StopTypes.BUS;
-                direction = StopDirections.UNKNOWN;
-                favorite = true;
-                mapMarker = new MyStopMapMarker(id, coordinates, name, type, direction, favorite);
-                mapMarker.setFocused(true);
-                mapVer4.mapMarkersAdd(mapMarker, false);
 
                 for (int i = 0; i < 100; i++)
                 {

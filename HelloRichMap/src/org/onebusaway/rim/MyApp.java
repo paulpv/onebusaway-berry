@@ -19,7 +19,7 @@ import net.rim.device.api.ui.input.NavigationDeviceSettings;
 import net.rim.device.api.ui.input.TouchscreenSettings;
 
 import org.onebusaway.rim.MyStopMapMarker.StopDirections;
-import org.onebusaway.rim.MyStopMapMarker.StopType;
+import org.onebusaway.rim.MyStopMapMarker.StopTypes;
 
 public class MyApp extends UiApplication
 {
@@ -105,7 +105,7 @@ public class MyApp extends UiApplication
                 id = "-1";
                 coordinates = MAPPOINT_SEATTLE.toCoordinates();
                 name = "Home";
-                type = StopType.BUS;
+                type = StopTypes.BUS;
                 direction = StopDirections.UNKNOWN;
                 favorite = true;
                 mapMarker = new MyStopMapMarker(id, coordinates, name, type, direction, favorite);
@@ -119,10 +119,11 @@ public class MyApp extends UiApplication
                     coordinates.setLatitude(coordinates.getLatitude() + ((random.nextFloat() - random.nextFloat()) / 10));
                     coordinates.setLongitude(coordinates.getLongitude() + ((random.nextFloat() - random.nextFloat()) / 10));
                     name = "#" + id;
-                    direction = random.nextInt(StopType.getMax()) + 1;
+                    type = StopTypes.BUS;
+                    direction = random.nextInt(StopTypes.getMax()) + 1;
                     direction = random.nextInt(StopDirections.getMax()) + 1;
                     favorite = (random.nextInt() % 2 == 0);
-                    
+
                     mapMarker = new MyStopMapMarker(id, coordinates, name, type, direction, favorite);
                     mapVer4.mapMarkersAdd(mapMarker, false);
                 }

@@ -69,6 +69,8 @@ public class MyMapField extends MapField
         int markerX;
         int markerY;
         Bitmap markerBitmap;
+        int markerWidth;
+        int markerHeight;
 
         synchronized (mapMarkers)
         {
@@ -82,16 +84,20 @@ public class MyMapField extends MapField
                 markerX = markerXY.x;
                 markerY = markerXY.y;
 
-                if (markerX >= 0 && markerX <= width && markerY >= 0 && markerY <= height)
-                {
-                    MyApp.log("Drawing " + marker);
+                markerBitmap = marker.getBitmap();
+                markerWidth = markerBitmap.getWidth();
+                markerHeight = markerBitmap.getHeight();
 
-                    markerBitmap = marker.getBitmap();
-                    g.drawBitmap(markerX, markerY, markerBitmap.getWidth(), markerBitmap.getHeight(), markerBitmap, 0, 0);
+                if (markerX + markerWidth < 0 || markerX - markerWidth > width //
+                                || markerY + markerHeight < 0 || markerY - markerHeight > height)
+                {
+                    //MyApp.log("Not drawing " + marker);
                 }
                 else
                 {
-                    MyApp.log("Not drawing " + marker);
+                    //MyApp.log("Drawing " + marker);
+                    marker.drawBitmap(g, markerX, markerY);
+                    //g.drawBitmap(markerX, markerY, markerWidth, markerHeight, markerBitmap, 0, 0);
                 }
             }
         }

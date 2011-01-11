@@ -10,15 +10,17 @@ public class MyMapMarker
     protected final Coordinates coordinates;
     protected final Bitmap      imageUnfocused;
     protected final Bitmap      imageFocused;
+    
     protected boolean           focused;
 
-    public MyMapMarker(String id, Coordinates coordinates)
+    protected MyMapMarker(String id, Coordinates coordinates, String imageUnfocused, String imageFocused)
     {
         this.id = id;
         this.coordinates = coordinates;
-
-        imageUnfocused = Bitmap.getBitmapResource("pin.png");
-        imageFocused = Bitmap.getBitmapResource("pin_focus.png");
+        this.imageUnfocused = Bitmap.getBitmapResource(imageUnfocused);
+        this.imageFocused = Bitmap.getBitmapResource(imageFocused);
+        
+        focused = false;
     }
 
     public String toString()
@@ -36,6 +38,11 @@ public class MyMapMarker
         return coordinates;
     }
 
+    public boolean getFocused()
+    {
+        return focused;
+    }
+    
     public void setFocused(boolean focused)
     {
         this.focused = focused;
@@ -43,6 +50,6 @@ public class MyMapMarker
 
     public Bitmap getBitmap()
     {
-        return (focused) ? imageFocused : imageUnfocused;
+        return (getFocused()) ? imageFocused : imageUnfocused;
     }
 }

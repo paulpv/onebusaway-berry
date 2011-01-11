@@ -18,6 +18,9 @@ import net.rim.device.api.ui.input.InputSettings;
 import net.rim.device.api.ui.input.NavigationDeviceSettings;
 import net.rim.device.api.ui.input.TouchscreenSettings;
 
+import org.onebusaway.rim.MyStopMapMarker.StopDirections;
+import org.onebusaway.rim.MyStopMapMarker.StopType;
+
 public class MyApp extends UiApplication
 {
 
@@ -93,21 +96,34 @@ public class MyApp extends UiApplication
                 Random random = new Random();
 
                 MyMapMarker mapMarker;
-                boolean focused;
+                String id;
+                String name;
+                int type;
+                int direction;
+                boolean favorite;
 
+                id = "-1";
                 coordinates = MAPPOINT_SEATTLE.toCoordinates();
-                mapMarker = new MyMapMarker("-1", coordinates);
+                name = "Home";
+                type = StopType.BUS;
+                direction = StopDirections.UNKNOWN;
+                favorite = true;
+                mapMarker = new MyStopMapMarker(id, coordinates, name, type, direction, favorite);
                 mapMarker.setFocused(true);
                 mapVer4.mapMarkersAdd(mapMarker, false);
 
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 100; i++)
                 {
+                    id = String.valueOf(i);
                     coordinates = MAPPOINT_SEATTLE.toCoordinates();
                     coordinates.setLatitude(coordinates.getLatitude() + ((random.nextFloat() - random.nextFloat()) / 10));
                     coordinates.setLongitude(coordinates.getLongitude() + ((random.nextFloat() - random.nextFloat()) / 10));
-                    mapMarker = new MyMapMarker(String.valueOf(i), coordinates);
-                    focused = (random.nextInt() % 2 == 0);
-                    mapMarker.setFocused(focused);
+                    name = "#" + id;
+                    direction = random.nextInt(StopType.getMax()) + 1;
+                    direction = random.nextInt(StopDirections.getMax()) + 1;
+                    favorite = (random.nextInt() % 2 == 0);
+                    
+                    mapMarker = new MyStopMapMarker(id, coordinates, name, type, direction, favorite);
                     mapVer4.mapMarkersAdd(mapMarker, false);
                 }
                 mapVer4.invalidate();

@@ -2,17 +2,25 @@
 
 package org.onebusaway.rim;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import net.rim.device.api.lbs.MapField;
+import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.TouchEvent;
 import net.rim.device.api.ui.TouchGesture;
+import net.rim.device.api.ui.XYPoint;
 
 public class MyMapField extends MapField
 {
+    protected final Hashtable  mapMarkers               = new Hashtable();
+
+    // Used for outputting debugging geometry during touch events.
+    // The drawn geometry can be a bit buggy, but it meets my current needs. 
     protected static final int TOUCH_INDICATOR_RADIUS   = 10;
     protected static final int TOUCH_INDICATOR_DIAMETER = TOUCH_INDICATOR_RADIUS * 2;
-
     int                        touchX1                  = -1;
     int                        touchX2                  = -1;
     int                        touchY1                  = -1;
@@ -52,12 +60,47 @@ public class MyMapField extends MapField
                 g.drawRect(x, y, width, height);
             }
         }
+
+        int width = getPreferredWidth();
+        int height = getPreferredHeight();
+
+        MyMapMarker marker;
+        XYPoint markerXY;
+        int markerX;
+        int markerY;
+        Bitmap markerBitmap;
+
+        synchronized (mapMarkers)
+        {
+            Enumeration markers = mapMarkers.elements();
+            while (markers.hasMoreElements())
+            {
+                marker = (MyMapMarker) markers.nextElement();
+
+                markerXY = new XYPoint();
+                convertWorldToField(marker.getCoordinates(), markerXY);
+                markerX = markerXY.x;
+                markerY = markerXY.y;
+
+                if (markerX >= 0 && markerX <= width && markerY >= 0 && markerY <= height)
+                {
+                    MyApp.log("Drawing " + marker);
+
+                    markerBitmap = marker.getBitmap();
+                    g.drawBitmap(markerX, markerY, markerBitmap.getWidth(), markerBitmap.getHeight(), markerBitmap, 0, 0);
+                }
+                else
+                {
+                    MyApp.log("Not drawing " + marker);
+                }
+            }
+        }
     }
 
     int pinchBeginX = -1;
     int pinchBeginY = -1;
-    int moveLastX = -1;
-    int moveLastY = -1;
+    int moveLastX   = -1;
+    int moveLastY   = -1;
 
     protected boolean touchEvent(TouchEvent message)
     {
@@ -148,7 +191,7 @@ public class MyMapField extends MapField
                         return true;
                 }
                 break;
-                
+
             case TouchEvent.MOVE:
                 int size = message.getMovePointsSize();
                 MyApp.log("MOVE gesture=" + gesture + ", size=" + size + ", 1=" + x1 + "," + y1 + ", 2=" + x2 + "," + y2);
@@ -171,11 +214,52 @@ public class MyMapField extends MapField
                 }
                 return true;
 
-            //case TouchGesture.DOUBLE_TAP:
+                //case TouchGesture.DOUBLE_TAP:
                 // TODO:(pv) Shift-Double-Tap should zoom out
                 //zoomIn();
                 //return true;
         }
         return super.touchEvent(message);
+    }
+
+    public void invalidate()
+    {
+        super.invalidate();
+    }
+
+    public void mapMarkersAdd(MyMapMarker mapMarker, boolean invalidate)
+    {
+        synchronized (mapMarkers)
+        {
+            mapMarkers.put(mapMarker.getId(), mapMarker);
+        }
+        if (invalidate)
+        {
+            invalidate();
+        }
+    }
+
+    public void mapMarkersRemove(MyMapMarker mapMarker, boolean invalidate)
+    {
+        synchronized (mapMarkers)
+        {
+            mapMarkers.remove(mapMarker.getId());
+        }
+        if (invalidate)
+        {
+            invalidate();
+        }
+    }
+
+    public void mapMarkersClear(boolean invalidate)
+    {
+        synchronized (mapMarkers)
+        {
+            mapMarkers.clear();
+        }
+        if (invalidate)
+        {
+            invalidate();
+        }
     }
 }

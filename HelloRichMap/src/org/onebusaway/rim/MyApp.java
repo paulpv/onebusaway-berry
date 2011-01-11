@@ -2,16 +2,16 @@
 
 package org.onebusaway.rim;
 
+import java.util.Random;
+
+import javax.microedition.location.Coordinates;
+
 import net.rim.device.api.lbs.maps.MapFactory;
 import net.rim.device.api.lbs.maps.model.MapDataModel;
 import net.rim.device.api.lbs.maps.model.MapLocation;
 import net.rim.device.api.lbs.maps.model.MapPoint;
 import net.rim.device.api.lbs.maps.model.Mappable;
 import net.rim.device.api.lbs.maps.ui.RichMapField;
-import net.rim.device.api.ui.Color;
-import net.rim.device.api.ui.Graphics;
-import net.rim.device.api.ui.TouchEvent;
-import net.rim.device.api.ui.TouchGesture;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.container.MainScreen;
 import net.rim.device.api.ui.input.InputSettings;
@@ -64,7 +64,7 @@ public class MyApp extends UiApplication
     {
         public final MapPoint                             MAPPOINT_SEATTLE = new MapPoint(47.6063889, -122.3308333);
 
-        protected net.rim.device.api.lbs.MapField         mapVer4;
+        protected MyMapField                              mapVer4;
         protected net.rim.device.api.lbs.maps.ui.MapField mapVer6;
         protected RichMapField                            mapVer6Rich;
 
@@ -84,26 +84,54 @@ public class MyApp extends UiApplication
 
             if (true)
             {
+                Coordinates coordinates = MAPPOINT_SEATTLE.toCoordinates();
                 mapVer4 = new MyMapField();
-                mapVer4.moveTo(MAPPOINT_SEATTLE.toCoordinates());
+                mapVer4.moveTo(coordinates);
                 mapVer4.setZoom(2);
                 add(mapVer4);
-            }
-            else if (true)
-            {
-                mapVer6 = new net.rim.device.api.lbs.maps.ui.MapField();
-                mapVer6.getAction().setCentreAndZoom(MAPPOINT_SEATTLE, 2);
-                add(mapVer6);
 
-                // addMapVer6Data(mapVer6);
+                Random random = new Random();
+
+                MyMapMarker mapMarker;
+                boolean focused;
+
+                coordinates = MAPPOINT_SEATTLE.toCoordinates();
+                mapMarker = new MyMapMarker("-1", coordinates);
+                mapMarker.setFocused(true);
+                mapVer4.mapMarkersAdd(mapMarker, false);
+
+                for (int i = 0; i < 10; i++)
+                {
+                    coordinates = MAPPOINT_SEATTLE.toCoordinates();
+                    coordinates.setLatitude(coordinates.getLatitude() + ((random.nextFloat() - random.nextFloat()) / 10));
+                    coordinates.setLongitude(coordinates.getLongitude() + ((random.nextFloat() - random.nextFloat()) / 10));
+                    mapMarker = new MyMapMarker(String.valueOf(i), coordinates);
+                    focused = (random.nextInt() % 2 == 0);
+                    mapMarker.setFocused(focused);
+                    mapVer4.mapMarkersAdd(mapMarker, false);
+                }
+                mapVer4.invalidate();
             }
             else
             {
-                mapVer6Rich = MapFactory.getInstance().generateRichMapField();
-                mapVer6Rich.getAction().setCentreAndZoom(MAPPOINT_SEATTLE, 2);
-                add(mapVer6Rich);
+                // Use of either of these two v6.0 fields eventually locks up the app
 
-                // addMapVer6Data(mapVer6Rich.getMapField());
+                if (false)
+                {
+                    mapVer6 = new net.rim.device.api.lbs.maps.ui.MapField();
+                    mapVer6.getAction().setCentreAndZoom(MAPPOINT_SEATTLE, 2);
+                    add(mapVer6);
+
+                    // addMapVer6Data(mapVer6);
+                }
+                else if (false)
+                {
+                    mapVer6Rich = MapFactory.getInstance().generateRichMapField();
+                    mapVer6Rich.getAction().setCentreAndZoom(MAPPOINT_SEATTLE, 2);
+                    add(mapVer6Rich);
+
+                    // addMapVer6Data(mapVer6Rich.getMapField());
+                }
             }
         }
 
@@ -164,6 +192,25 @@ public class MyApp extends UiApplication
             // the screen...
             // map.getMapField().update(true);
             map6.update(true);
+        }
+
+        protected boolean keyDown(int keycode, int time)
+        {
+            log("keyDown(" + keycode + ")");
+
+            switch (keycode)
+            {
+                case 268435456:
+                    // Zoom in
+                    mapVer4.setZoom(Math.max(mapVer4.getZoom() - 1, mapVer4.getMinZoom()));
+                    return true;
+
+                case 268500992:
+                    // Zoom out
+                    mapVer4.setZoom(Math.min(mapVer4.getZoom() + 1, mapVer4.getMaxZoom()));
+                    return true;
+            }
+            return super.keyDown(keycode, time);
         }
     }
 }

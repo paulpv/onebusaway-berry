@@ -18,8 +18,8 @@ import net.rim.device.api.ui.input.InputSettings;
 import net.rim.device.api.ui.input.NavigationDeviceSettings;
 import net.rim.device.api.ui.input.TouchscreenSettings;
 
-import org.onebusaway.rim.MyStopMapMarker.StopDirections;
-import org.onebusaway.rim.MyStopMapMarker.StopTypes;
+import org.onebusaway.rim.ObaMapMarkerStop.StopDirections;
+import org.onebusaway.rim.ObaMapMarkerStop.StopTypes;
 
 public class MyApp extends UiApplication
 {
@@ -67,7 +67,7 @@ public class MyApp extends UiApplication
     {
         public final MapPoint                             MAPPOINT_SEATTLE = new MapPoint(47.6063889, -122.3308333);
 
-        protected MyMapField                              mapVer4;
+        protected ObaMapField                              mapVer4;
         protected net.rim.device.api.lbs.maps.ui.MapField mapVer6;
         protected RichMapField                            mapVer6Rich;
 
@@ -88,7 +88,7 @@ public class MyApp extends UiApplication
             if (true)
             {
                 Coordinates coordinates = MAPPOINT_SEATTLE.toCoordinates();
-                mapVer4 = new MyMapField();
+                mapVer4 = new ObaMapField();
                 mapVer4.moveTo(coordinates);
                 mapVer4.setZoom(2);
                 add(mapVer4);
@@ -96,11 +96,11 @@ public class MyApp extends UiApplication
                 Random random = new Random();
 
                 coordinates = MAPPOINT_SEATTLE.toCoordinates();
-                MyLocationMapMarker markerLocation = new MyLocationMapMarker("-1", coordinates);
+                ObaMapMarkerLocation markerLocation = new ObaMapMarkerLocation("-1", coordinates);
                 mapVer4.mapLocationAdd(markerLocation);
                 mapVer4.setGpsLocked(true);
 
-                MyMapMarker mapMarker;
+                ObaMapMarker mapMarker;
                 String id;
                 String name;
                 int type;
@@ -119,7 +119,7 @@ public class MyApp extends UiApplication
                     direction = random.nextInt(StopDirections.getMax()) + 1;
                     favorite = (random.nextInt() % 2 == 0);
 
-                    mapMarker = new MyStopMapMarker(id, coordinates, name, type, direction, favorite);
+                    mapMarker = new ObaMapMarkerStop(id, coordinates, name, type, direction, favorite);
                     mapVer4.mapMarkersAdd(mapMarker, false);
                 }
                 mapVer4.invalidate();

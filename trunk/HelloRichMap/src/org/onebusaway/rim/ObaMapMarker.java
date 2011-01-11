@@ -8,9 +8,9 @@ import javax.microedition.location.Coordinates;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Graphics;
 
-public class MyMapMarker
+public class ObaMapMarker
 {
-    protected MyMapField        parent         = null;
+    protected ObaMapField        parent         = null;
     protected final String      id;
     protected final Coordinates coordinates;
     protected final Bitmap      imageMain;
@@ -20,12 +20,12 @@ public class MyMapMarker
 
     protected boolean           useImageAlt;
 
-    protected MyMapMarker(String id, Coordinates coordinates, String imageMain)
+    protected ObaMapMarker(String id, Coordinates coordinates, String imageMain)
     {
         this(id, coordinates, imageMain, null);
     }
 
-    protected MyMapMarker(String id, Coordinates coordinates, String imageMain, String imageAlt)
+    protected ObaMapMarker(String id, Coordinates coordinates, String imageMain, String imageAlt)
     {
         this.id = id;
         this.coordinates = coordinates;
@@ -70,7 +70,7 @@ public class MyMapMarker
         this.useImageAlt = useImageAlt;
     }
 
-    public void setParent(MyMapField parent)
+    public void setParent(ObaMapField parent)
     {
         this.parent = parent;
     }

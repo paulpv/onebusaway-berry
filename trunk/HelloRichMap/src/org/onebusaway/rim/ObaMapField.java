@@ -13,10 +13,10 @@ import net.rim.device.api.ui.TouchEvent;
 import net.rim.device.api.ui.TouchGesture;
 import net.rim.device.api.ui.XYPoint;
 
-public class MyMapField extends MapField
+public class ObaMapField extends MapField
 {
     protected final Hashtable     markersStops             = new Hashtable();
-    protected MyLocationMapMarker markerLocation           = null;
+    protected ObaMapMarkerLocation markerLocation           = null;
 
     // Used for outputting debugging geometry during touch events.
     // The drawn geometry can be a bit buggy, but it meets my current needs. 
@@ -65,7 +65,7 @@ public class MyMapField extends MapField
         int width = getPreferredWidth();
         int height = getPreferredHeight();
 
-        MyMapMarker marker;
+        ObaMapMarker marker;
         XYPoint markerXY;
         int markerX;
         int markerY;
@@ -78,7 +78,7 @@ public class MyMapField extends MapField
             Enumeration markers = markersStops.elements();
             while (markers.hasMoreElements())
             {
-                marker = (MyMapMarker) markers.nextElement();
+                marker = (ObaMapMarker) markers.nextElement();
 
                 markerXY = new XYPoint();
                 convertWorldToField(marker.getCoordinates(), markerXY);
@@ -234,7 +234,7 @@ public class MyMapField extends MapField
         super.invalidate();
     }
 
-    public void mapMarkersAdd(MyMapMarker mapMarker, boolean invalidate)
+    public void mapMarkersAdd(ObaMapMarker mapMarker, boolean invalidate)
     {
         synchronized (markersStops)
         {
@@ -251,7 +251,7 @@ public class MyMapField extends MapField
     {
         synchronized (markersStops)
         {
-            MyMapMarker mapMarker = (MyMapMarker) markersStops.remove(id);
+            ObaMapMarker mapMarker = (ObaMapMarker) markersStops.remove(id);
             mapMarker.setParent(null);
             if (invalidate)
             {
@@ -260,7 +260,7 @@ public class MyMapField extends MapField
         }
     }
 
-    public void mapLocationAdd(MyLocationMapMarker markerLocation)
+    public void mapLocationAdd(ObaMapMarkerLocation markerLocation)
     {
         this.markerLocation = markerLocation;
         //markerLocation.invalidate();

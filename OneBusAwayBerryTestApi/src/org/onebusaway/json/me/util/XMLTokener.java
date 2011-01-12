@@ -1,8 +1,8 @@
-package org.json.me.util;
+package org.onebusaway.json.me.util;
 
-import org.json.me.JSONException;
-import org.json.me.JSONObject;
-import org.json.me.JSONTokener;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
+import org.onebusaway.json.me.JSONTokener;
 
 /*
 Copyright (c) 2002 JSON.org

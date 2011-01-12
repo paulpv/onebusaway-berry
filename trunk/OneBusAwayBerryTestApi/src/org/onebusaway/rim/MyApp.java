@@ -30,9 +30,9 @@ public class MyApp extends UiApplication
 
         public MyMainScreen()
         {
-            super(NO_HORIZONTAL_SCROLL | NO_VERTICAL_SCROLL);
+            //super(NO_HORIZONTAL_SCROLL | NO_VERTICAL_SCROLL);
 
-            rtf = new RichTextField();
+            rtf = new RichTextField(USE_ALL_HEIGHT | USE_ALL_WIDTH);
             add(rtf);
         }
     }

@@ -1,4 +1,4 @@
-package org.json.me;
+package org.onebusaway.json.me;
 
 /*
 Copyright (c) 2006 JSON.org

@@ -33,6 +33,7 @@ public class MyApp extends UiApplication
             //super(NO_HORIZONTAL_SCROLL | NO_VERTICAL_SCROLL);
 
             rtf = new RichTextField(USE_ALL_HEIGHT | USE_ALL_WIDTH);
+            rtf.setText("Testing, testing, 1, 2, 3...");
             add(rtf);
         }
     }

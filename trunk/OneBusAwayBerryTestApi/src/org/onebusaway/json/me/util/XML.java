@@ -1,9 +1,10 @@
-package org.json.me.util;
+package org.onebusaway.json.me.util;
 
 import java.util.Enumeration;
-import org.json.me.JSONArray;
-import org.json.me.JSONException;
-import org.json.me.JSONObject;
+
+import org.onebusaway.json.me.JSONArray;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /*
 Copyright (c) 2002 JSON.org

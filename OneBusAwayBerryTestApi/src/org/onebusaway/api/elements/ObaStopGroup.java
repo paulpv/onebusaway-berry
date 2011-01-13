@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.elements;
-
-import com.joulespersecond.oba.ObaApi;
+package org.onebusaway.api.elements;
 
 public final class ObaStopGroup {
     public static final ObaStopGroup EMPTY_OBJECT = new ObaStopGroup();

@@ -15,6 +15,8 @@
  */
 package org.onebusaway.api.request;
 
+import java.util.Vector;
+
 import net.rim.device.api.collection.List;
 
 import org.onebusaway.api.JSONReceivable;
@@ -39,7 +41,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
         return getRefs().getStop(id);
     }
 
-    public List getStops(String[] ids) {
+    public Vector getStops(String[] ids) {
         return getRefs().getStops(ids);
     }
 
@@ -47,7 +49,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
         return getRefs().getRoute(id);
     }
 
-    public List getRoutes(String[] ids) {
+    public Vector getRoutes(String[] ids) {
         return getRefs().getRoutes(ids);
     }
 
@@ -55,7 +57,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
         return getRefs().getTrip(id);
     }
 
-    public List getTrips(String[] ids) {
+    public Vector getTrips(String[] ids) {
         return getRefs().getTrips(ids);
     }
 
@@ -63,7 +65,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
         return getRefs().getAgency(id);
     }
 
-    public List getAgencies(String[] ids) {
+    public Vector getAgencies(String[] ids) {
         return getRefs().getAgencies(ids);
     }
 
@@ -71,7 +73,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
         return getRefs().getSituation(id);
     }
 
-    public List getSituations(String[] ids) {
+    public Vector getSituations(String[] ids) {
         return getRefs().getSituations(ids);
     }
 

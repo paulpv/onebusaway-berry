@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.elements;
+package org.onebusaway.api.elements;
+
+import java.util.Vector;
 
 import net.rim.device.api.collection.List;
 import net.rim.device.api.util.Arrays;
 
-import com.joulespersecond.oba.TextUtils;
+import org.onebusaway.api.TextUtils;
+
 
 public final class ObaSituationElement implements ObaSituation {
     public static final ObaSituationElement EMPTY_OBJECT = new ObaSituationElement();
@@ -51,12 +54,12 @@ public final class ObaSituationElement implements ObaSituation {
             return stopId;
         }
 
-        public static List toList(StopId[] ids) {
-            ArrayList result = new ArrayList(ids.length);
+        public static Vector toList(StopId[] ids) {
+            Vector result = new Vector(ids.length);
             StopId id;
             for (int i=0; i < ids.length; i++) {
                 id = ids[i];
-                result.add(id.getId());
+                result.addElement(id.getId());
             }
             return result;
         }
@@ -83,7 +86,7 @@ public final class ObaSituationElement implements ObaSituation {
             return lineId;
         }
 
-        public List getStopIds() {
+        public Vector getStopIds() {
             return StopId.toList(calls);
         }
     }
@@ -99,7 +102,7 @@ public final class ObaSituationElement implements ObaSituation {
             vehicleJourneys = VehicleJourneyElement.EMPTY_ARRAY;
         }
 
-        public List getStopIds() {
+        public Vector getStopIds() {
             return StopId.toList(stops);
         }
 
@@ -123,8 +126,13 @@ public final class ObaSituationElement implements ObaSituation {
             return diversionPath;
         }
 
-        public List getDiversionStopIds() {
-            return Arrays.asList(diversionStopIds);
+        public Vector getDiversionStopIds() {
+            Vector diversionStopIds = new Vector(this.diversionStopIds.length);
+            for(int i=0; i < this.diversionStopIds.length; i++)
+            {
+                diversionStopIds.addElement(diversionStopIds.elementAt(i));
+            }
+            return diversionStopIds;
         }
 
     }
@@ -197,13 +205,13 @@ public final class ObaSituationElement implements ObaSituation {
     }
 
     public String getReason() {
-        if (!TextUtils.isEmpty(equipmentReason)) {
+        if (!TextUtils.isNullOrEmpty(equipmentReason)) {
             return equipmentReason;
-        } else if (!TextUtils.isEmpty(environmentReason)) {
+        } else if (!TextUtils.isNullOrEmpty(environmentReason)) {
             return environmentReason;
-        } else if (!TextUtils.isEmpty(personnelReason)) {
+        } else if (!TextUtils.isNullOrEmpty(personnelReason)) {
             return personnelReason;
-        } else if (!TextUtils.isEmpty(miscellaneousReason)) {
+        } else if (!TextUtils.isNullOrEmpty(miscellaneousReason)) {
             return miscellaneousReason;
         } else {
             return undefinedReason;
@@ -211,13 +219,13 @@ public final class ObaSituationElement implements ObaSituation {
     }
 
     public String getReasonType() {
-        if (!TextUtils.isEmpty(equipmentReason)) {
+        if (!TextUtils.isNullOrEmpty(equipmentReason)) {
             return ObaSituation.REASON_TYPE_EQUIPMENT;
-        } else if (!TextUtils.isEmpty(environmentReason)) {
+        } else if (!TextUtils.isNullOrEmpty(environmentReason)) {
             return ObaSituation.REASON_TYPE_ENVIRONMENT;
-        } else if (!TextUtils.isEmpty(personnelReason)) {
+        } else if (!TextUtils.isNullOrEmpty(personnelReason)) {
             return ObaSituation.REASON_TYPE_PERSONNEL;
-        } else if (!TextUtils.isEmpty(miscellaneousReason)) {
+        } else if (!TextUtils.isNullOrEmpty(miscellaneousReason)) {
             return ObaSituation.REASON_TYPE_MISCELLANEOUS;
         } else {
             return ObaSituation.REASON_TYPE_UNDEFINED;

@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.elements;
+package org.onebusaway.api.elements;
+
+import java.util.Vector;
 
 import net.rim.device.api.collection.List;
+import net.rim.device.api.collection.ReadableList;
+import net.rim.device.api.collection.util.SparseList;
+import net.rim.device.api.collection.util.UnsortedReadableList;
 
 public final class ObaReferencesElement implements ObaReferences {
     public static final ObaReferencesElement EMPTY_OBJECT = new ObaReferencesElement();
@@ -38,40 +43,65 @@ public final class ObaReferencesElement implements ObaReferences {
         return (ObaStop) findById(stops, id);
     }
 
-    public List getStops(String[] ids) {
-        return findList(stops, ids);
+    //public ObaStop[] getStops(String[] ids)
+    public Vector getStops(String[] ids)
+    {
+        Vector results = findList(stops, ids);
+        //ObaStop[] stops = new ObaStop[results.size()];
+        //results.copyInto(stops);
+        return results;//stops;
     }
 
     public ObaRoute getRoute(String id) {
         return (ObaRoute) findById(routes, id);
     }
 
-    public List getRoutes(String[] ids) {
-        return findList(routes, ids);
+    //public ObaRoute[] getRoutes(String[] ids)
+    public Vector getRoutes(String[] ids)
+    {
+        Vector results = findList(routes, ids);
+        //ObaRoute[] routes = new ObaRoute[results.size()];
+        //results.copyInto(routes);
+        return results;//routes;
     }
 
     public ObaTrip getTrip(String id) {
         return (ObaTrip) findById(trips, id);
     }
 
-    public List getTrips(String[] ids) {
-        return findList(trips, ids);
+    //public ObaTrip[] getTrips(String[] ids)
+    public Vector getTrips(String[] ids)
+    {
+        Vector results = findList(trips, ids);
+        //ObaTrip[] trips = new ObaTrip[results.size()];
+        //results.copyInto(trips);
+        return results;//trips;
     }
 
     public ObaAgency getAgency(String id) {
         return (ObaAgency) findById(agencies, id);
     }
 
-    public List getAgencies(String[] ids) {
-        return findList(agencies, ids);
+    //public ObaAgency[] getAgencies(String[] ids)
+    public Vector getAgencies(String[] ids)
+    {
+        Vector results = findList(agencies, ids);
+        //ObaAgency[] agencies = new ObaAgency[results.size()];
+        //results.copyInto(agencies);
+        return results;//agencies;
     }
 
     public ObaSituation getSituation(String id) {
         return (ObaSituation) findById(situations, id);
     }
 
-    public List getSituations(String[] ids) {
-        return findList(situations, ids);
+    //public ObaSituation[] getSituations(String[] ids)
+    public Vector getSituations(String[] ids)
+    {
+        Vector results = findList(situations, ids);
+        //ObaSituation[] situations = new ObaSituation[results.size()];
+        //results.copyInto(situations);
+        return results;//situations;
     }
 
     //
@@ -88,16 +118,16 @@ public final class ObaReferencesElement implements ObaReferences {
         return null;
     }
     
-    private static List findList(ObaElement[] objects, String[] ids) {
-        ArrayList<E> result = new ArrayList<E>();
+    private static Vector findList(ObaElement[] objects, String[] ids) {
+        Vector results = new Vector();
         final int len = ids.length;
         for (int i=0; i < len; ++i) {
             final String id = ids[i];
             final ObaElement obj = findById(objects, id);
             if (obj != null) {
-                result.add(obj);
+                results.addElement(obj);
             }
         }
-        return result;
+        return results;
     }
 }

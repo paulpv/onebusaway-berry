@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.elements;
+package org.onebusaway.api.elements;
 
-import com.joulespersecond.oba.ObaInteger;
+import org.onebusaway.api.ObaInteger;
+
 
 public final class ObaTripElement implements ObaTrip {
     public static final ObaTripElement EMPTY_OBJECT = new ObaTripElement();

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.elements;
+package org.onebusaway.api.elements;
 
 import net.rim.device.api.ui.Color;
 
-import com.joulespersecond.oba.ObaInteger;
+import org.onebusaway.api.ObaInteger;
+
 
 /**
  * Object defining a Route element.

@@ -20,7 +20,7 @@ import org.onebusaway.net.Uri;
 
 public class ObaApi
 {
-    //private static final String TAG = "ObaApi";
+    private static final String TAG = "ObaApi";
     
     // Uninstantiatable
     private ObaApi() { }

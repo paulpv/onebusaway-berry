@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.elements;
+package org.onebusaway.api.elements;
+
+import org.onebusaway.api.JSONReceivable;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * Object that defines an Agency element
@@ -21,19 +25,25 @@ package com.joulespersecond.oba.elements;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaAgencyElement implements ObaAgency {
+public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
+    
     public static final ObaAgencyElement EMPTY_OBJECT = new ObaAgencyElement();
     public static final ObaAgencyElement[] EMPTY_ARRAY = new ObaAgencyElement[] {};
 
-    private final String id;
-    private final String name;
-    private final String url;
-    private final String timezone;
-    private final String lang;
-    private final String phone;
-    private final String disclaimer;
+    private String id;
+    private String name;
+    private String url;
+    private String timezone;
+    private String lang;
+    private String phone;
+    private String disclaimer;
 
     public ObaAgencyElement() {
+        reset();
+    }
+
+    public void reset()
+    {
         id = "";
         name = "";
         url = "";
@@ -41,6 +51,25 @@ public final class ObaAgencyElement implements ObaAgency {
         lang = "";
         phone = "";
         disclaimer = "";
+    }
+
+    public void fromJSON(JSONObject json) throws JSONException
+    {
+        try
+        {
+            id = json.getString("id");
+            name = json.getString("name");
+            url = json.getString("url");
+            timezone = json.getString("timezone");
+            lang = json.getString("lang");
+            phone = json.getString("phone");
+            disclaimer = json.getString("disclaimer");
+        }
+        catch (JSONException ex)
+        {
+            reset();
+            throw ex;
+        }
     }
 
     public String getId() {

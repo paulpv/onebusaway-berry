@@ -24,6 +24,8 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 import javax.microedition.io.HttpsConnection;
 
+import net.rim.device.api.compress.GZIPInputStream;
+
 import org.onebusaway.net.Uri;
 import org.onebusaway.rim.MyApp;
 
@@ -38,7 +40,6 @@ public final class ObaHelp
 
     public static String getUri(Uri uri) throws IOException
     {
-
         // TODO:(pv) Be a little more robust:
         // http://vasudevkamath.blogspot.com/2009/09/posting-data-via-http-from-blackberry.html
 
@@ -59,56 +60,53 @@ public final class ObaHelp
             conn = (HttpConnection) Connector.open(url);
         }
 
-        //conn.setReadTimeout(30*1000);
-        
-        // TODO:(pv) Support gzip encoding on BB...
-        boolean useGzip = false;
-        //conn.setRequestProperty("Accept-Encoding", "gzip");
-
         //
-        // Per:
+        // Below ideas per the original Android code and...
         // http://www.blackberryforums.com/developer-forum/181071-http-post-passing-parameters-urls.html#post1320379
         //
+
+        //conn.setReadTimeout(30*1000);
+
+        // Request support for gzip compression
+        conn.setRequestProperty("Accept-Encoding", "gzip");
+
+        // Make the request and get the response error code
         int responseCode = conn.getResponseCode();
+               
         String responseMessage = conn.getResponseMessage();
         String contentType = conn.getType();
         String contentEncoding = conn.getHeaderField("Content-Encoding");
         int contentLength = (int) conn.getLength();
         InputStream in = conn.openInputStream();
         
-        if (!TextUtils.isNullOrEmpty(contentEncoding))
-        {
-            useGzip = contentEncoding.equalsIgnoreCase("gzip");
-        }
-
-        /*
+        boolean useGzip = contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip");
+        
         Reader reader;
-        if (useGzip) {
-            reader = new BufferedReader(
-                    new InputStreamReader(new GZIPInputStream(in)), 8*1024);
+        if (useGzip)
+        {
+            reader = new InputStreamReader(new GZIPInputStream(in));
         }
-        else {
-            reader = new BufferedReader(
-                    new InputStreamReader(in), 8*1024);
+        else
+        {
+            reader = new InputStreamReader(in);
         }
-        */
-
+        
         String content;
 
         if (contentLength > 0)
         {
-            byte[] buf = new byte[contentLength];
-            in.read(buf);
+            char[] buf = new char[contentLength];
+            reader.read(buf);
             content = new String(buf);
         }
         else
         {
             StringBuffer sb = new StringBuffer();
-            byte[] buf = new byte[1024];
+            char[] buf = new char[1024];
             int n = 0;
-            while ((n = in.read(buf)) > 0)
+            while ((n = reader.read(buf)) > 0)
             {
-                sb.append(new String(buf, 0, n));
+                sb.append(buf, 0, n);
             }
             content = sb.toString();
         }
@@ -117,6 +115,5 @@ public final class ObaHelp
         conn.close();
 
         return content;
-
     }
 }

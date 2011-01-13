@@ -17,6 +17,7 @@ package org.onebusaway.api.request;
 
 import net.rim.device.api.collection.List;
 
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.elements.ObaAgency;
 import org.onebusaway.api.elements.ObaReferences;
 import org.onebusaway.api.elements.ObaRoute;
@@ -24,13 +25,14 @@ import org.onebusaway.api.elements.ObaSituation;
 import org.onebusaway.api.elements.ObaStop;
 import org.onebusaway.api.elements.ObaTrip;
 import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 public abstract class ObaResponseWithRefs extends ObaResponse implements ObaReferences {
 
-    public ObaResponseWithRefs(String jsonString, Class clsData) throws JSONException, InstantiationException,
+    public ObaResponseWithRefs(JSONObject json, JSONReceivable data) throws JSONException, InstantiationException,
                     IllegalAccessException
     {
-        super(jsonString, clsData);
+        super(json, data);
     }
 
     public ObaStop getStop(String id) {

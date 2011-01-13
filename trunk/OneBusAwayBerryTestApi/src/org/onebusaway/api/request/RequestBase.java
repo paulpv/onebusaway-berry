@@ -16,29 +16,52 @@
 package org.onebusaway.api.request;
 
 import java.io.IOException;
-import java.io.Reader;
 
 import net.rim.device.api.io.FileNotFoundException;
 
 import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaApi;
 import org.onebusaway.api.ObaHelp;
+import org.onebusaway.api.TextUtils;
 import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 import org.onebusaway.net.Uri;
 import org.onebusaway.rim.settings.ObaSettings;
 
 /**
  * The base class for Oba requests.
- * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
+ * @author Paul Peavyhouse (pv@swooby.com) JME
  */
 public class RequestBase
 {
+    private static final String   API_KEY     = "v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc=cGF1bGN3YXR0c0BnbWFpbC5jb20=";
+    private static final String   API_VERSION = "2";
+    protected static final String BASE_PATH   = "/api/where";
 
-    protected final Uri mUri;
+    protected final Class         clsData;
+    protected final Uri           uri;
 
-    protected RequestBase(Uri uri)
+    public static boolean isDataClassJsonReceivable(Class clsData)
     {
-        mUri = uri;
+        return (clsData != null && clsData.getClass().isInstance(JSONReceivable.class));
+    }
+
+    protected RequestBase(Class clsData, Uri uri)
+    {
+        if (!isDataClassJsonReceivable(clsData))
+        {
+            throw new IllegalArgumentException("clsData must implement JSONReceivable");
+        }
+
+        this.clsData = clsData;
+        this.uri = uri;
+    }
+
+    public String toString()
+    {
+        return TextUtils.getShortClassName(this) + " { clsData=" + TextUtils.getShortClassName(clsData) + ", uri=\"" + uri
+                        + "\" }";
     }
 
     private static String getServer()
@@ -48,30 +71,25 @@ public class RequestBase
 
     public static class BuilderBase
     {
-
-        private static final String   API_KEY   = "v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc=cGF1bGN3YXR0c0BnbWFpbC5jb20=";
-        protected static final String BASE_PATH = "/api/where";
-
-        protected final Uri.Builder   mBuilder;
-        private String                mApiKey   = API_KEY;
+        protected final Uri.Builder builder;
+        private String              apiKey = API_KEY;
 
         protected BuilderBase(String path)
         {
-            mBuilder = new Uri.Builder();
-            mBuilder.scheme("http");
-            mBuilder.authority(getServer());
-            mBuilder.path(path);
-            mBuilder.appendQueryParameter("version", "2");
-            ObaApi.setAppInfo(mBuilder);
+            this(path, false);
         }
 
         protected BuilderBase(String path, boolean noVersion)
         {
-            mBuilder = new Uri.Builder();
-            mBuilder.scheme("http");
-            mBuilder.authority(getServer());
-            mBuilder.path(path);
-            ObaApi.setAppInfo(mBuilder);
+            builder = new Uri.Builder();
+            builder.scheme("http");
+            builder.authority(getServer());
+            builder.path(path);
+            if (!noVersion)
+            {
+                builder.appendQueryParameter("version", API_VERSION);
+            }
+            ObaApi.setAppInfo(builder);
         }
 
         protected static String getPathWithId(String pathElement, String id)
@@ -85,8 +103,8 @@ public class RequestBase
 
         protected Uri buildUri()
         {
-            mBuilder.appendQueryParameter("key", mApiKey);
-            return mBuilder.build();
+            builder.appendQueryParameter("key", apiKey);
+            return builder.build();
         }
 
         /**
@@ -99,7 +117,7 @@ public class RequestBase
          */
         public void setServer(String server)
         {
-            mBuilder.authority(server);
+            builder.authority(server);
         }
 
         /**
@@ -110,65 +128,65 @@ public class RequestBase
          */
         public void setApiKey(String key)
         {
-            mApiKey = key;
+            apiKey = key;
         }
     }
 
-    private ObaResponse createFromError(Class cls, int code, Throwable err)
+    private ObaResponse createResponseWithDataFromJson(String jsonString) throws JSONException, InstantiationException,
+                    IllegalAccessException
     {
-        if (cls == null || cls.isInstance(ObaResponse.class))
-        {
-            // TODO:(pv) Should this instead return an error object below?
-            throw new IllegalArgumentException();
-        }
-
-        // This is not very efficient, but it's an error case and it's easier
-        // than instantiating one ourselves.
-        //final String jsonErr =  ObaApi.getGson().toJson(error);
-        //final String json = String.format("{code: %d,version:\"2\",text:%s}", code, jsonErr);
-
-        // Hopefully this never returns null.
-        return null;//ObaApi.getGson().fromJson(json, cls);
+        JSONObject json = new JSONObject(jsonString);
+        JSONReceivable obaResponse = (JSONReceivable) clsData.newInstance();
+        return new ObaResponse(json, obaResponse);
     }
 
-    protected ObaResponse call(Class clsData)
+    private ObaResponse createResponseWithNoDataDueToError(int code, Throwable err)
     {
-        if (clsData == null || clsData.isInstance(JSONReceivable.class))
-        {
-            // TODO:(pv) Should this instead return an error object below?
-            throw new IllegalArgumentException();
-        }
-
         try
         {
-            String response = ObaHelp.getUri(mUri);
-
-            // Example response for ObaCurrentTimeRequest
-            // {"text":"OK","data":{"time":1294877371929,"readableTime":"2011-01-12T16:09:31-08:00"},"code":200,"version":1}
-
-            ObaResponse obaResponse = new ObaResponse(response, clsData);
-            return obaResponse;
-
-        }
-        catch (FileNotFoundException e)
-        {
-            return createFromError(clsData, ObaApi.OBA_NOT_FOUND, e);
-        }
-        catch (IOException e)
-        {
-            return createFromError(clsData, ObaApi.OBA_IO_EXCEPTION, e);
+            final String failSafeString = "{code:" + code + ",version:\"2\",text:\"" + err.toString() + "\"}";
+            JSONObject json = new JSONObject(failSafeString);
+            return new ObaResponse(json, null);
         }
         catch (JSONException e)
         {
-            return createFromError(clsData, ObaApi.OBA_INTERNAL_ERROR, e);
+            e.printStackTrace();
+
+            // Hopefully this never returns null.
+            return null;
+        }
+    }
+
+    public ObaResponse call()
+    {
+        try
+        {
+            String response = ObaHelp.getUri(uri);
+
+            // Example responses:
+            // ObaCurrentTimeRequest {"text":"OK","data":{"time":1294877371929,"readableTime":"2011-01-12T16:09:31-08:00"},"code":200,"version":1}
+
+            return createResponseWithDataFromJson(response);
+        }
+        catch (FileNotFoundException e)
+        {
+            return createResponseWithNoDataDueToError(ObaApi.OBA_NOT_FOUND, e);
+        }
+        catch (IOException e)
+        {
+            return createResponseWithNoDataDueToError(ObaApi.OBA_IO_EXCEPTION, e);
+        }
+        catch (JSONException e)
+        {
+            return createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
         catch (InstantiationException e)
         {
-            return createFromError(clsData, ObaApi.OBA_INTERNAL_ERROR, e);
+            return createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
         catch (IllegalAccessException e)
         {
-            return createFromError(clsData, ObaApi.OBA_INTERNAL_ERROR, e);
+            return createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
     }
 }

@@ -22,8 +22,8 @@ import org.onebusaway.json.me.JSONObject;
 
 /**
  * Base class for response objects.
- * @author Paul Watts (paulcwatts@gmail.com)
- * @author Paul Peavyhouse (pv@swooby.com)
+ * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
+ * @author Paul Peavyhouse (pv@swooby.com) JME
  */
 public class ObaResponse
 {
@@ -32,36 +32,24 @@ public class ObaResponse
     private String         text;
     private JSONReceivable data;
 
-    public ObaResponse(String jsonString, Class clsData) throws JSONException, InstantiationException, IllegalAccessException
+    public ObaResponse(JSONObject json, JSONReceivable data) throws JSONException
     {
         try
         {
-            JSONObject json = new JSONObject(jsonString);
-            version = json.getString("version");
-            code = json.getInt("code");
-            text = json.getString("text");
-            if (clsData != null && clsData.isInstance(JSONReceivable.class))
+            this.version = json.getString("version");
+            this.code = json.getInt("code");
+            this.text = json.getString("text");
+            this.data = data;
+            if (data != null)
             {
-                String jsonData = json.getString("data");
-                data = (JSONReceivable) clsData.newInstance();
-                data.fromJSON(jsonData);
-            }
-            else
-            {
-                data = null;
+                JSONObject jsonData = json.getJSONObject("data");
+                if (jsonData != null)
+                {
+                    this.data.fromJSON(jsonData);
+                }
             }
         }
         catch (JSONException e)
-        {
-            reset();
-            throw e;
-        }
-        catch (InstantiationException e)
-        {
-            reset();
-            throw e;
-        }
-        catch (IllegalAccessException e)
         {
             reset();
             throw e;

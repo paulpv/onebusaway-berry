@@ -16,6 +16,7 @@
 package org.onebusaway.api.elements;
 
 import org.onebusaway.api.GeoPoint;
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaApi;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
@@ -27,7 +28,7 @@ import org.onebusaway.json.me.JSONObject;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopElement implements ObaStop
+public final class ObaStopElement implements ObaStop, JSONReceivable
 {
     public static final ObaStopElement   EMPTY_OBJECT = new ObaStopElement();
     public static final ObaStopElement[] EMPTY_ARRAY  = new ObaStopElement[] {};
@@ -59,15 +60,13 @@ public final class ObaStopElement implements ObaStop
         routeIds = EMPTY_ROUTES;
     }
     
-    public void fromJSON(String jsonString) throws JSONException
+    public void fromJSON(JSONObject json) throws JSONException
     {
-        // TODO:(pv) super.fromJSON
         try
         {
-            JSONObject json = new JSONObject(jsonString);
             id = json.getString("id");
-            //lat = json.getDouble("lat");
-            //lon = json.getDouble("lon"));
+            lat = json.getDouble("lat");
+            lon = json.getDouble("lon");
             direction = json.getString("direction");
             locationType = json.getInt("locationType");
             name = json.getString("name");
@@ -93,6 +92,7 @@ public final class ObaStopElement implements ObaStop
         }
     }
 
+    /*
     public String toJSON() throws JSONException
     {
         // TODO:(pv) super.toJSON
@@ -100,8 +100,8 @@ public final class ObaStopElement implements ObaStop
         {
             JSONObject inner = new JSONObject();
             inner.put("id", id);
-            //inner.getDouble("lat", lat);
-            //inner.getDouble("lon", lon);
+            inner.getDouble("lat", lat);
+            inner.getDouble("lon", lon);
             inner.put("direction", direction);
             inner.put("locationType", locationType);
             inner.put("name", name);
@@ -122,6 +122,7 @@ public final class ObaStopElement implements ObaStop
             throw ex;
         }
     }
+    */
 
     public String getId()
     {

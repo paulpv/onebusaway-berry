@@ -1,7 +1,8 @@
 /*
- * Copied from android/net/Uri.java and converted to JME
+ * NOTE:(pv) Copied from android/net/Uri.java and converted to JME.
+ * I commented out anything Android specific and removed all templates/generics.
+ * A lot of this file seems unnecessary for this app and could probably be removed.
  */
-// TODO:(pv) After this is working, remove all unused/unreferenced code
 /*
  * Copyright (C) 2007 The Android Open Source Project
  *

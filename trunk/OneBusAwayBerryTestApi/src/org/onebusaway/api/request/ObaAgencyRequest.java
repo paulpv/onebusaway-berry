@@ -13,30 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request;
+package org.onebusaway.api.request;
 
-import android.content.Context;
-import android.net.Uri;
-
-import java.util.concurrent.Callable;
+import org.onebusaway.api.ObaCallable;
+import org.onebusaway.net.Uri;
 
 /**
  * Retrieve info for a specific transit agency
  * {@link http://code.google.com/p/onebusaway/wiki/OneBusAwayRestApi_Agency}
  *
- * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
+ * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public final class ObaAgencyRequest extends RequestBase implements Callable<ObaAgencyResponse> {
-    protected ObaAgencyRequest(Uri uri) {
-        super(uri);
+public final class ObaAgencyRequest extends RequestBase implements ObaCallable
+{
+    protected ObaAgencyRequest(Uri uri)
+    {
+        super(ObaAgencyResponse.class, uri);
     }
 
-    public static class Builder extends RequestBase.BuilderBase {
-        public Builder(Context context, String agencyId) {
-            super(context, getPathWithId("/agency/", agencyId));
+    public static class Builder extends RequestBase.BuilderBase
+    {
+        public Builder(String agencyId)
+        {
+            super(getPathWithId("/agency/", agencyId));
         }
 
-        public ObaAgencyRequest build() {
+        public ObaAgencyRequest build()
+        {
             return new ObaAgencyRequest(buildUri());
         }
     }
@@ -47,18 +51,8 @@ public final class ObaAgencyRequest extends RequestBase implements Callable<ObaA
      * @param routeId The agency Id to request.
      * @return The new request instance.
      */
-    public static ObaAgencyRequest newRequest(Context context, String agency) {
-        return new Builder(context, agency).build();
-    }
-
-    @Override
-    public ObaAgencyResponse call() {
-        return call(ObaAgencyResponse.class);
-    }
-
-
-    @Override
-    public String toString() {
-        return "ObaAgencyRequest [mUri=" + mUri + "]";
+    public static ObaAgencyRequest newRequest(String agencyId)
+    {
+        return new Builder(agencyId).build();
     }
 }

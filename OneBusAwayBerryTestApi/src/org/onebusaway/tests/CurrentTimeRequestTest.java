@@ -10,7 +10,7 @@ public class CurrentTimeRequestTest// extends ObaTestCase
 {
     public void testCurrentTime()
     {
-        ObaCurrentTimeRequest.Builder builder = new ObaCurrentTimeRequest.Builder();//getContext());
+        ObaCurrentTimeRequest.Builder builder = new ObaCurrentTimeRequest.Builder();
         ObaCurrentTimeRequest request = builder.build();
         ObaResponse response = request.call();
         //assertOK(response);
@@ -24,8 +24,15 @@ public class CurrentTimeRequestTest// extends ObaTestCase
 
     public void testNewRequest()
     {
-        // This is just to make sure we copy and call newRequest() at least once
-        ObaCurrentTimeRequest request = ObaCurrentTimeRequest.newRequest();//getContext());
+        ObaCurrentTimeRequest request = ObaCurrentTimeRequest.newRequest();
         //assertNotNull(request);
+        ObaResponse response = request.call();
+        //assertOK(response);
+        ObaCurrentTimeResponse currentTime = (ObaCurrentTimeResponse) response.getData();
+        //assertOK(currentTime);
+        final long time = currentTime.getTime();
+        //assertTrue(time > 0);
+        final String readableTime = currentTime.getReadableTime();
+        //assertNotNull(readableTime);
     }
 }

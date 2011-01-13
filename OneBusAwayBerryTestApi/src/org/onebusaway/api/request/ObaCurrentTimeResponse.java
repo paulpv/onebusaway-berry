@@ -35,11 +35,10 @@ public final class ObaCurrentTimeResponse implements JSONReceivable
         readableTime = "";
     }
 
-    public void fromJSON(String jsonString) throws JSONException
+    public void fromJSON(JSONObject json) throws JSONException
     {
         try
         {
-            JSONObject json = new JSONObject(jsonString);
             time = json.getLong("time");
             readableTime = json.getString("readableTime");
         }

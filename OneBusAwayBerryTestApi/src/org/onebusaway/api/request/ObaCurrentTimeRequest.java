@@ -22,13 +22,14 @@ import org.onebusaway.net.Uri;
  * Retrieve the current system time.
  * {@link http://code.google.com/p/onebusaway/wiki/OneBusAwayRestApi_CurrentTime}
  *
- * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
+ * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public final class ObaCurrentTimeRequest extends RequestBase implements ObaCallable//<ObaCurrentTimeResponse> 
+public final class ObaCurrentTimeRequest extends RequestBase implements ObaCallable 
 {
     protected ObaCurrentTimeRequest(Uri uri)
     {
-        super(uri);
+        super(ObaCurrentTimeResponse.class, uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase
@@ -52,15 +53,5 @@ public final class ObaCurrentTimeRequest extends RequestBase implements ObaCalla
     public static ObaCurrentTimeRequest newRequest()
     {
         return new Builder().build();
-    }
-
-    public ObaResponse call()
-    {
-        return call(ObaCurrentTimeResponse.class);
-    }
-
-    public String toString()
-    {
-        return "ObaCurrentTimeRequest [mUri=" + mUri + "]";
     }
 }

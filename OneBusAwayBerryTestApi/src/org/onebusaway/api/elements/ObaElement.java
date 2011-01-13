@@ -15,13 +15,12 @@
  */
 package org.onebusaway.api.elements;
 
-import org.onebusaway.api.JSONSendable;
 
 /**
  * Base interface for any element that has an ID.
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public interface ObaElement extends JSONSendable {
+public interface ObaElement {
     /**
      * @return Returns the ID of this element.
      */

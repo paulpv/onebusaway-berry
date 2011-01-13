@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.elements;
+package org.onebusaway.api.elements;
 
 
 public interface ObaStopSchedule {

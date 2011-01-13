@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.elements;
+package org.onebusaway.api.elements;
 
-import com.joulespersecond.oba.GeoPoint;
-import com.joulespersecond.oba.ObaApi;
+import org.onebusaway.api.GeoPoint;
+import org.onebusaway.api.ObaApi;
+
 
 public interface ObaTripStatus {
     public static final class Position {

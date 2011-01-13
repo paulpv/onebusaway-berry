@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.elements;
+package org.onebusaway.api.elements;
 
-import com.joulespersecond.oba.GeoPoint;
+import org.onebusaway.api.GeoPoint;
 
 public final class ObaTripStatusElement implements ObaTripStatus {
     protected static final ObaTripStatusElement EMPTY_OBJECT = new ObaTripStatusElement();

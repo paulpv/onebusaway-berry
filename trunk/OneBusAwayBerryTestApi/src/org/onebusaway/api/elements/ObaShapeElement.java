@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.elements;
+package org.onebusaway.api.elements;
+
+import java.util.Vector;
 
 import net.rim.device.api.collection.List;
 
-import com.joulespersecond.oba.GeoPoint;
+import org.onebusaway.api.GeoPoint;
 
 public final class ObaShapeElement implements ObaShape {
     public static final ObaShapeElement EMPTY_OBJECT = new ObaShapeElement();
@@ -41,11 +43,15 @@ public final class ObaShapeElement implements ObaShape {
         return levels;
     }
 
-    public List getLevels() {
+    //public int[] getLevels()
+    public Vector getLevels()
+    {
         return decodeLevels(levels, length);
     }
 
-    public List getPoints() {
+    //public GeoPoint[] getPoints()
+    public Vector getPoints()
+    {
         return decodeLine(points, length);
     }
 
@@ -65,9 +71,9 @@ public final class ObaShapeElement implements ObaShape {
      *      of points that are contained in the encoded string.
      * @return A list of points from the encoded string.
      */
-    public static List decodeLine(String encoded, int numPoints) {
+    public static Vector decodeLine(String encoded, int numPoints) {
         //assert(numPoints >= 0);
-        ArrayList<GeoPoint> array = new ArrayList<GeoPoint>(numPoints);
+        Vector array = new Vector(numPoints);
 
         final int len = encoded.length();
         int i = 0;
@@ -103,7 +109,7 @@ public final class ObaShapeElement implements ObaShape {
             lon += dlon;
 
             // The polyline encodes in degrees * 1E5, we need degrees * 1E6
-            array.add(new GeoPoint(lat*10, lon*10));
+            array.addElement(new GeoPoint(lat*10, lon*10));
         }
 
         return array;
@@ -119,9 +125,9 @@ public final class ObaShapeElement implements ObaShape {
      *      of points that are contained in the encoded string.
      * @return A list of levels from the encoded string.
      */
-    public static List decodeLevels(String encoded, int numPoints) {
+    public static Vector decodeLevels(String encoded, int numPoints) {
         //assert(numPoints >= 0);
-        ArrayList<Integer> array = new ArrayList<Integer>(numPoints);
+        Vector array = new Vector(numPoints);
 
         final int len = encoded.length();
         int i = 0;
@@ -138,7 +144,7 @@ public final class ObaShapeElement implements ObaShape {
                 ++i;
             } while (b >= 0x20);
 
-            array.add(result);
+            array.addElement(new Integer(result));
         }
 
         return array;

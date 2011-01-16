@@ -16,12 +16,12 @@
 package org.onebusaway.api.elements;
 
 import org.onebusaway.api.GeoPoint;
-import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaApi;
+import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable
+public final class ObaAgencyWithCoverage implements ObaElement, ObaReceivable
 {
     public static final ObaAgencyWithCoverage[] EMPTY_ARRAY = new ObaAgencyWithCoverage[] {};
 
@@ -33,11 +33,6 @@ public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable
 
     public ObaAgencyWithCoverage()
     {
-        reset();
-    }
-
-    public void reset()
-    {
         agencyId = "";
         lat = 0;
         lon = 0;
@@ -47,19 +42,11 @@ public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable
 
     public void fromJSON(JSONObject json) throws JSONException
     {
-        try
-        {
-            agencyId = json.getString("agencyId");
-            lat = json.getDouble("lat");
-            lon = json.getDouble("lon");
-            latSpan = json.getDouble("latSpan");
-            lonSpan = json.getDouble("lonSpan");
-        }
-        catch (JSONException ex)
-        {
-            reset();
-            throw ex;
-        }
+        agencyId = json.getString("agencyId");
+        lat = json.getDouble("lat");
+        lon = json.getDouble("lon");
+        latSpan = json.getDouble("latSpan");
+        lonSpan = json.getDouble("lonSpan");
     }
 
     public String getId()

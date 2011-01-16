@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request;
+package org.onebusaway.api.request;
 
-import android.content.Context;
-import android.net.Uri;
-
-import java.util.concurrent.Callable;
+import org.onebusaway.api.ObaCallable;
+import org.onebusaway.net.Uri;
 
 /**
  * Retrieve the set of stops serving a particular route
@@ -27,18 +25,18 @@ import java.util.concurrent.Callable;
  * @author Paul Watts (paulcwatts@gmail.com)
  */
 public final class ObaStopsForRouteRequest extends RequestBase
-        implements Callable<ObaStopsForRouteResponse> {
+        implements ObaCallable {
     protected ObaStopsForRouteRequest(Uri uri) {
-        super(uri);
+        super(ObaStopsForRouteResponse.class, uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
-        public Builder(Context context, String routeId) {
-            super(context, getPathWithId("/stops-for-route/", routeId));
+        public Builder(String routeId) {
+            super(getPathWithId("/stops-for-route/", routeId));
         }
 
         public Builder setIncludeShapes(boolean includePolylines) {
-            mBuilder.appendQueryParameter("includePolylines",
+            builder.appendQueryParameter("includePolylines",
                     includePolylines ? "true" : "false");
             return this;
         }
@@ -46,15 +44,5 @@ public final class ObaStopsForRouteRequest extends RequestBase
         public ObaStopsForRouteRequest build() {
             return new ObaStopsForRouteRequest(buildUri());
         }
-    }
-
-    @Override
-    public ObaStopsForRouteResponse call() {
-        return call(ObaStopsForRouteResponse.class);
-    }
-
-    @Override
-    public String toString() {
-        return "ObaStopsForRouteRequest [mUri=" + mUri + "]";
     }
 }

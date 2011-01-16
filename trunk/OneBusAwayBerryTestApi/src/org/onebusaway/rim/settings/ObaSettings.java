@@ -3,7 +3,6 @@ package org.onebusaway.rim.settings;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import javax.microedition.location.Criteria;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotOpenException;

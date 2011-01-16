@@ -15,6 +15,7 @@
  */
 package org.onebusaway.api.elements;
 
+
 public final class ObaRouteSchedule {
     public static final ObaRouteSchedule EMPTY_OBJECT = new ObaRouteSchedule();
     public static final ObaRouteSchedule[] EMPTY_ARRAY = new ObaRouteSchedule[] {};

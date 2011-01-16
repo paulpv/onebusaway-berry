@@ -17,22 +17,31 @@ package org.onebusaway.api.elements;
 
 import java.util.Vector;
 
-import net.rim.device.api.collection.List;
-
 import org.onebusaway.api.GeoPoint;
+import org.onebusaway.api.ObaReceivable;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
-public final class ObaShapeElement implements ObaShape {
+public final class ObaShapeElement implements ObaShape, ObaReceivable {
+    
     public static final ObaShapeElement EMPTY_OBJECT = new ObaShapeElement();
     public static final ObaShapeElement[] EMPTY_ARRAY = new ObaShapeElement[] {};
 
-    private final String points;
-    private final int length;
-    private final String levels;
+    private String points;
+    private int length;
+    private String levels;
 
-    private ObaShapeElement() {
+    public ObaShapeElement() {
         points = "";
         length = 0;
         levels = "";
+    }
+
+    public void fromJSON(JSONObject json) throws JSONException
+    {
+        points = json.getString("points");
+        length = json.getInt("length");
+        levels = json.getString("levels");
     }
 
     public int getLength() {
@@ -43,14 +52,12 @@ public final class ObaShapeElement implements ObaShape {
         return levels;
     }
 
-    //public int[] getLevels()
-    public Vector getLevels()
+    public int[] getLevels()
     {
         return decodeLevels(levels, length);
     }
 
-    //public GeoPoint[] getPoints()
-    public Vector getPoints()
+    public GeoPoint[] getPoints()
     {
         return decodeLine(points, length);
     }
@@ -71,7 +78,7 @@ public final class ObaShapeElement implements ObaShape {
      *      of points that are contained in the encoded string.
      * @return A list of points from the encoded string.
      */
-    public static Vector decodeLine(String encoded, int numPoints) {
+    public static GeoPoint[] decodeLine(String encoded, int numPoints) {
         //assert(numPoints >= 0);
         Vector array = new Vector(numPoints);
 
@@ -111,8 +118,10 @@ public final class ObaShapeElement implements ObaShape {
             // The polyline encodes in degrees * 1E5, we need degrees * 1E6
             array.addElement(new GeoPoint(lat*10, lon*10));
         }
-
-        return array;
+        
+        GeoPoint[] geoPoints = new GeoPoint[array.size()];
+        array.copyInto(geoPoints);
+        return geoPoints;
     }
 
     /**
@@ -125,7 +134,7 @@ public final class ObaShapeElement implements ObaShape {
      *      of points that are contained in the encoded string.
      * @return A list of levels from the encoded string.
      */
-    public static Vector decodeLevels(String encoded, int numPoints) {
+    public static int[] decodeLevels(String encoded, int numPoints) {
         //assert(numPoints >= 0);
         Vector array = new Vector(numPoints);
 
@@ -147,6 +156,11 @@ public final class ObaShapeElement implements ObaShape {
             array.addElement(new Integer(result));
         }
 
-        return array;
+        int[] levels = new int[array.size()];
+        for(i=0; i < array.size(); i++)
+        {
+            levels[i] = ((Integer)array.elementAt(i)).intValue();
+        }
+        return levels;
     }
 }

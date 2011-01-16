@@ -2,12 +2,11 @@
 
 package org.onebusaway.rim;
 
-import org.onebusaway.api.ObaApi;
-import org.onebusaway.tests.CurrentTimeRequestTest;
-
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.RichTextField;
 import net.rim.device.api.ui.container.MainScreen;
+
+import org.onebusaway.api.request.test.CurrentTimeRequestTest;
 
 public class MyApp extends UiApplication
 {

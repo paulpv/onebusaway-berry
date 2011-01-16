@@ -15,8 +15,8 @@
  */
 package org.onebusaway.api.request;
 
-import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaApi;
+import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
@@ -30,24 +30,24 @@ public class ObaResponse
     private String         version;
     private int            code;
     private String         text;
-    private JSONReceivable data;
+    private ObaReceivable data;
 
-    public ObaResponse(JSONObject json, JSONReceivable data) throws JSONException
+    public ObaResponse(JSONObject json, ObaReceivable data) throws JSONException, InstantiationException, IllegalAccessException
     {
         try
         {
             this.version = json.getString("version");
             this.code = json.getInt("code");
             this.text = json.getString("text");
-            this.data = data;
             if (data != null)
             {
                 JSONObject jsonData = json.getJSONObject("data");
                 if (jsonData != null)
                 {
-                    this.data.fromJSON(jsonData);
+                    data.fromJSON(jsonData);
                 }
             }
+            this.data = data;
         }
         catch (JSONException e)
         {
@@ -88,7 +88,7 @@ public class ObaResponse
         return text;
     }
     
-    public JSONReceivable getData()
+    public ObaReceivable getData()
     {
         return data;
     }

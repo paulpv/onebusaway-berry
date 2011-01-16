@@ -15,11 +15,11 @@
  */
 package org.onebusaway.api.request;
 
-import org.onebusaway.api.JSONReceivable;
+import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-public final class ObaCurrentTimeResponse implements JSONReceivable
+public final class ObaCurrentTimeResponse implements ObaReceivable
 {
     private long   time;
     private String readableTime;

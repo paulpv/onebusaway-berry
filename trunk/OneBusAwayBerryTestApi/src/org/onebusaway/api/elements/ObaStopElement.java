@@ -16,8 +16,8 @@
 package org.onebusaway.api.elements;
 
 import org.onebusaway.api.GeoPoint;
-import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaApi;
+import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
@@ -28,7 +28,7 @@ import org.onebusaway.json.me.JSONObject;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopElement implements ObaStop, JSONReceivable
+public final class ObaStopElement implements ObaStop, ObaReceivable
 {
     public static final ObaStopElement   EMPTY_OBJECT = new ObaStopElement();
     public static final ObaStopElement[] EMPTY_ARRAY  = new ObaStopElement[] {};
@@ -45,11 +45,6 @@ public final class ObaStopElement implements ObaStop, JSONReceivable
 
     public ObaStopElement()
     {
-        reset();
-    }
-
-    public void reset()
-    {
         id = "";
         lat = 0;
         lon = 0;
@@ -59,43 +54,31 @@ public final class ObaStopElement implements ObaStop, JSONReceivable
         code = "";
         routeIds = EMPTY_ROUTES;
     }
-    
-    public void fromJSON(JSONObject json) throws JSONException
+
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
     {
-        try
+        id = json.getString("id");
+        lat = json.getDouble("lat");
+        lon = json.getDouble("lon");
+        direction = json.getString("direction");
+        locationType = json.getInt("locationType");
+        name = json.getString("name");
+        code = json.getString("code");
+        JSONArray jsonRouteIds = json.getJSONArray("routeIds");
+        if (jsonRouteIds != null)
         {
-            id = json.getString("id");
-            lat = json.getDouble("lat");
-            lon = json.getDouble("lon");
-            direction = json.getString("direction");
-            locationType = json.getInt("locationType");
-            name = json.getString("name");
-            code = json.getString("code");
-            JSONArray routeIds = json.getJSONArray("routeIds");
-            if (routeIds != null)
-            {
-                this.routeIds = new String[routeIds.length()];
-                for (int i = 0; i < this.routeIds.length; i++)
-                {
-                    this.routeIds[i] = (String) routeIds.get(i);
-                }
-            }
-            else
-            {
-                this.routeIds = EMPTY_ROUTES;
-            }
+            routeIds = new String[jsonRouteIds.length()];
+            ObaApi.copyJSONArrayToObaReceivableArray(jsonRouteIds, routeIds, String.class);
         }
-        catch (JSONException ex)
+        else
         {
-            reset();
-            throw ex;
+            routeIds = EMPTY_ROUTES;
         }
     }
 
     /*
     public String toJSON() throws JSONException
     {
-        // TODO:(pv) super.toJSON
         try
         {
             JSONObject inner = new JSONObject();

@@ -17,13 +17,15 @@ package org.onebusaway.api.elements;
 
 import java.util.Vector;
 
-import net.rim.device.api.collection.List;
-import net.rim.device.api.util.Arrays;
-
+import org.onebusaway.api.ObaApi;
+import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.api.TextUtils;
+import org.onebusaway.json.me.JSONArray;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 
-public final class ObaSituationElement implements ObaSituation {
+public final class ObaSituationElement implements ObaSituation, ObaReceivable {
     public static final ObaSituationElement EMPTY_OBJECT = new ObaSituationElement();
     public static final ObaSituationElement[] EMPTY_ARRAY = new ObaSituationElement[] {};
 
@@ -112,16 +114,41 @@ public final class ObaSituationElement implements ObaSituation {
     }
 
     public static final class ConditionDetailsElement
-            implements ConditionDetails {
-
-        private final String[] diversionStopIds;
-        private final ObaShapeElement diversionPath;
+            implements ConditionDetails, ObaReceivable {
+        
+        private String[] diversionStopIds;
+        private ObaShapeElement diversionPath;
 
         ConditionDetailsElement() {
-            diversionStopIds = null;
-            diversionPath = null;
+            diversionStopIds = ObaApi.EMPTY_ARRAY_STRING;
+            diversionPath = ObaShapeElement.EMPTY_OBJECT;
         }
 
+        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
+        {
+            JSONArray jsonDiversionStopIds = json.optJSONArray("diversionStopIds");
+            if (jsonDiversionStopIds != null)
+            {
+                diversionStopIds = new String[jsonDiversionStopIds.length()];
+                ObaApi.copyJSONArrayToObaReceivableArray(jsonDiversionStopIds, diversionStopIds, String.class);
+            }
+            else
+            {
+                diversionStopIds = ObaApi.EMPTY_ARRAY_STRING;
+            }
+            
+            JSONObject jsonDiversionPath = json.optJSONObject("diversionPath");
+            if (jsonDiversionPath != null)
+            {
+                diversionPath = new ObaShapeElement();
+                diversionPath.fromJSON(jsonDiversionPath);
+            }
+            else
+            {
+                diversionPath = ObaShapeElement.EMPTY_OBJECT;
+            }
+        }
+        
         public ObaShape getDiversionPath() {
             return diversionPath;
         }
@@ -134,18 +161,30 @@ public final class ObaSituationElement implements ObaSituation {
             }
             return diversionStopIds;
         }
-
     }
 
-    public static final class ConsequenceElement implements Consequence {
+    public static final class ConsequenceElement implements Consequence, ObaReceivable {
         public static final ConsequenceElement[] EMPTY_ARRAY = new ConsequenceElement[] {};
 
-        private final String condition;
-        private final ConditionDetailsElement conditionDetails;
+        private String condition;
+        private ConditionDetailsElement conditionDetails;
 
         ConsequenceElement() {
+            reset();
+        }
+
+        public void reset()
+        {
             condition = "";
             conditionDetails = null;
+        }
+
+        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
+        {
+            condition = json.getString("condition");
+            JSONObject jsonConditionDetails = json.getJSONObject("conditionDetails");
+            conditionDetails = new ConditionDetailsElement();
+            conditionDetails.fromJSON(jsonConditionDetails);
         }
 
         public String getCondition() {
@@ -157,22 +196,26 @@ public final class ObaSituationElement implements ObaSituation {
         }
     }
 
-
-    private final String id;
-    private final Text summary;
-    private final Text description;
-    private final Text advice;
-    private final String equipmentReason;
-    private final String environmentReason;
-    private final String personnelReason;
-    private final String miscellaneousReason;
-    private final String undefinedReason;
-    //private final String securityAlert;
-    private final long creationTime;
-    private final AffectsElement affects;
-    private final ConsequenceElement[] consequences;
+    private String id;
+    private Text summary;
+    private Text description;
+    private Text advice;
+    private String equipmentReason;
+    private String environmentReason;
+    private String personnelReason;
+    private String miscellaneousReason;
+    private String undefinedReason;
+    //private String securityAlert;
+    private long creationTime;
+    private AffectsElement affects;
+    private ConsequenceElement[] consequences;
 
     ObaSituationElement() {
+        reset();
+    }
+    
+    public void reset()
+    {
         id = "";
         summary = null;
         description = null;
@@ -188,6 +231,12 @@ public final class ObaSituationElement implements ObaSituation {
         consequences = ConsequenceElement.EMPTY_ARRAY;
     }
 
+    public void fromJSON(JSONObject jsonSituation)
+    {
+        // TODO:(pv) Auto-generated method stub
+        
+    }
+    
     public String getId() {
         return id;
     }

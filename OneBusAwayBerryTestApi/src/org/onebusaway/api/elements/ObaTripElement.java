@@ -16,22 +16,29 @@
 package org.onebusaway.api.elements;
 
 import org.onebusaway.api.ObaInteger;
+import org.onebusaway.api.ObaReceivable;
+import org.onebusaway.json.me.JSONObject;
 
 
-public final class ObaTripElement implements ObaTrip {
+public final class ObaTripElement implements ObaTrip, ObaReceivable {
     public static final ObaTripElement EMPTY_OBJECT = new ObaTripElement();
     public static final ObaTripElement[] EMPTY_ARRAY = new ObaTripElement[] {};
 
-    private final String id;
-    private final String tripShortName;
-    private final String shapeId;
-    private final String directionId;
-    private final String serviceId;
-    private final String tripHeadsign;
-    private final String timeZone;
-    private final String routeId;
+    private String id;
+    private String tripShortName;
+    private String shapeId;
+    private String directionId;
+    private String serviceId;
+    private String tripHeadsign;
+    private String timeZone;
+    private String routeId;
 
-    private ObaTripElement() {
+    public ObaTripElement() {
+        reset();
+    }
+
+    public void reset()
+    {
         id = "";
         tripShortName = "";
         shapeId = "";
@@ -40,6 +47,12 @@ public final class ObaTripElement implements ObaTrip {
         tripHeadsign = "";
         timeZone = "";
         routeId = "";
+    }
+
+    public void fromJSON(JSONObject json)
+    {
+        // TODO:(pv) Auto-generated method stub
+        
     }
 
     public String getId() {

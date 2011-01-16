@@ -18,6 +18,9 @@ package org.onebusaway.api.elements;
 import net.rim.device.api.ui.Color;
 
 import org.onebusaway.api.ObaInteger;
+import org.onebusaway.api.ObaReceivable;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 
 /**
@@ -26,19 +29,19 @@ import org.onebusaway.api.ObaInteger;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaRouteElement implements ObaRoute {
+public final class ObaRouteElement implements ObaRoute, ObaReceivable {
     public static final ObaRouteElement EMPTY_OBJECT = new ObaRouteElement();
     public static final ObaRouteElement[] EMPTY_ARRAY = new ObaRouteElement[] {};
 
-    private final String id;
-    private final String shortName;
-    private final String longName;
-    private final String description;
-    private final int type;
-    private final String url;
-    private final String color;
-    private final String textColor;
-    private final String agencyId;
+    private String id;
+    private String shortName;
+    private String longName;
+    private String description;
+    private int type;
+    private String url;
+    private String color;
+    private String textColor;
+    private String agencyId;
 
     public ObaRouteElement() {
         id = "";
@@ -51,6 +54,19 @@ public final class ObaRouteElement implements ObaRoute {
         textColor = "";
         agencyId = "";
     }
+
+    public void fromJSON(JSONObject json) throws JSONException
+    {
+        id = json.getString("id");
+        shortName = json.getString("shortName");
+        longName = json.getString("longName");
+        description = json.getString("description");
+        type = json.getInt("type");
+        url = json.getString("url");
+        color = json.getString("color");
+        textColor = json.getString("textColor");
+        agencyId = json.getString("agencyId");
+}
 
     public String getId() {
         return id;

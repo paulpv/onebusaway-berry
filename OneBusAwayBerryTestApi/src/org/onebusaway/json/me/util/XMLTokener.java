@@ -1,7 +1,6 @@
 package org.onebusaway.json.me.util;
 
 import org.onebusaway.json.me.JSONException;
-import org.onebusaway.json.me.JSONObject;
 import org.onebusaway.json.me.JSONTokener;
 
 /*
@@ -294,7 +293,7 @@ public class XMLTokener extends JSONTokener {
         }
     }
     
-    // TODO
+    // TODO:(jsonme)
     private static boolean isWhitespace(char c) {
         switch (c) {
             case ' ':
@@ -306,7 +305,7 @@ public class XMLTokener extends JSONTokener {
         return false;
     }
     
-    // TODO
+    // TODO:(jsonme)
     private static boolean isLetterOrDigit(char c) {
         switch (c) {
             case '0':

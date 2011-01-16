@@ -15,7 +15,6 @@
  */
 package org.onebusaway.api.elements;
 
-import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
@@ -25,7 +24,7 @@ import org.onebusaway.json.me.JSONObject;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
+public final class ObaAgencyElement implements ObaAgency {//, JSONReceivable {
     
     public static final ObaAgencyElement EMPTY_OBJECT = new ObaAgencyElement();
     public static final ObaAgencyElement[] EMPTY_ARRAY = new ObaAgencyElement[] {};
@@ -39,11 +38,6 @@ public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
     private String disclaimer;
 
     public ObaAgencyElement() {
-        reset();
-    }
-
-    public void reset()
-    {
         id = "";
         name = "";
         url = "";
@@ -52,24 +46,16 @@ public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
         phone = "";
         disclaimer = "";
     }
-
+    
     public void fromJSON(JSONObject json) throws JSONException
     {
-        try
-        {
-            id = json.getString("id");
-            name = json.getString("name");
-            url = json.getString("url");
-            timezone = json.getString("timezone");
-            lang = json.getString("lang");
-            phone = json.getString("phone");
-            disclaimer = json.getString("disclaimer");
-        }
-        catch (JSONException ex)
-        {
-            reset();
-            throw ex;
-        }
+        id = json.getString("id");
+        name = json.getString("name");
+        url = json.getString("url");
+        timezone = json.getString("timezone");
+        lang = json.getString("lang");
+        phone = json.getString("phone");
+        disclaimer = json.getString("disclaimer");
     }
 
     public String getId() {

@@ -17,19 +17,20 @@ package org.onebusaway.api.elements;
 
 import java.util.Vector;
 
-import net.rim.device.api.collection.List;
-import net.rim.device.api.collection.ReadableList;
-import net.rim.device.api.collection.util.SparseList;
-import net.rim.device.api.collection.util.UnsortedReadableList;
+import org.onebusaway.api.ObaApi;
+import org.onebusaway.json.me.JSONArray;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 public final class ObaReferencesElement implements ObaReferences {
+    
     public static final ObaReferencesElement EMPTY_OBJECT = new ObaReferencesElement();
 
-    private final ObaStopElement[] stops;
-    private final ObaRouteElement[] routes;
-    private final ObaTripElement[] trips;
-    private final ObaAgencyElement[] agencies;
-    private final ObaSituationElement[] situations;
+    private ObaStopElement[] stops;
+    private ObaRouteElement[] routes;
+    private ObaTripElement[] trips;
+    private ObaAgencyElement[] agencies;
+    private ObaSituationElement[] situations;
 
     public ObaReferencesElement() {
         stops = ObaStopElement.EMPTY_ARRAY;
@@ -39,73 +40,126 @@ public final class ObaReferencesElement implements ObaReferences {
         situations = ObaSituationElement.EMPTY_ARRAY;
     }
 
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
+    {
+        JSONArray jsonStops = json.getJSONArray("stops");
+        if (jsonStops != null)
+        {
+            stops = new ObaStopElement[jsonStops.length()];
+            ObaApi.copyJSONArrayToObaReceivableArray(jsonStops, stops, ObaStopElement.class);
+        }
+        else
+        {
+            stops = ObaStopElement.EMPTY_ARRAY;
+        }
+        
+        JSONArray jsonRoutes = json.getJSONArray("routes");
+        if (jsonRoutes != null)
+        {
+            routes = new ObaRouteElement[jsonRoutes.length()];
+            ObaApi.copyJSONArrayToObaReceivableArray(jsonRoutes, routes, ObaRouteElement.class);
+        }
+        else
+        {
+            routes = ObaRouteElement.EMPTY_ARRAY;
+        }
+        
+        JSONArray jsonTrips = json.getJSONArray("trips");
+        if (jsonTrips != null)
+        {
+            trips = new ObaTripElement[jsonTrips.length()];
+            ObaApi.copyJSONArrayToObaReceivableArray(jsonTrips, trips, ObaTripElement.class);
+        }
+        else
+        {
+            trips = ObaTripElement.EMPTY_ARRAY;
+        }
+        
+        JSONArray jsonAgencies = json.getJSONArray("agencies");
+        if (jsonAgencies != null)
+        {
+            agencies = new ObaAgencyElement[jsonAgencies.length()];
+            ObaApi.copyJSONArrayToObaReceivableArray(jsonAgencies, agencies, ObaAgencyElement.class);
+        }
+        else
+        {
+            agencies = ObaAgencyElement.EMPTY_ARRAY;
+        }
+        
+        JSONArray jsonSituations = json.getJSONArray("situations");
+        if (jsonSituations != null)
+        {
+            situations = new ObaSituationElement[jsonSituations.length()];
+            ObaApi.copyJSONArrayToObaReceivableArray(jsonSituations, situations, ObaSituationElement.class);
+        }
+        else
+        {
+            situations = ObaSituationElement.EMPTY_ARRAY;
+        }
+    }
+    
     public ObaStop getStop(String id) {
         return (ObaStop) findById(stops, id);
     }
 
-    //public ObaStop[] getStops(String[] ids)
-    public Vector getStops(String[] ids)
+    public ObaStop[] getStops(String[] ids)
     {
         Vector results = findList(stops, ids);
-        //ObaStop[] stops = new ObaStop[results.size()];
-        //results.copyInto(stops);
-        return results;//stops;
+        ObaStop[] stops = new ObaStop[results.size()];
+        results.copyInto(stops);
+        return stops;
     }
 
     public ObaRoute getRoute(String id) {
         return (ObaRoute) findById(routes, id);
     }
 
-    //public ObaRoute[] getRoutes(String[] ids)
-    public Vector getRoutes(String[] ids)
+    public ObaRoute[] getRoutes(String[] ids)
     {
         Vector results = findList(routes, ids);
-        //ObaRoute[] routes = new ObaRoute[results.size()];
-        //results.copyInto(routes);
-        return results;//routes;
+        ObaRoute[] routes = new ObaRoute[results.size()];
+        results.copyInto(routes);
+        return routes;
     }
 
     public ObaTrip getTrip(String id) {
         return (ObaTrip) findById(trips, id);
     }
 
-    //public ObaTrip[] getTrips(String[] ids)
-    public Vector getTrips(String[] ids)
+    public ObaTrip[] getTrips(String[] ids)
     {
         Vector results = findList(trips, ids);
-        //ObaTrip[] trips = new ObaTrip[results.size()];
-        //results.copyInto(trips);
-        return results;//trips;
+        ObaTrip[] trips = new ObaTrip[results.size()];
+        results.copyInto(trips);
+        return trips;
     }
 
     public ObaAgency getAgency(String id) {
         return (ObaAgency) findById(agencies, id);
     }
 
-    //public ObaAgency[] getAgencies(String[] ids)
-    public Vector getAgencies(String[] ids)
+    public ObaAgency[] getAgencies(String[] ids)
     {
         Vector results = findList(agencies, ids);
-        //ObaAgency[] agencies = new ObaAgency[results.size()];
-        //results.copyInto(agencies);
-        return results;//agencies;
+        ObaAgency[] agencies = new ObaAgency[results.size()];
+        results.copyInto(agencies);
+        return agencies;
     }
 
     public ObaSituation getSituation(String id) {
         return (ObaSituation) findById(situations, id);
     }
 
-    //public ObaSituation[] getSituations(String[] ids)
-    public Vector getSituations(String[] ids)
+    public ObaSituation[] getSituations(String[] ids)
     {
         Vector results = findList(situations, ids);
-        //ObaSituation[] situations = new ObaSituation[results.size()];
-        //results.copyInto(situations);
-        return results;//situations;
+        ObaSituation[] situations = new ObaSituation[results.size()];
+        results.copyInto(situations);
+        return situations;
     }
 
     //
-    // TODO: This will be much easier when we convert to HashMap storage.
+    // TODO:(oba) This will be much easier when we convert to HashMap storage.
     //
     private static ObaElement findById(ObaElement[] objects, String id) {
         final int len = objects.length;

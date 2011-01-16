@@ -17,8 +17,6 @@ package org.onebusaway.api.elements;
 
 import java.util.Vector;
 
-import net.rim.device.api.collection.List;
-
 public interface ObaSituation extends ObaElement {
     public static final String REASON_TYPE_EQUIPMENT = "equipment";
     public static final String REASON_TYPE_ENVIRONMENT = "environment";

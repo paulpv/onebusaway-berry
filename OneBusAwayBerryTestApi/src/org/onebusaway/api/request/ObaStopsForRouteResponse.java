@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request;
+package org.onebusaway.api.request;
 
-import com.joulespersecond.oba.elements.ObaReferences;
-import com.joulespersecond.oba.elements.ObaReferencesElement;
-import com.joulespersecond.oba.elements.ObaShape;
-import com.joulespersecond.oba.elements.ObaShapeElement;
-import com.joulespersecond.oba.elements.ObaStop;
-import com.joulespersecond.oba.elements.ObaStopGrouping;
-
-import java.util.List;
+import org.onebusaway.api.ObaReceivable;
+import org.onebusaway.api.elements.ObaReferences;
+import org.onebusaway.api.elements.ObaReferencesElement;
+import org.onebusaway.api.elements.ObaShape;
+import org.onebusaway.api.elements.ObaShapeElement;
+import org.onebusaway.api.elements.ObaStop;
+import org.onebusaway.api.elements.ObaStopGrouping;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * Response object for ObaStopForRouteRequest requests.
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopsForRouteResponse extends ObaResponseWithRefs {
+public final class ObaStopsForRouteResponse implements ObaReceivable {
+    
     private static final class Entry {
         private static final Entry EMPTY_OBJECT = new Entry();
 
@@ -43,41 +44,47 @@ public final class ObaStopsForRouteResponse extends ObaResponseWithRefs {
         }
     }
 
-    private static final class Data {
-        private static final Data EMPTY_OBJECT = new Data();
-
-        private final ObaReferencesElement references = ObaReferencesElement.EMPTY_OBJECT;
-        private final Entry entry = Entry.EMPTY_OBJECT;
-    }
-    private final Data data;
+    private ObaReferencesElement references;
+    private Entry entry;
 
     private ObaStopsForRouteResponse() {
-        data = Data.EMPTY_OBJECT;
+        references = ObaReferencesElement.EMPTY_OBJECT;
+        entry = Entry.EMPTY_OBJECT;
     }
 
+    public void fromJSON(JSONObject json)
+    {
+        JSONObject jsonReferences = json.optJSONObject("references");
+        if (jsonReferences != null)
+        {
+            
+        }
+        
+        JSONObject jsonEntry = json.optJSONObject("entry");
+    }
+    
     /**
      * Returns the list of dereferenced stops.
      */
-    public List<ObaStop> getStops() {
-        return data.references.getStops(data.entry.stopIds);
+    public ObaStop[] getStops() {
+        return references.getStops(entry.stopIds);
     }
 
     /**
      * @return The list of shapes, if they exist; otherwise returns an empty list.
      */
     public ObaShape[] getShapes() {
-        return data.entry.polylines;
+        return entry.polylines;
     }
 
     /**
      * @return Returns a collection of stops grouped into useful collections.
      */
     public ObaStopGrouping[] getStopGroupings() {
-        return data.entry.stopGroupings;
+        return entry.stopGroupings;
     }
 
-    @Override
     protected ObaReferences getRefs() {
-        return data.references;
+        return references;
     }
 }

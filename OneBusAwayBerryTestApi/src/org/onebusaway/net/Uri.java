@@ -25,10 +25,7 @@ package org.onebusaway.net;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-
-import net.rim.device.api.collection.ReadableList;
-import net.rim.device.api.collection.util.SparseList;
-import net.rim.device.api.collection.util.UnsortedReadableList;
+import java.util.Vector;
 
 import org.onebusaway.api.TextUtils;
 
@@ -318,7 +315,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
      *
      * @return decoded path segments, each without a leading or trailing '/'
      */
-    public abstract ReadableList /*List<String>*/ getPathSegments();
+    public abstract String[] /*List<String>*/ getPathSegments();
 
     /**
      * Gets the decoded last segment in the path.
@@ -573,7 +570,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
             return getPathPart().getEncoded();
         }
 
-        public ReadableList /*List<String>*/ getPathSegments() {
+        public String[] /*List<String>*/ getPathSegments() {
             return getPathPart().getPathSegments();
         }
 
@@ -886,8 +883,8 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
             return fragment.getEncoded();
         }
 
-        public ReadableList /*List<String>*/ getPathSegments() {
-            return PathSegments.EMPTY;//Collections.emptyList();
+        public String[] /*List<String>*/ getPathSegments() {
+            return new String[0];//Collections.emptyList();
         }
 
         public String getLastPathSegment() {
@@ -942,10 +939,9 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
     /**
      * Wrapper for path segment array.
      */
-    //static class PathSegments extends AbstractList<String> implements RandomAccess
-    static class PathSegments extends UnsortedReadableList
+    /*
+    static class PathSegments extends AbstractList<String> implements RandomAccess
     {
-
         static final PathSegments EMPTY = new PathSegments(null, 0);
 
         final String[] segments;
@@ -968,6 +964,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
             return this.size;
         }
     }
+    */
 
     /**
      * Builds PathSegments.
@@ -989,16 +986,22 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
             segments[size++] = segment;
         }
 
-        PathSegments build() {
+        String[] /* PathSegments */ build() {
+            /*
             if (segments == null) {
                 return PathSegments.EMPTY;
             }
+            */
 
             try {
-                return new PathSegments(segments, size);
+                //return new PathSegments(segments, size);
+                String[] segments = new String[size];
+                System.arraycopy(this.segments, 0, segments, 0, size);
+                return segments;
             } finally {
                 // Makes sure this doesn't get reused.
                 segments = null;
+                size = 0;
             }
         }
     }
@@ -1009,15 +1012,15 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
     private abstract static class AbstractHierarchicalUri extends Uri {
 
         public String getLastPathSegment() {
-            // TODO: If we haven't parsed all of the segments already, just
+            // TODO:(android) If we haven't parsed all of the segments already, just
             // grab the last one directly so we only allocate one string.
 
-            ReadableList /*List*<String>*/ segments = getPathSegments();
-            int size = segments.size();
+            String[]/*List*<String>*/ segments = getPathSegments();
+            int size = segments.length;//.size();
             if (size == 0) {
                 return null;
             }
-            return (String) segments.getAt(size - 1);
+            return segments[size - 1];//(String) segments.getAt(size - 1);
         }
 
         private Part userInfo;
@@ -1237,7 +1240,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
             return this.fragment.getEncoded();
         }
 
-        public ReadableList /*List<String>*/ getPathSegments() {
+        public String[] /*List<String>*/ getPathSegments() {
             return this.path.getPathSegments();
         }
 
@@ -1528,14 +1531,14 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
      *
      * @return a list of decoded values
      */
-    public ReadableList /*List<String>*/ getQueryParameters(String key) {
+    public String[] /*List<String>*/ getQueryParameters(String key) {
         if (isOpaque()) {
             throw new UnsupportedOperationException(NOT_HIERARCHICAL);
         }
 
         String query = getEncodedQuery();
         if (query == null) {
-            return new UnsortedReadableList();//Collections.emptyList();
+            return new String[0];//Collections.emptyList();
         }
 
         String encodedKey;
@@ -1553,7 +1556,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
         String prefix = "&" + encodedKey + "=";
 
         //ArrayList<String> values = new ArrayList<String>();
-        SparseList values = new SparseList();
+        Vector values = new Vector();
 
         int start = 0;
         int length = query.length();
@@ -1575,13 +1578,13 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
             }
 
             String value = query.substring(start, end);
-            values.add(decode(value));
+            values.addElement(decode(value));
 
             start = end;
         }
 
-        UnsortedReadableList list = new UnsortedReadableList();
-        list.loadFrom(values);
+        String[] list = new String[values.size()];
+        values.copyInto(list);
         return list;//Collections.unmodifiableList(values);
     }
 
@@ -2116,7 +2119,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
          * Cached path segments. This doesn't need to be volatile--we don't
          * care if other threads see the result.
          */
-        private PathSegments pathSegments;
+        private String[] /* PathSegments */ pathSegments;
 
         /**
          * Gets the individual path segments. Parses them if necessary.
@@ -2124,14 +2127,14 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
          * @return parsed path segments or null if this isn't a hierarchical
          *  URI
          */
-        PathSegments getPathSegments() {
+        String[] /* PathSegments */ getPathSegments() {
             if (pathSegments != null) {
                 return pathSegments;
             }
 
             String path = getEncoded();
             if (path == null) {
-                return pathSegments = PathSegments.EMPTY;
+                return pathSegments = new String[0];//PathSegments.EMPTY;
             }
 
             PathSegmentsBuilder segmentBuilder = new PathSegmentsBuilder();
@@ -2190,7 +2193,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
         static PathPart appendDecodedSegment(PathPart oldPart, String decoded) {
             String encoded = encode(decoded);
 
-            // TODO: Should we reuse old PathSegments? Probably not.
+            // TODO:(android) Should we reuse old PathSegments? Probably not.
             return appendEncodedSegment(oldPart, encoded);
         }
 

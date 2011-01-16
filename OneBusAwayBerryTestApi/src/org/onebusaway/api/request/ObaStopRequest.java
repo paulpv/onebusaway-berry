@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request;
+package org.onebusaway.api.request;
 
-import android.content.Context;
-import android.net.Uri;
-
-import java.util.concurrent.Callable;
+import org.onebusaway.api.ObaCallable;
+import org.onebusaway.net.Uri;
 
 /**
  * Retrieve info about a specific stop.
@@ -26,14 +24,14 @@ import java.util.concurrent.Callable;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopRequest extends RequestBase implements Callable<ObaStopResponse> {
+public final class ObaStopRequest extends RequestBase implements ObaCallable {
     protected ObaStopRequest(Uri uri) {
-        super(uri);
+        super(ObaStopResponse.class, uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
-        public Builder(Context context, String stopId) {
-            super(context, getPathWithId("/stop/", stopId));
+        public Builder(String stopId) {
+            super(getPathWithId("/stop/", stopId));
         }
 
         public ObaStopRequest build() {
@@ -47,17 +45,7 @@ public final class ObaStopRequest extends RequestBase implements Callable<ObaSto
      * @param stopId The stopId to request.
      * @return The new request instance.
      */
-    public static ObaStopRequest newRequest(Context context, String stopId) {
-        return new Builder(context, stopId).build();
-    }
-
-    @Override
-    public ObaStopResponse call() {
-        return call(ObaStopResponse.class);
-    }
-
-    @Override
-    public String toString() {
-        return "ObaStopRequest [mUri=" + mUri + "]";
+    public static ObaStopRequest newRequest(String stopId) {
+        return new Builder(stopId).build();
     }
 }

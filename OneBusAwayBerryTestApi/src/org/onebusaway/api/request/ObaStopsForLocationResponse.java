@@ -13,62 +13,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request;
+package org.onebusaway.api.request;
 
-import com.joulespersecond.oba.elements.ObaReferences;
-import com.joulespersecond.oba.elements.ObaReferencesElement;
-import com.joulespersecond.oba.elements.ObaStop;
-import com.joulespersecond.oba.elements.ObaStopElement;
+import org.onebusaway.api.ObaReceivable;
+import org.onebusaway.api.elements.ObaReferences;
+import org.onebusaway.api.elements.ObaReferencesElement;
+import org.onebusaway.api.elements.ObaStop;
+import org.onebusaway.api.elements.ObaStopElement;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
+
 
 /**
  * Response object for ObaStopsForLocation objects.
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopsForLocationResponse extends ObaResponseWithRefs {
-    private static final class Data {
-        private static final Data EMPTY_OBJECT = new Data();
+public final class ObaStopsForLocationResponse implements ObaReceivable {
 
-        private final ObaReferencesElement references;
-        private final ObaStopElement[] list;
-        private final boolean outOfRange;
-        private final boolean limitExceeded;
-
-        private Data() {
-            references = ObaReferencesElement.EMPTY_OBJECT;
-            list = ObaStopElement.EMPTY_ARRAY;
-            outOfRange = false;
-            limitExceeded = false;
-        }
-    }
-    private final Data data;
-
+    private ObaReferencesElement references;
+    private ObaStopElement[] list;
+    private boolean outOfRange;
+    private boolean limitExceeded;
+    
     private ObaStopsForLocationResponse() {
-        data = Data.EMPTY_OBJECT;
+        reset();
     }
 
+    public void reset()
+    {
+        references = ObaReferencesElement.EMPTY_OBJECT;
+        list = ObaStopElement.EMPTY_ARRAY;
+        outOfRange = false;
+        limitExceeded = false;
+    }
+
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
+    {
+        // TODO:(pv) Auto-generated method stub
+        
+    }
+    
     /**
      * @return The list of stops.
      */
     public ObaStop[] getStops() {
-        return data.list;
+        return list;
     }
 
     /**
      * @return Whether the request is out of range of the coverage area.
      */
     public boolean getOutOfRange() {
-        return data.outOfRange;
+        return outOfRange;
     }
 
     /**
      * @return Whether the results exceeded the limits of the response.
      */
     public boolean getLimitExceeded() {
-        return data.limitExceeded;
+        return limitExceeded;
     }
 
-    @Override
     protected ObaReferences getRefs() {
-        return data.references;
+        return references;
     }
+
 }

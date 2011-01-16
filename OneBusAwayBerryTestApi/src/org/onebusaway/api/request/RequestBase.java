@@ -19,9 +19,9 @@ import java.io.IOException;
 
 import net.rim.device.api.io.FileNotFoundException;
 
-import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaApi;
 import org.onebusaway.api.ObaHelp;
+import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.api.TextUtils;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
@@ -42,14 +42,9 @@ public class RequestBase
     protected final Class         clsData;
     protected final Uri           uri;
 
-    public static boolean isDataClassJsonReceivable(Class clsData)
-    {
-        return (clsData != null && clsData.getClass().isInstance(JSONReceivable.class));
-    }
-
     protected RequestBase(Class clsData, Uri uri)
     {
-        if (!isDataClassJsonReceivable(clsData))
+        if (!ObaApi.isInstanceObaReceivable(clsData))
         {
             throw new IllegalArgumentException("clsData must implement JSONReceivable");
         }
@@ -132,61 +127,69 @@ public class RequestBase
         }
     }
 
-    private ObaResponse createResponseWithDataFromJson(String jsonString) throws JSONException, InstantiationException,
-                    IllegalAccessException
-    {
-        JSONObject json = new JSONObject(jsonString);
-        JSONReceivable obaResponse = (JSONReceivable) clsData.newInstance();
-        return new ObaResponse(json, obaResponse);
-    }
-
     private ObaResponse createResponseWithNoDataDueToError(int code, Throwable err)
     {
         try
         {
-            final String failSafeString = "{code:" + code + ",version:\"2\",text:\"" + err.toString() + "\"}";
-            JSONObject json = new JSONObject(failSafeString);
+            JSONObject json = new JSONObject();
+            json.put("code", code);
+            json.put("version", "2");
+            json.put("text", (err == null) ? "UNKNOWN" : err.toString());
             return new ObaResponse(json, null);
         }
         catch (JSONException e)
         {
             e.printStackTrace();
-
-            // Hopefully this never returns null.
-            return null;
         }
+        catch (InstantiationException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
+        
+        // Hopefully this never returns null.
+        return null;
     }
 
     public ObaResponse call()
     {
+        ObaResponse obaResponse = null;
+        
         try
         {
-            String response = ObaHelp.getUri(uri);
+            String jsonStringResponse = ObaHelp.getUri(uri);
 
             // Example responses:
             // ObaCurrentTimeRequest {"text":"OK","data":{"time":1294877371929,"readableTime":"2011-01-12T16:09:31-08:00"},"code":200,"version":1}
 
-            return createResponseWithDataFromJson(response);
+            JSONObject json = new JSONObject(jsonStringResponse);
+            ObaReceivable jsonReceivable = (ObaReceivable) clsData.newInstance();
+            obaResponse = new ObaResponse(json, jsonReceivable);
         }
         catch (FileNotFoundException e)
         {
-            return createResponseWithNoDataDueToError(ObaApi.OBA_NOT_FOUND, e);
+            obaResponse = createResponseWithNoDataDueToError(ObaApi.OBA_NOT_FOUND, e);
         }
         catch (IOException e)
         {
-            return createResponseWithNoDataDueToError(ObaApi.OBA_IO_EXCEPTION, e);
+            obaResponse = createResponseWithNoDataDueToError(ObaApi.OBA_IO_EXCEPTION, e);
         }
         catch (JSONException e)
         {
-            return createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
+            obaResponse = createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
         catch (InstantiationException e)
         {
-            return createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
+            obaResponse = createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
         catch (IllegalAccessException e)
         {
             return createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
+        
+        return obaResponse;
     }
 }

@@ -15,9 +15,7 @@
  */
 package org.onebusaway.api.elements;
 
-import java.util.Vector;
-
-import net.rim.device.api.collection.List;
+import org.onebusaway.api.GeoPoint;
 
 public interface ObaShape {
     /**
@@ -39,16 +37,14 @@ public interface ObaShape {
      *
      * @return The decoded levels to display line.
      */
-    //public int[] getLevels();
-    public Vector getLevels();
+    public int[] getLevels();
 
     /**
      * Returns the list of points in this line.
      *
      * @return The list of points in this line.
      */
-    //public GeoPoint[] getPoints();
-    public Vector getPoints();
+    public GeoPoint[] getPoints();
 
     /**
      * Returns the string encoding of the points in this line.

@@ -15,7 +15,7 @@
  */
 package org.onebusaway.api.elements;
 
-import org.onebusaway.api.GeoPoint;
+import javax.microedition.location.Coordinates;
 
 public interface ObaShape {
     /**
@@ -44,7 +44,7 @@ public interface ObaShape {
      *
      * @return The list of points in this line.
      */
-    public GeoPoint[] getPoints();
+    public Coordinates[] getPoints();
 
     /**
      * Returns the string encoding of the points in this line.

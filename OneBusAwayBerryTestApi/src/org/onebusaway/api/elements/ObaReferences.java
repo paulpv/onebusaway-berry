@@ -15,6 +15,8 @@
  */
 package org.onebusaway.api.elements;
 
+import java.util.Vector;
+
 
 /**
  * Interface representing the <references> object in responses.
@@ -33,7 +35,7 @@ public interface ObaReferences {
      * @param ids A list of stops to convert.
      * @return The list of converted stop.
      */
-    public ObaStop[] getStops(String[] ids);
+    public Vector /*List<ObaStop>*/ getStops(String[] ids);
 
     /**
      * Dereferences a route by its ID.
@@ -47,7 +49,7 @@ public interface ObaReferences {
      * @param ids A list of routes to convert.
      * @return The list of converted routes.
      */
-    public ObaRoute[] getRoutes(String[] ids);
+    public Vector /*List<ObaRoute>*/ getRoutes(String[] ids);
 
     /**
      * References a trip by its ID.
@@ -61,7 +63,7 @@ public interface ObaReferences {
      * @param ids A list of trips to convert.
      * @return The list of converted trips.
      */
-    public ObaTrip[] getTrips(String[] ids);
+    public Vector /*List<ObaTrip>*/ getTrips(String[] ids);
 
     /**
      * Dereferences an agency by its ID.
@@ -75,7 +77,7 @@ public interface ObaReferences {
      * @param ids A list of agency IDs to convert.
      * @return The list of converted agencies.
      */
-    public ObaAgency[] getAgencies(String[] ids);
+    public Vector /*List<ObaAgency>*/ getAgencies(String[] ids);
 
     /**
      * Dereferences a situation by ID.
@@ -89,5 +91,5 @@ public interface ObaReferences {
      * @param ids A list of situation IDs to convert.
      * @return The list of converted situations.
      */
-    public ObaSituation[] getSituations(String[] ids);
+    public Vector /*ObaSituation*/ getSituations(String[] ids);
 }

@@ -15,6 +15,9 @@
  */
 package org.onebusaway.api;
 
+import javax.microedition.location.Coordinates;
+
+import org.onebusaway.api.request.ObaResponse;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
@@ -67,33 +70,39 @@ public class ObaApi
      * @param lon The longitude.
      * @return A GeoPoint representing this latitude/longitude.
      */
-    public static final GeoPoint makeGeoPoint(double lat, double lon) {
-        return new GeoPoint((int)(lat*1E6), (int)(lon*1E6));
+    public static final Coordinates makeGeoPoint(double lat, double lon) {
+        return new Coordinates(lat, lon, 0);
     }
 
     // TODO:(pv) Is there a better location for these? ObaHelp? ObaRequest? ObaResponse?
-    
-    public static String[] EMPTY_ARRAY_STRING = new String[0];
-    
-    public static boolean isInstanceObaReceivable(Class cls)
+
+    /**
+     * No-Op method used as a placeholder for compatibility w/ Android code.
+     */
+    public static Context getContext()
     {
-        return (cls != null && cls.getClass().isInstance(ObaReceivable.class));
-        //return (cls != null && cls.isInstance(ObaReceivable.class));
+        return null;
     }
 
-    public static Object newObjectFromJson(JSONObject json, String key, Class clsItem) throws JSONException, InstantiationException, IllegalAccessException
+    public static String[] EMPTY_ARRAY_STRING = new String[] {};
+    
+    
+    /*
+    public static boolean isInstanceJSONReceivable(Class cls)
     {
-        if (!isInstanceObaReceivable(clsItem))
-        {
-            throw new IllegalArgumentException("getObjectFromJson: clsItem must implement JSONReceivable");
-        }
-        
+        return (cls != null && cls.getClass().isInstance(JSONReceivable.class));
+    }
+    */
+    
+    /**
+     * Used by both Elements and Responses, so best in the root api package,
+     */
+    public static void fromJSON(JSONObject json, String key, JSONReceivable jsonReceivable) throws JSONException, InstantiationException, IllegalAccessException
+    {
         JSONObject jsonItem = json.getJSONObject(key);
-        ObaReceivable item = (ObaReceivable) clsItem.newInstance(); 
-        item.fromJSON(jsonItem);
-        return item;
+        jsonReceivable.fromJSON(jsonItem);
     }
-
+    
     /**
      * Copies the src JSONArray to an already allocated dest array, allocating objects of the clsItem
      *
@@ -106,31 +115,71 @@ public class ObaApi
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public static void copyJSONArrayToObaReceivableArray(JSONArray src, Object[] dest, Class clsItem) throws JSONException, InstantiationException, IllegalAccessException
+    public static void copyTo(JSONArray src, JSONReceivable[] dest, Class clsItem) throws JSONException, InstantiationException, IllegalAccessException
     {
         if (src == null || dest == null || clsItem == null)
         {
-            throw new IllegalArgumentException("src, dest, and clsItem must not be null");
+            throw new IllegalArgumentException("copyTo: src, dest, and clsItem must not be null");
         }
         
-        if (src != null && dest != null && src.length() == dest.length)
+        if (src != null && dest != null && src.length() != dest.length)
         {
-            throw new IllegalArgumentException("getObjectFromJson: src.length() and dest.length must equal.");
-        }
-        
-        if (!isInstanceObaReceivable(clsItem))
-        {
-            throw new IllegalArgumentException("getObjectFromJson: clsItem must implement JSONReceivable");
+            throw new IllegalArgumentException("copyTo: src.length() and dest.length must equal");
         }
 
+        /*
+        if (!isInstanceJSONReceivable(clsItem))
+        {
+            throw new IllegalArgumentException("copyTo: clsItem must be of type JSONReceivable.class");
+        }
+        */
+        
         JSONObject jsonObject;
-        ObaReceivable item;
+        JSONReceivable item;
         for (int i = 0; i < dest.length; i++)
         {
             jsonObject = src.getJSONObject(i);
-            item = (ObaReceivable) clsItem.newInstance(); 
+            item = (JSONReceivable) clsItem.newInstance();
             item.fromJSON(jsonObject);
             dest[i] = item;
         }
     }
+
+    public static void copyTo(JSONArray src, String[] dest) throws JSONException
+    {
+        if (src == null || dest == null)
+        {
+            throw new IllegalArgumentException("copyTo: src, and dest must not be null");
+        }
+        
+        if (src != null && dest != null && src.length() != dest.length)
+        {
+            throw new IllegalArgumentException("copyTo: src.length() and dest.length must equal");
+        }
+
+        for (int i = 0; i < dest.length; i++)
+        {
+            dest[i] = src.getString(i);
+        }
+    }
+
+    /*
+    public static void copyTo(JSONArray src, int[] dest) throws JSONException
+    {
+        if (src == null || dest == null)
+        {
+            throw new IllegalArgumentException("copyTo: src, and dest must not be null");
+        }
+        
+        if (src != null && dest != null && src.length() != dest.length)
+        {
+            throw new IllegalArgumentException("copyTo: src.length() and dest.length must equal");
+        }
+
+        for (int i = 0; i < dest.length; i++)
+        {
+            dest[i] = src.getInt(i);
+        }
+    }
+    */
 }

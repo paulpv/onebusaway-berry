@@ -15,11 +15,10 @@
  */
 package org.onebusaway.api.request;
 
-import org.onebusaway.api.ObaReceivable;
-import org.onebusaway.api.elements.ObaReferences;
-import org.onebusaway.api.elements.ObaReferencesElement;
+import org.onebusaway.api.ObaApi;
 import org.onebusaway.api.elements.ObaStop;
 import org.onebusaway.api.elements.ObaStopElement;
+import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
@@ -28,20 +27,13 @@ import org.onebusaway.json.me.JSONObject;
  * Response object for ObaStopsForLocation objects.
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopsForLocationResponse implements ObaReceivable {
+public final class ObaStopsForLocationResponse extends ObaResponseWithRefs {
 
-    private ObaReferencesElement references;
     private ObaStopElement[] list;
     private boolean outOfRange;
     private boolean limitExceeded;
     
-    private ObaStopsForLocationResponse() {
-        reset();
-    }
-
-    public void reset()
-    {
-        references = ObaReferencesElement.EMPTY_OBJECT;
+    public ObaStopsForLocationResponse() {
         list = ObaStopElement.EMPTY_ARRAY;
         outOfRange = false;
         limitExceeded = false;
@@ -49,8 +41,12 @@ public final class ObaStopsForLocationResponse implements ObaReceivable {
 
     public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
     {
-        // TODO:(pv) Auto-generated method stub
-        
+        JSONArray jsonList = json.getJSONArray("list");
+        list = new ObaStopElement[jsonList.length()];
+        ObaApi.copyTo(jsonList, list, ObaStopElement.class);
+
+        outOfRange = json.getBoolean("outOfRange");
+        limitExceeded = json.getBoolean("limitExceeded");
     }
     
     /**
@@ -73,9 +69,4 @@ public final class ObaStopsForLocationResponse implements ObaReceivable {
     public boolean getLimitExceeded() {
         return limitExceeded;
     }
-
-    protected ObaReferences getRefs() {
-        return references;
-    }
-
 }

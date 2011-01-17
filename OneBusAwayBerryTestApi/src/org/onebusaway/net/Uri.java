@@ -884,7 +884,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
         }
 
         public String[] /*List<String>*/ getPathSegments() {
-            return new String[0];//Collections.emptyList();
+            return new String[] {};//Collections.emptyList();
         }
 
         public String getLastPathSegment() {
@@ -1538,7 +1538,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
 
         String query = getEncodedQuery();
         if (query == null) {
-            return new String[0];//Collections.emptyList();
+            return new String[] {};//Collections.emptyList();
         }
 
         String encodedKey;
@@ -2134,7 +2134,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
 
             String path = getEncoded();
             if (path == null) {
-                return pathSegments = new String[0];//PathSegments.EMPTY;
+                return pathSegments = new String[] {};//PathSegments.EMPTY;
             }
 
             PathSegmentsBuilder segmentBuilder = new PathSegmentsBuilder();

@@ -15,6 +15,7 @@
  */
 package org.onebusaway.api.request;
 
+import org.onebusaway.api.Context;
 import org.onebusaway.api.ObaCallable;
 import org.onebusaway.net.Uri;
 
@@ -31,8 +32,8 @@ public final class ObaStopsForRouteRequest extends RequestBase
     }
 
     public static class Builder extends RequestBase.BuilderBase {
-        public Builder(String routeId) {
-            super(getPathWithId("/stops-for-route/", routeId));
+        public Builder(Context context, String routeId) {
+            super(context, getPathWithId("/stops-for-route/", routeId));
         }
 
         public Builder setIncludeShapes(boolean includePolylines) {

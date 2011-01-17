@@ -15,7 +15,9 @@
  */
 package org.onebusaway.api.request;
 
-import org.onebusaway.api.GeoPoint;
+import javax.microedition.location.Coordinates;
+
+import org.onebusaway.api.Context;
 import org.onebusaway.api.ObaCallable;
 import org.onebusaway.net.Uri;
 
@@ -32,10 +34,10 @@ public final class ObaStopsForLocationRequest extends RequestBase
     }
 
     public static class Builder extends RequestBase.BuilderBase {
-        public Builder(GeoPoint location) {
-            super(BASE_PATH + "/stops-for-location.json");
-            builder.appendQueryParameter("lat", String.valueOf(location.getLatitudeE6()/1E6));
-            builder.appendQueryParameter("lon", String.valueOf(location.getLongitudeE6()/1E6));
+        public Builder(Context context, Coordinates location) {
+            super(context, BASE_PATH + "/stops-for-location.json");
+            builder.appendQueryParameter("lat", String.valueOf(location.getLatitude()));
+            builder.appendQueryParameter("lon", String.valueOf(location.getLongitude()));
         }
 
         /**
@@ -63,11 +65,13 @@ public final class ObaStopsForLocationRequest extends RequestBase
          * @param latSpan The latitude span of the bounding box in microdegrees.
          * @param lonSpan The longitude span of the bounding box in microdegrees.
          */
+        /*
         public Builder setSpan(int latSpan, int lonSpan) {
             builder.appendQueryParameter("latSpan", String.valueOf(latSpan/1E6));
             builder.appendQueryParameter("lonSpan", String.valueOf(lonSpan/1E6));
             return this;
         }
+        */
 
         /**
          * A specific route short name to search for.

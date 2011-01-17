@@ -17,15 +17,15 @@ package org.onebusaway.api.elements;
 
 import java.util.Vector;
 
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaApi;
-import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.api.TextUtils;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
 
-public final class ObaSituationElement implements ObaSituation, ObaReceivable {
+public final class ObaSituationElement implements ObaSituation, JSONReceivable {
     public static final ObaSituationElement EMPTY_OBJECT = new ObaSituationElement();
     public static final ObaSituationElement[] EMPTY_ARRAY = new ObaSituationElement[] {};
 
@@ -114,7 +114,7 @@ public final class ObaSituationElement implements ObaSituation, ObaReceivable {
     }
 
     public static final class ConditionDetailsElement
-            implements ConditionDetails, ObaReceivable {
+            implements ConditionDetails, JSONReceivable {
         
         private String[] diversionStopIds;
         private ObaShapeElement diversionPath;
@@ -126,27 +126,12 @@ public final class ObaSituationElement implements ObaSituation, ObaReceivable {
 
         public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
         {
-            JSONArray jsonDiversionStopIds = json.optJSONArray("diversionStopIds");
-            if (jsonDiversionStopIds != null)
-            {
-                diversionStopIds = new String[jsonDiversionStopIds.length()];
-                ObaApi.copyJSONArrayToObaReceivableArray(jsonDiversionStopIds, diversionStopIds, String.class);
-            }
-            else
-            {
-                diversionStopIds = ObaApi.EMPTY_ARRAY_STRING;
-            }
+            JSONArray jsonDiversionStopIds = json.getJSONArray("diversionStopIds");
+            diversionStopIds = new String[jsonDiversionStopIds.length()];
+            ObaApi.copyTo(jsonDiversionStopIds, diversionStopIds);
             
-            JSONObject jsonDiversionPath = json.optJSONObject("diversionPath");
-            if (jsonDiversionPath != null)
-            {
-                diversionPath = new ObaShapeElement();
-                diversionPath.fromJSON(jsonDiversionPath);
-            }
-            else
-            {
-                diversionPath = ObaShapeElement.EMPTY_OBJECT;
-            }
+            diversionPath = new ObaShapeElement();
+            ObaApi.fromJSON(json, "diversionPath", diversionPath);
         }
         
         public ObaShape getDiversionPath() {
@@ -163,18 +148,13 @@ public final class ObaSituationElement implements ObaSituation, ObaReceivable {
         }
     }
 
-    public static final class ConsequenceElement implements Consequence, ObaReceivable {
+    public static final class ConsequenceElement implements Consequence, JSONReceivable {
         public static final ConsequenceElement[] EMPTY_ARRAY = new ConsequenceElement[] {};
 
         private String condition;
         private ConditionDetailsElement conditionDetails;
 
         ConsequenceElement() {
-            reset();
-        }
-
-        public void reset()
-        {
             condition = "";
             conditionDetails = null;
         }
@@ -211,11 +191,6 @@ public final class ObaSituationElement implements ObaSituation, ObaReceivable {
     private ConsequenceElement[] consequences;
 
     ObaSituationElement() {
-        reset();
-    }
-    
-    public void reset()
-    {
         id = "";
         summary = null;
         description = null;
@@ -233,7 +208,7 @@ public final class ObaSituationElement implements ObaSituation, ObaReceivable {
 
     public void fromJSON(JSONObject jsonSituation)
     {
-        // TODO:(pv) Auto-generated method stub
+        // TODO:(pv) fromJSON Auto-generated method stub
         
     }
     

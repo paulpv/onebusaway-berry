@@ -15,7 +15,7 @@
  */
 package org.onebusaway.api.request;
 
-import org.onebusaway.api.ObaReceivable;
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.elements.ObaAgency;
 import org.onebusaway.api.elements.ObaAgencyElement;
 import org.onebusaway.json.me.JSONException;
@@ -27,33 +27,20 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public final class ObaAgencyResponse implements ObaAgency, ObaReceivable
+public final class ObaAgencyResponse extends ObaResponse implements ObaAgency, JSONReceivable
 {
     private ObaAgencyElement entry;
 
     public ObaAgencyResponse()
-    {
-        reset();
-    }
-
-    public void reset()
     {
         entry = ObaAgencyElement.EMPTY_OBJECT;
     }
 
     public void fromJSON(JSONObject json) throws JSONException
     {
-        try
-        {
-            JSONObject jsonEntry = json.getJSONObject("entry");
-            entry = new ObaAgencyElement();
-            entry.fromJSON(jsonEntry);
-        }
-        catch (JSONException ex)
-        {
-            reset();
-            throw ex;
-        }
+        JSONObject jsonEntry = json.getJSONObject("entry");
+        entry = new ObaAgencyElement();
+        entry.fromJSON(jsonEntry);
     }
 
     public String getId()

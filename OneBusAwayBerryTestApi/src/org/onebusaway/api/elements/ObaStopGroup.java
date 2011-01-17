@@ -15,19 +15,32 @@
  */
 package org.onebusaway.api.elements;
 
-public final class ObaStopGroup {
+import org.onebusaway.api.JSONReceivable;
+import org.onebusaway.api.ObaApi;
+import org.onebusaway.json.me.JSONArray;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
+
+public final class ObaStopGroup implements JSONReceivable {
     public static final ObaStopGroup EMPTY_OBJECT = new ObaStopGroup();
     public static final ObaStopGroup[] EMPTY_ARRAY = new ObaStopGroup[] {};
 
-    private static final class StopGroupName {
+    private static final class StopGroupName implements JSONReceivable {
         private static final StopGroupName EMPTY_OBJECT = new StopGroupName();
 
-        private final String type;
-        private final String[] names;
+        private String type;
+        private String[] names;
 
         private StopGroupName() {
             type = "";
             names = new String[] {};
+        }
+        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
+        {
+            type = json.getString("type");
+            JSONArray jsonNames = json.getJSONArray("names");
+            names = new String[jsonNames.length()];
+            ObaApi.copyTo(jsonNames, names);
         }
         String getType() {
             return type;
@@ -36,9 +49,10 @@ public final class ObaStopGroup {
             return names;
         }
     }
-    private final String[] stopIds;
-    private final ObaShapeElement[] polylines;
-    private final StopGroupName name;
+    
+    private String[] stopIds;
+    private ObaShapeElement[] polylines;
+    private StopGroupName name;
 
     public static final String TYPE_DESTINATION = "destination";
 
@@ -51,6 +65,20 @@ public final class ObaStopGroup {
         name = StopGroupName.EMPTY_OBJECT;
     }
 
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
+    {
+        JSONArray jsonStopIds = json.getJSONArray("stopIds");
+        stopIds = new String[jsonStopIds.length()];
+        ObaApi.copyTo(jsonStopIds, stopIds);
+        
+        JSONArray jsonPolylines = json.getJSONArray("polylines");
+        polylines = new ObaShapeElement[jsonPolylines.length()];
+        ObaApi.copyTo(jsonPolylines, polylines, ObaShapeElement.class);
+        
+        name = new StopGroupName();
+        ObaApi.fromJSON(json, "name", name);
+    }
+    
     /**
      * Returns the type of grouping.
      *

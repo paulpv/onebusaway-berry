@@ -15,12 +15,13 @@
  */
 package org.onebusaway.api.elements;
 
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaInteger;
-import org.onebusaway.api.ObaReceivable;
+import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
 
-public final class ObaTripElement implements ObaTrip, ObaReceivable {
+public final class ObaTripElement implements ObaTrip, JSONReceivable {
     public static final ObaTripElement EMPTY_OBJECT = new ObaTripElement();
     public static final ObaTripElement[] EMPTY_ARRAY = new ObaTripElement[] {};
 
@@ -34,11 +35,6 @@ public final class ObaTripElement implements ObaTrip, ObaReceivable {
     private String routeId;
 
     public ObaTripElement() {
-        reset();
-    }
-
-    public void reset()
-    {
         id = "";
         tripShortName = "";
         shapeId = "";
@@ -49,10 +45,16 @@ public final class ObaTripElement implements ObaTrip, ObaReceivable {
         routeId = "";
     }
 
-    public void fromJSON(JSONObject json)
+    public void fromJSON(JSONObject json) throws JSONException
     {
-        // TODO:(pv) Auto-generated method stub
-        
+        id = json.getString("id");
+        tripShortName = json.getString("tripShortName");
+        shapeId = json.getString("shapeId");
+        directionId = json.getString("directionId");
+        serviceId = json.getString("serviceId");
+        tripHeadsign = json.getString("tripHeadsign");
+        timeZone = json.getString("timeZone");
+        routeId = json.getString("routeId");
     }
 
     public String getId() {

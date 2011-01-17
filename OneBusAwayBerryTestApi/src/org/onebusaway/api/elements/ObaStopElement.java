@@ -15,9 +15,10 @@
  */
 package org.onebusaway.api.elements;
 
-import org.onebusaway.api.GeoPoint;
+import javax.microedition.location.Coordinates;
+
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaApi;
-import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
@@ -28,7 +29,7 @@ import org.onebusaway.json.me.JSONObject;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopElement implements ObaStop, ObaReceivable
+public final class ObaStopElement implements ObaStop, JSONReceivable
 {
     public static final ObaStopElement   EMPTY_OBJECT = new ObaStopElement();
     public static final ObaStopElement[] EMPTY_ARRAY  = new ObaStopElement[] {};
@@ -65,15 +66,8 @@ public final class ObaStopElement implements ObaStop, ObaReceivable
         name = json.getString("name");
         code = json.getString("code");
         JSONArray jsonRouteIds = json.getJSONArray("routeIds");
-        if (jsonRouteIds != null)
-        {
-            routeIds = new String[jsonRouteIds.length()];
-            ObaApi.copyJSONArrayToObaReceivableArray(jsonRouteIds, routeIds, String.class);
-        }
-        else
-        {
-            routeIds = EMPTY_ROUTES;
-        }
+        routeIds = new String[jsonRouteIds.length()];
+        ObaApi.copyTo(jsonRouteIds, routeIds);
     }
 
     /*
@@ -122,7 +116,7 @@ public final class ObaStopElement implements ObaStop, ObaReceivable
         return name;
     }
 
-    public GeoPoint getLocation()
+    public Coordinates getLocation()
     {
         return ObaApi.makeGeoPoint(lat, lon);
     }

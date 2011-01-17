@@ -15,6 +15,7 @@
  */
 package org.onebusaway.api.request;
 
+import org.onebusaway.api.Context;
 import org.onebusaway.api.ObaCallable;
 import org.onebusaway.net.Uri;
 
@@ -34,9 +35,9 @@ public final class ObaAgencyRequest extends RequestBase implements ObaCallable
 
     public static class Builder extends RequestBase.BuilderBase
     {
-        public Builder(String agencyId)
+        public Builder(Context context, String agencyId)
         {
-            super(getPathWithId("/agency/", agencyId));
+            super(context, getPathWithId("/agency/", agencyId));
         }
 
         public ObaAgencyRequest build()
@@ -51,8 +52,8 @@ public final class ObaAgencyRequest extends RequestBase implements ObaCallable
      * @param routeId The agency Id to request.
      * @return The new request instance.
      */
-    public static ObaAgencyRequest newRequest(String agencyId)
+    public static ObaAgencyRequest newRequest(Context context, String agencyId)
     {
-        return new Builder(agencyId).build();
+        return new Builder(context, agencyId).build();
     }
 }

@@ -15,13 +15,14 @@
  */
 package org.onebusaway.api.elements;
 
-import org.onebusaway.api.GeoPoint;
+import javax.microedition.location.Coordinates;
+
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaApi;
-import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-public final class ObaAgencyWithCoverage implements ObaElement, ObaReceivable
+public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable 
 {
     public static final ObaAgencyWithCoverage[] EMPTY_ARRAY = new ObaAgencyWithCoverage[] {};
 
@@ -57,7 +58,7 @@ public final class ObaAgencyWithCoverage implements ObaElement, ObaReceivable
     /**
      * @return The center point of the agency's coverage area.
      */
-    public GeoPoint getPoint()
+    public Coordinates getPoint()
     {
         return ObaApi.makeGeoPoint(lat, lon);
     }

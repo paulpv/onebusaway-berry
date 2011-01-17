@@ -15,9 +15,12 @@
  */
 package org.onebusaway.api.request;
 
-import org.onebusaway.api.ObaReceivable;
+import java.util.Vector;
+
+import org.onebusaway.api.ObaApi;
 import org.onebusaway.api.elements.ObaAgency;
 import org.onebusaway.api.elements.ObaReferences;
+import org.onebusaway.api.elements.ObaReferencesElement;
 import org.onebusaway.api.elements.ObaRoute;
 import org.onebusaway.api.elements.ObaSituation;
 import org.onebusaway.api.elements.ObaStop;
@@ -25,53 +28,93 @@ import org.onebusaway.api.elements.ObaTrip;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-public abstract class ObaResponseWithRefs extends ObaResponse implements ObaReferences {
+public abstract class ObaResponseWithRefs extends ObaResponse implements ObaReferences
+{
+    protected ObaReferencesElement references;
 
-    public ObaResponseWithRefs(JSONObject json, ObaReceivable data) throws JSONException, InstantiationException,
-                    IllegalAccessException
+    public ObaResponseWithRefs()
     {
-        super(json, data);
+        references = ObaReferencesElement.EMPTY_OBJECT;
     }
 
-    public ObaStop getStop(String id) {
-        return getRefs().getStop(id);
+    public JSONObject fromJSON(String jsonString) throws JSONException, InstantiationException, IllegalAccessException
+    {
+        try
+        {
+            JSONObject jsonData = super.fromJSON(jsonString);
+
+            references = new ObaReferencesElement();
+            ObaApi.fromJSON(jsonData, "references", references);
+
+            return jsonData;
+        }
+        catch (JSONException e)
+        {
+            fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        }
+        catch (InstantiationException e)
+        {
+            fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        }
+        catch (IllegalAccessException e)
+        {
+            fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        }
+        catch (Exception e)
+        {
+            fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        }
+
+        return null;
     }
 
-    public ObaStop[] getStops(String[] ids) {
-        return getRefs().getStops(ids);
+    public ObaStop getStop(String id)
+    {
+        return references.getStop(id);
     }
 
-    public ObaRoute getRoute(String id) {
-        return getRefs().getRoute(id);
+    public Vector getStops(String[] ids)
+    {
+        return references.getStops(ids);
     }
 
-    public ObaRoute[] getRoutes(String[] ids) {
-        return getRefs().getRoutes(ids);
+    public ObaRoute getRoute(String id)
+    {
+        return references.getRoute(id);
     }
 
-    public ObaTrip getTrip(String id) {
-        return getRefs().getTrip(id);
+    public Vector getRoutes(String[] ids)
+    {
+        return references.getRoutes(ids);
     }
 
-    public ObaTrip[] getTrips(String[] ids) {
-        return getRefs().getTrips(ids);
+    public ObaTrip getTrip(String id)
+    {
+        return references.getTrip(id);
     }
 
-    public ObaAgency getAgency(String id) {
-        return getRefs().getAgency(id);
+    public Vector getTrips(String[] ids)
+    {
+        return references.getTrips(ids);
     }
 
-    public ObaAgency[] getAgencies(String[] ids) {
-        return getRefs().getAgencies(ids);
+    public ObaAgency getAgency(String id)
+    {
+        return references.getAgency(id);
     }
 
-    public ObaSituation getSituation(String id) {
-        return getRefs().getSituation(id);
+    public Vector getAgencies(String[] ids)
+    {
+        return references.getAgencies(ids);
     }
 
-    public ObaSituation[] getSituations(String[] ids) {
-        return getRefs().getSituations(ids);
+    public ObaSituation getSituation(String id)
+    {
+        return references.getSituation(id);
     }
 
-    abstract protected ObaReferences getRefs();
+    public Vector getSituations(String[] ids)
+    {
+        return references.getSituations(ids);
+    }
 }

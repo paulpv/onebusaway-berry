@@ -17,8 +17,8 @@ package org.onebusaway.api.elements;
 
 import net.rim.device.api.ui.Color;
 
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaInteger;
-import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
@@ -29,7 +29,7 @@ import org.onebusaway.json.me.JSONObject;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaRouteElement implements ObaRoute, ObaReceivable {
+public final class ObaRouteElement implements ObaRoute, JSONReceivable {
     public static final ObaRouteElement EMPTY_OBJECT = new ObaRouteElement();
     public static final ObaRouteElement[] EMPTY_ARRAY = new ObaRouteElement[] {};
 

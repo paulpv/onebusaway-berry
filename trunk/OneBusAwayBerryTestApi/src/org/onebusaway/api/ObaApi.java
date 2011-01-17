@@ -77,7 +77,7 @@ public class ObaApi
     // TODO:(pv) Is there a better location for these? ObaHelp? ObaRequest? ObaResponse?
 
     /**
-     * No-Op method used as a placeholder for compatibility w/ Android code.
+     * No-Op method used as a placeholder for better compatibility w/ Android code.
      */
     public static Context getContext()
     {

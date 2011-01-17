@@ -21,11 +21,20 @@ import org.onebusaway.api.ObaApi;
 //import j2meunit.framework.TestCase;
 
 //TODO:(pv) Decide on BB unit test framework
-//http://www.developer.com/java/j2me/article.php/3760891/A-Unit-Testing-Framework-for-the-BlackBerry.htm
-//J2MEUnit: Need to download code and compile a BB .jar file.
+// 1) Someone's decent hand-rolled equiv of JMEUnit:
+//      http://www.developer.com/java/j2me/article.php/3760891/A-Unit-Testing-Framework-for-the-BlackBerry.htm
+// 2) J2MEUnit: Need to download code and compile a BB .jar file:
+//      http://j2meunit.sourceforge.net/
+// 3) Same as #2, but already done:
+//      http://www.logicprobe.org/proj/logicmail/browser/trunk/J2MEUnit
+
 
 public class ObaTestCase //extends TestCase
 {
+    /**
+     * No-op method used as a placeholder for better compatibility w/ Android code.
+     * @return
+     */
     protected Context getContext()
     {
         return ObaApi.getContext();

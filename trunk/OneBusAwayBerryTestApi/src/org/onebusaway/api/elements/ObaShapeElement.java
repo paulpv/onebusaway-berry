@@ -17,12 +17,13 @@ package org.onebusaway.api.elements;
 
 import java.util.Vector;
 
-import org.onebusaway.api.GeoPoint;
-import org.onebusaway.api.ObaReceivable;
+import javax.microedition.location.Coordinates;
+
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-public final class ObaShapeElement implements ObaShape, ObaReceivable {
+public final class ObaShapeElement implements ObaShape, JSONReceivable {
     
     public static final ObaShapeElement EMPTY_OBJECT = new ObaShapeElement();
     public static final ObaShapeElement[] EMPTY_ARRAY = new ObaShapeElement[] {};
@@ -57,7 +58,7 @@ public final class ObaShapeElement implements ObaShape, ObaReceivable {
         return decodeLevels(levels, length);
     }
 
-    public GeoPoint[] getPoints()
+    public Coordinates[] getPoints()
     {
         return decodeLine(points, length);
     }
@@ -78,7 +79,7 @@ public final class ObaShapeElement implements ObaShape, ObaReceivable {
      *      of points that are contained in the encoded string.
      * @return A list of points from the encoded string.
      */
-    public static GeoPoint[] decodeLine(String encoded, int numPoints) {
+    public static Coordinates[] decodeLine(String encoded, int numPoints) {
         //assert(numPoints >= 0);
         Vector array = new Vector(numPoints);
 
@@ -116,10 +117,11 @@ public final class ObaShapeElement implements ObaShape, ObaReceivable {
             lon += dlon;
 
             // The polyline encodes in degrees * 1E5, we need degrees * 1E6
-            array.addElement(new GeoPoint(lat*10, lon*10));
+            //array.addElement(new GeoPoint(lat*10, lon*10));
+            array.addElement(new Coordinates(lat/1E5, lon/1E5, 0));
         }
         
-        GeoPoint[] geoPoints = new GeoPoint[array.size()];
+        Coordinates[] geoPoints = new Coordinates[array.size()];
         array.copyInto(geoPoints);
         return geoPoints;
     }

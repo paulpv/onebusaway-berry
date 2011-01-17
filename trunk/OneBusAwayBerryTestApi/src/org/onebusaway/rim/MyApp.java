@@ -6,7 +6,7 @@ import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.RichTextField;
 import net.rim.device.api.ui.container.MainScreen;
 
-import org.onebusaway.api.request.test.CurrentTimeRequestTest;
+import org.onebusaway.api.request.test.StopsForLocationTest;
 
 public class MyApp extends UiApplication
 {
@@ -51,9 +51,15 @@ public class MyApp extends UiApplication
         {
             //ObaApi.setAppInfo(2, "");
             
-            CurrentTimeRequestTest test = new CurrentTimeRequestTest();
-            test.testCurrentTime();
-            test.testNewRequest();
+            //CurrentTimeRequestTest testTimeRequest = new CurrentTimeRequestTest();
+            //testTimeRequest.testCurrentTime();
+            //testTimeRequest.testNewRequest();
+            
+            StopsForLocationTest testStopsForLocation = new StopsForLocationTest();
+            testStopsForLocation.testDowntownSeattle1();
+            testStopsForLocation.testQuery();
+            testStopsForLocation.testQueryFail();
+            testStopsForLocation.testOutOfRange();
         }
     }
 }

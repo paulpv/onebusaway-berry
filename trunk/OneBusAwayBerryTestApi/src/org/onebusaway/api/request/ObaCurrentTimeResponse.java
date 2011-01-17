@@ -15,21 +15,16 @@
  */
 package org.onebusaway.api.request;
 
-import org.onebusaway.api.ObaReceivable;
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-public final class ObaCurrentTimeResponse implements ObaReceivable
+public final class ObaCurrentTimeResponse extends ObaResponse implements JSONReceivable
 {
     private long   time;
     private String readableTime;
 
     public ObaCurrentTimeResponse()
-    {
-        reset();
-    }
-
-    public void reset()
     {
         time = 0;
         readableTime = "";
@@ -37,16 +32,8 @@ public final class ObaCurrentTimeResponse implements ObaReceivable
 
     public void fromJSON(JSONObject json) throws JSONException
     {
-        try
-        {
-            time = json.getLong("time");
-            readableTime = json.getString("readableTime");
-        }
-        catch (JSONException ex)
-        {
-            reset();
-            throw ex;
-        }
+        time = json.getLong("time");
+        readableTime = json.getString("readableTime");
     }
 
     /**

@@ -19,12 +19,10 @@ import java.io.IOException;
 
 import net.rim.device.api.io.FileNotFoundException;
 
+import org.onebusaway.api.Context;
 import org.onebusaway.api.ObaApi;
 import org.onebusaway.api.ObaHelp;
-import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.api.TextUtils;
-import org.onebusaway.json.me.JSONException;
-import org.onebusaway.json.me.JSONObject;
 import org.onebusaway.net.Uri;
 import org.onebusaway.rim.settings.ObaSettings;
 
@@ -35,54 +33,60 @@ import org.onebusaway.rim.settings.ObaSettings;
  */
 public class RequestBase
 {
-    private static final String   API_KEY     = "v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc=cGF1bGN3YXR0c0BnbWFpbC5jb20=";
-    private static final String   API_VERSION = "2";
-    protected static final String BASE_PATH   = "/api/where";
-
-    protected final Class         clsData;
-    protected final Uri           uri;
-
-    protected RequestBase(Class clsData, Uri uri)
+    public static boolean isInstanceObaResponse(Class cls)
     {
-        if (!ObaApi.isInstanceObaReceivable(clsData))
+        return (cls != null && cls.getClass().isInstance(ObaResponse.class));
+    }
+
+    protected final Class clsResponse;
+    protected final Uri   uri;
+
+    protected RequestBase(Class clsResponse, Uri uri)
+    {
+        if (!isInstanceObaResponse(clsResponse))
         {
-            throw new IllegalArgumentException("clsData must implement JSONReceivable");
+            throw new IllegalArgumentException("clsResponse must be of type ObaResponse.class");
         }
 
-        this.clsData = clsData;
+        this.clsResponse = clsResponse;
         this.uri = uri;
     }
 
     public String toString()
     {
-        return TextUtils.getShortClassName(this) + " { clsData=" + TextUtils.getShortClassName(clsData) + ", uri=\"" + uri
-                        + "\" }";
+        return TextUtils.getShortClassName(this) + //
+                        " { clsResponse=" + TextUtils.getShortClassName(clsResponse) + //
+                        ", uri=\"" + uri + "\" }";
     }
 
-    private static String getServer()
+    private static String getServer(Context context)
     {
         return ObaSettings.getSettings().getApiServerName();
     }
 
     public static class BuilderBase
     {
-        protected final Uri.Builder builder;
-        private String              apiKey = API_KEY;
+        private static final String   API_KEY_ANDROID    = "v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc=cGF1bGN3YXR0c0BnbWFpbC5jb20=";
+        private static final String   API_KEY_BLACKBERRY = "84050538-4d94-4f19-b05e-5221c86eda95";
+        protected static final String BASE_PATH          = "/api/where";
 
-        protected BuilderBase(String path)
+        protected final Uri.Builder   builder;
+        private String                apiKey             = API_KEY_BLACKBERRY;
+
+        protected BuilderBase(Context context, String path)
         {
-            this(path, false);
+            this(context, path, false);
         }
 
-        protected BuilderBase(String path, boolean noVersion)
+        protected BuilderBase(Context context, String path, boolean noVersion)
         {
             builder = new Uri.Builder();
             builder.scheme("http");
-            builder.authority(getServer());
+            builder.authority(getServer(context));
             builder.path(path);
             if (!noVersion)
             {
-                builder.appendQueryParameter("version", API_VERSION);
+                builder.appendQueryParameter("version", ObaApi.VERSION2);
             }
             ObaApi.setAppInfo(builder);
         }
@@ -127,69 +131,41 @@ public class RequestBase
         }
     }
 
-    private ObaResponse createResponseWithNoDataDueToError(int code, Throwable err)
-    {
-        try
-        {
-            JSONObject json = new JSONObject();
-            json.put("code", code);
-            json.put("version", "2");
-            json.put("text", (err == null) ? "UNKNOWN" : err.toString());
-            return new ObaResponse(json, null);
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-        catch (InstantiationException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IllegalAccessException e)
-        {
-            e.printStackTrace();
-        }
-        
-        // Hopefully this never returns null.
-        return null;
-    }
-
     public ObaResponse call()
     {
         ObaResponse obaResponse = null;
-        
+
         try
         {
+            // MUST NEVER FAIL: Must have a public default constructor!
+            obaResponse = (ObaResponse) clsResponse.newInstance();
+
+            // Example requests:
+            // Initial startup out of service area:
+            // http://api.onebusaway.org/api/where/stops-for-location.json?version=2&app_ver=11&app_uid=5284047f4ffb4e04824a2fd1d1f0cd62&lat=36.149777&lon=-95.993398&latSpan=0.0&lonSpan=360.0&key=v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc%3DcGF1bGN3YXR0c0BnbWFpbC5jb20%3D
+            // Initial request for Seattle:
+            // http://api.onebusaway.org/api/where/stops-for-location.json?version=2&app_ver=11&app_uid=5284047f4ffb4e04824a2fd1d1f0cd62&lat=47.60599&lon=-122.33178&latSpan=0.012441&lonSpan=0.013732&key=v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc%3DcGF1bGN3YXR0c0BnbWFpbC5jb20%3D
+
             String jsonStringResponse = ObaHelp.getUri(uri);
 
             // Example responses:
             // ObaCurrentTimeRequest {"text":"OK","data":{"time":1294877371929,"readableTime":"2011-01-12T16:09:31-08:00"},"code":200,"version":1}
 
-            JSONObject json = new JSONObject(jsonStringResponse);
-            ObaReceivable jsonReceivable = (ObaReceivable) clsData.newInstance();
-            obaResponse = new ObaResponse(json, jsonReceivable);
+            obaResponse.fromJSON(jsonStringResponse);
         }
         catch (FileNotFoundException e)
         {
-            obaResponse = createResponseWithNoDataDueToError(ObaApi.OBA_NOT_FOUND, e);
+            obaResponse.fromError(ObaApi.OBA_NOT_FOUND, e);
         }
         catch (IOException e)
         {
-            obaResponse = createResponseWithNoDataDueToError(ObaApi.OBA_IO_EXCEPTION, e);
+            obaResponse.fromError(ObaApi.OBA_IO_EXCEPTION, e);
         }
-        catch (JSONException e)
+        catch (Exception e)
         {
-            obaResponse = createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
+            obaResponse.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
-        catch (InstantiationException e)
-        {
-            obaResponse = createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
-        }
-        catch (IllegalAccessException e)
-        {
-            return createResponseWithNoDataDueToError(ObaApi.OBA_INTERNAL_ERROR, e);
-        }
-        
+
         return obaResponse;
     }
 }

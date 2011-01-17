@@ -15,7 +15,8 @@
  */
 package org.onebusaway.api.elements;
 
-import org.onebusaway.api.GeoPoint;
+import javax.microedition.location.Coordinates;
+
 
 public final class ObaTripStatusElement implements ObaTripStatus {
     protected static final ObaTripStatusElement EMPTY_OBJECT = new ObaTripStatusElement();
@@ -86,7 +87,7 @@ public final class ObaTripStatusElement implements ObaTripStatus {
         return closestStopTimeOffset;
     }
 
-    public GeoPoint getPosition() {
+    public Coordinates getPosition() {
         return (position != null) ? position.getPoint() : null;
     }
 
@@ -130,7 +131,7 @@ public final class ObaTripStatusElement implements ObaTripStatus {
         return lastUpdateTime.longValue();
     }
 
-    public GeoPoint getLastKnownLocation() {
+    public Coordinates getLastKnownLocation() {
         return (lastKnownLocation != null) ? lastKnownLocation.getPoint() : null;
     }
 

@@ -15,11 +15,13 @@
  */
 package org.onebusaway.api.request;
 
-import org.onebusaway.api.GeoPoint;
+import java.util.Vector;
+
+import javax.microedition.location.Coordinates;
+
 import org.onebusaway.api.ObaApi;
 import org.onebusaway.api.elements.ObaReferences;
 import org.onebusaway.api.elements.ObaReferencesElement;
-import org.onebusaway.api.elements.ObaRoute;
 import org.onebusaway.api.elements.ObaStop;
 import org.onebusaway.api.elements.ObaStopElement;
 import org.onebusaway.json.me.JSONException;
@@ -30,9 +32,8 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) BB JME
  */
-public final class ObaStopResponse implements ObaStop {
+public final class ObaStopResponse extends ObaResponseWithRefs implements ObaStop {
     
-    private ObaReferencesElement references;
     private ObaStopElement entry;
 
     public ObaStopResponse() {
@@ -42,8 +43,8 @@ public final class ObaStopResponse implements ObaStop {
 
     public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
     {
-        references = (ObaReferencesElement) ObaApi.newObjectFromJson(json, "reference", ObaReferencesElement.class);
-        entry = (ObaStopElement) ObaApi.newObjectFromJson(json, "entry", ObaStopElement.class);
+        entry = new ObaStopElement();
+        ObaApi.fromJSON(json, "entry", entry);
     }
     
     public String getId() {
@@ -58,7 +59,7 @@ public final class ObaStopResponse implements ObaStop {
         return entry.getName();
     }
 
-    public GeoPoint getLocation() {
+    public Coordinates/*GeoPoint*/ getLocation() {
         return entry.getLocation();
     }
 
@@ -85,11 +86,7 @@ public final class ObaStopResponse implements ObaStop {
     /**
      * Returns the list of dereferenced routes.
      */
-    public ObaRoute[] getRoutes() {
+    public Vector getRoutes() {
         return references.getRoutes(entry.getRouteIds());
-    }
-
-    protected ObaReferences getRefs() {
-        return references;
     }
 }

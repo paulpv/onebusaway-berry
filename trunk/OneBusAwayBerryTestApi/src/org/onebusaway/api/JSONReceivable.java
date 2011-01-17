@@ -3,10 +3,8 @@ package org.onebusaway.api;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-
-public interface ObaReceivable
+public interface JSONReceivable
 {
-    //void reset();
     /**
      * Think of this as a public constructor; if this fails then the instance should be discarded.
      * It should probably be renamed to something like "constructor_CallerShouldDiscardObjectIfExceptionThrown".

@@ -15,6 +15,7 @@
  */
 package org.onebusaway.api.request;
 
+import org.onebusaway.api.Context;
 import org.onebusaway.api.ObaCallable;
 import org.onebusaway.net.Uri;
 
@@ -34,9 +35,9 @@ public final class ObaCurrentTimeRequest extends RequestBase implements ObaCalla
 
     public static class Builder extends RequestBase.BuilderBase
     {
-        public Builder()
+        public Builder(Context context)
         {
-            super(BASE_PATH + "/current-time.json", true);
+            super(context, BASE_PATH + "/current-time.json", true);
         }
 
         public ObaCurrentTimeRequest build()
@@ -50,8 +51,8 @@ public final class ObaCurrentTimeRequest extends RequestBase implements ObaCalla
      * @param context The package context.
      * @return The new request instance.
      */
-    public static ObaCurrentTimeRequest newRequest()
+    public static ObaCurrentTimeRequest newRequest(Context context)
     {
-        return new Builder().build();
+        return new Builder(context).build();
     }
 }

@@ -15,41 +15,26 @@
  */
 package org.onebusaway.api.request.test;
 
-// TODO:(pv) Decide on BB unit test framework
-// http://www.developer.com/java/j2me/article.php/3760891/A-Unit-Testing-Framework-for-the-BlackBerry.htm
-// J2MEUnit: Need to download code and compile a BB .jar file.
-
 import org.onebusaway.api.request.ObaCurrentTimeRequest;
 import org.onebusaway.api.request.ObaCurrentTimeResponse;
-import org.onebusaway.api.request.ObaResponse;
 
 public class CurrentTimeRequestTest extends ObaTestCase
 {
     public void testCurrentTime()
     {
-        ObaCurrentTimeRequest.Builder builder = new ObaCurrentTimeRequest.Builder();
+        ObaCurrentTimeRequest.Builder builder = new ObaCurrentTimeRequest.Builder(getContext());
         ObaCurrentTimeRequest request = builder.build();
-        ObaResponse response = request.call();
+        ObaCurrentTimeResponse response = (ObaCurrentTimeResponse) request.call();
         //assertOK(response);
-        ObaCurrentTimeResponse currentTime = (ObaCurrentTimeResponse) response.getData();
-        //assertNotNull(currentTime);
-        final long time = currentTime.getTime();
+        final long time = response.getTime();
         //assertTrue(time > 0);
-        final String readableTime = currentTime.getReadableTime();
+        final String readableTime = response.getReadableTime();
         //assertNotNullOrEmpty(readableTime);
     }
 
     public void testNewRequest()
     {
-        ObaCurrentTimeRequest request = ObaCurrentTimeRequest.newRequest();
+        ObaCurrentTimeRequest request = ObaCurrentTimeRequest.newRequest(getContext());
         //assertNotNull(request);
-        ObaResponse response = request.call();
-        //assertOK(response);
-        ObaCurrentTimeResponse currentTime = (ObaCurrentTimeResponse) response.getData();
-        //assertNotNull(currentTime);
-        final long time = currentTime.getTime();
-        //assertTrue(time > 0);
-        final String readableTime = currentTime.getReadableTime();
-        //assertNotNullOrEmpty(readableTime);
     }
 }

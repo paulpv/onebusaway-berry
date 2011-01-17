@@ -1,0 +1,9 @@
+First run request when out of service range:
+http://api.onebusaway.org/api/where/stops-for-location.json?version=2&app_ver=11&app_uid=5284047f4ffb4e04824a2fd1d1f0cd62&lat=36.149777&lon=-95.993398&latSpan=0.0&lonSpan=360.0&key=v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc%3DcGF1bGN3YXR0c0BnbWFpbC5jb20%3D
+
+First request in Seattle:
+http://api.onebusaway.org/api/where/stops-for-location.json?version=2&app_ver=11&app_uid=5284047f4ffb4e04824a2fd1d1f0cd62&lat=47.60599&lon=-122.33178&latSpan=0.012441&lonSpan=0.013732&key=v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc%3DcGF1bGN3YXR0c0BnbWFpbC5jb20%3D
+http://api.onebusaway.org/api/where/stops-for-location.json?version=2&lat=47.60599&lon=-122.33178&latSpan=0.012441&lonSpan=0.013732&key=v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc%3DcGF1bGN3YXR0c0BnbWFpbC5jb20%3D
+
+
+http://api.onebusaway.org/api/where/stops-for-location.json?version=2&lat=47.61098&lon=-122.33845&key=84050538-4d94-4f19-b05e-5221c86eda95

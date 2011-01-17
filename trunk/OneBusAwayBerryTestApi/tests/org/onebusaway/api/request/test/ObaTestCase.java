@@ -15,11 +15,22 @@
  */
 package org.onebusaway.api.request.test;
 
+import org.onebusaway.api.Context;
+import org.onebusaway.api.ObaApi;
+
 //import j2meunit.framework.TestCase;
 
+//TODO:(pv) Decide on BB unit test framework
+//http://www.developer.com/java/j2me/article.php/3760891/A-Unit-Testing-Framework-for-the-BlackBerry.htm
+//J2MEUnit: Need to download code and compile a BB .jar file.
 
 public class ObaTestCase //extends TestCase
 {
+    protected Context getContext()
+    {
+        return ObaApi.getContext();
+    }
+
     /*
     public void assertOK(ObaResponse response)
     {

@@ -15,6 +15,7 @@
  */
 package org.onebusaway.api.request;
 
+import org.onebusaway.api.Context;
 import org.onebusaway.api.ObaCallable;
 import org.onebusaway.net.Uri;
 
@@ -30,8 +31,8 @@ public final class ObaStopRequest extends RequestBase implements ObaCallable {
     }
 
     public static class Builder extends RequestBase.BuilderBase {
-        public Builder(String stopId) {
-            super(getPathWithId("/stop/", stopId));
+        public Builder(Context context, String stopId) {
+            super(context, getPathWithId("/stop/", stopId));
         }
 
         public ObaStopRequest build() {
@@ -45,7 +46,7 @@ public final class ObaStopRequest extends RequestBase implements ObaCallable {
      * @param stopId The stopId to request.
      * @return The new request instance.
      */
-    public static ObaStopRequest newRequest(String stopId) {
-        return new Builder(stopId).build();
+    public static ObaStopRequest newRequest(Context context, String stopId) {
+        return new Builder(context, stopId).build();
     }
 }

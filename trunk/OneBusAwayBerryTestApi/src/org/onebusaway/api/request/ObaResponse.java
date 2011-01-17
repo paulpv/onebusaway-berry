@@ -15,55 +15,80 @@
  */
 package org.onebusaway.api.request;
 
+import org.onebusaway.api.JSONReceivable;
 import org.onebusaway.api.ObaApi;
-import org.onebusaway.api.ObaReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
 /**
  * Base class for response objects.
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
- * @author Paul Peavyhouse (pv@swooby.com) JME
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public class ObaResponse
+public abstract class ObaResponse implements JSONReceivable
 {
-    private String         version;
-    private int            code;
-    private String         text;
-    private ObaReceivable data;
+    private String version;
+    private int    code;
+    private String text;
 
-    public ObaResponse(JSONObject json, ObaReceivable data) throws JSONException, InstantiationException, IllegalAccessException
-    {
-        try
-        {
-            this.version = json.getString("version");
-            this.code = json.getInt("code");
-            this.text = json.getString("text");
-            if (data != null)
-            {
-                JSONObject jsonData = json.getJSONObject("data");
-                if (jsonData != null)
-                {
-                    data.fromJSON(jsonData);
-                }
-            }
-            this.data = data;
-        }
-        catch (JSONException e)
-        {
-            reset();
-            throw e;
-        }
-    }
-
-    public void reset()
+    public ObaResponse()
     {
         version = ObaApi.VERSION1;
         code = 0;
         text = "ERROR";
-        data = null;
     }
-    
+
+    protected void fromError(int obaErrorCode, Throwable err)
+    {
+        this.version = ObaApi.VERSION2;
+        this.code = obaErrorCode;
+        this.text = (err == null) ? "UNKNOWN ERROR" : err.toString();
+    }
+
+    /**
+     * Parses the jsonString and populates the required fields "version", "code", "text", and "data".
+     * Returns the response's data field as a JSONObject so that the caller/subclass can retrieve other JSON objects.
+     *  
+     * @param jsonString with fields "version", "code", "text", "data".
+     * @return jsonString's "data" field as a JSONObject  
+     * @throws JSONException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    public JSONObject fromJSON(String jsonString) throws JSONException, InstantiationException, IllegalAccessException
+    {
+        try
+        {
+            JSONObject json = new JSONObject(jsonString);
+
+            this.version = json.getString("version");
+            this.code = json.getInt("code");
+            this.text = json.getString("text");
+            JSONObject jsonData = json.getJSONObject("data");
+            fromJSON(jsonData);
+
+            return jsonData;
+        }
+        catch (JSONException e)
+        {
+            fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        }
+        catch (InstantiationException e)
+        {
+            fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        }
+        catch (IllegalAccessException e)
+        {
+            fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        }
+        catch (Exception e)
+        {
+            fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        }
+
+        return null;
+    }
+
     /**
      * @return The version of this response.
      */
@@ -86,10 +111,5 @@ public class ObaResponse
     public String getText()
     {
         return text;
-    }
-    
-    public ObaReceivable getData()
-    {
-        return data;
     }
 }

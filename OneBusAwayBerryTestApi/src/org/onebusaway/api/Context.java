@@ -1,7 +1,7 @@
 package org.onebusaway.api;
 
 /**
- * No-Op class used as a empty placeholder for compatibility w/ Android code.
+ * No-Op class used as a empty placeholder for better compatibility w/ Android code.
  * 
  * @author pv
  *

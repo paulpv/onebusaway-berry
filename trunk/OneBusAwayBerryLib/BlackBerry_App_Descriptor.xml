@@ -1,17 +1,17 @@
 <Properties ModelVersion="1.1.2">
-  <General Title="OBA Test Api" Version="1.0.0" Vendor="BlackBerry Developer" Description=""/>
+  <General Title="OneBusAwayBerryLib" Version="1.0.0" Vendor="onebusaway.org" Description=""/>
   <Application Type="Library" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="true" IsAutostartup="false"/>
   <Resources hasTitleResource="false" TitleResourceBundleName="" TitleResourceBundleRelativePath="" TitleResourceBundleClassName="" TitleResourceBundleKey="" DescriptionId="">
     <Icons>
-      <Icon CanonicalFileName="res/json_file.png" IsFocus="false"/>
+      <Icon CanonicalFileName="res/icon.png" IsFocus="false"/>
     </Icons>
   </Resources>
-  <Compile OutputCompilerMessages="false" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
+  <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
     <PreprocessorDefines>
       <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>
     </PreprocessorDefines>
   </Compile>
-  <Packaging OutputFileName="OneBusAwayBerryTestApi" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">
+  <Packaging OutputFileName="OneBusAwayBerryLib" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="false">
     <AlxFiles/>
   </Packaging>
   <HiddenProperties>

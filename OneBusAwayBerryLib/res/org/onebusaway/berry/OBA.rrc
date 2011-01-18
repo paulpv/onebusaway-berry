@@ -1,0 +1,7 @@
+PERMISSION_REASON_CROSS_APPLICATION_COMMUNICATION#0="Required in order to register a custom ReasonProvider.";
+PERMISSION_REASON_IDLE_TIMER#0="Required to wake up the backlight during reminders.";
+PERMISSION_REASON_INTERNET#0="Required to access the internet.";
+PERMISSION_REASON_LOCATION_DATA#0="Required to access your GPS.";
+PERMISSION_REASON_OTHER#0="Required in order to run properly.";
+PERMISSION_REASON_SERVER_NETWORK#0="Required for corporate MDS connections.";
+PERMISSION_REASON_WIFI#0="Required to access Wi-Fi networks.";

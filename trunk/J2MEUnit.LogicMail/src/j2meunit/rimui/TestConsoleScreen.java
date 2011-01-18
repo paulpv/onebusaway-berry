@@ -107,10 +107,10 @@ public class TestConsoleScreen extends MainScreen implements TestListener {
     /**
      * Creates a new instance of TestConsoleScreen
      */
-    public TestConsoleScreen(String[] testCaseClasses) {
+    public TestConsoleScreen(TestCase[] testCases) {
         initializeFields();
         testTreeItems = new Hashtable();
-        mainTestSuite = createTestSuite(testCaseClasses);
+        mainTestSuite = createTestSuite(testCases);
         elapsedTime = -1;
         populateTestTree(mainTestSuite, 0);
     }
@@ -398,6 +398,21 @@ public class TestConsoleScreen extends MainScreen implements TestListener {
         return testSuite;
     }
 
+    protected TestSuite createTestSuite(TestCase[] testCases) {
+        TestSuite testSuite = new TestSuite();
+        if (testCases.length < 1) {
+            return testSuite;
+        }
+
+        TestCase testCase;
+        for (int i = 0; i < testCases.length; i++) {
+            testCase = testCases[i];
+            testSuite.addTest(testCase.suite());
+        }
+
+        return testSuite;
+    }
+    
     /**
      * Run all tests in the given test suite.
      *

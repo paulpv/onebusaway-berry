@@ -8,6 +8,7 @@
   </Resources>
   <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
     <PreprocessorDefines>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="BB_VER_4_7_AND_ABOVE" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>
     </PreprocessorDefines>
   </Compile>

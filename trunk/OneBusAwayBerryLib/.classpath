@@ -2,8 +2,7 @@
 <classpath>
 	<classpathentry excluding="com/joulespersecond/oba/" kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/net.rim.ejde.BlackBerryVMInstallType/BlackBerry JRE 4.6.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/net.rim.ejde.BlackBerryVMInstallType/BlackBerry JRE 6.0.0"/>
 	<classpathentry kind="src" path=".locale_interfaces"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/OneBusAwayBerry J2MEUnit.LogicMail"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

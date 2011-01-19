@@ -21,8 +21,7 @@ public class OneBusAwayTests
         sb.append("]");
         System.out.println(sb.toString());
         
-        ObaPermissions.registerReasonProvider();
-        if (!ObaPermissions.checkStartupPermissions(true))
+        if (!ObaPermissions.checkPermissions(true))
         {
             ObaUtils.exitMessageNoUi(1, "Required permissions not set; exiting.");
             return;

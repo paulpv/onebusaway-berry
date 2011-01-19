@@ -18,8 +18,12 @@ import net.rim.device.api.ui.input.InputSettings;
 import net.rim.device.api.ui.input.NavigationDeviceSettings;
 import net.rim.device.api.ui.input.TouchscreenSettings;
 
-import org.onebusaway.rim.ObaMapMarkerStop.StopDirections;
-import org.onebusaway.rim.ObaMapMarkerStop.StopTypes;
+import org.onebusaway.berry.map.ObaMapField;
+import org.onebusaway.berry.map.ObaMapMarker;
+import org.onebusaway.berry.map.ObaMapMarkerLocation;
+import org.onebusaway.berry.map.ObaMapMarkerStop;
+import org.onebusaway.berry.map.ObaMapMarkerStop.StopDirections;
+import org.onebusaway.berry.map.ObaMapMarkerStop.StopTypes;
 
 public class MyApp extends UiApplication
 {

@@ -41,10 +41,14 @@ public final class ObaHelp
     {
         // TODO:(pv) Be even more robust:
         // http://vasudevkamath.blogspot.com/2009/09/posting-data-via-http-from-blackberry.html
+        
+        // TODO:(pv) Accept deviceside=true; interface=wifi; apn, etc
+        //  http://developerlife.com/tutorials/?p=884
+        //  http://docs.blackberry.com/en/developers/deliverables/5779/Creating_connections_508946_11.jsp
 
         String url = uri.toString();
 
-        //Log.d(TAG, "getUri: " + url);
+        //Log.d(TAG, "getUri: " + uri);
 
         HttpConnection conn;
 

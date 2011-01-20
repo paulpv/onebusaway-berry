@@ -16,8 +16,6 @@
 package org.onebusaway.berry.test.api.request.test;
 
 import j2meunit.framework.Test;
-import j2meunit.framework.TestCase;
-import j2meunit.framework.TestMethod;
 import j2meunit.framework.TestSuite;
 
 import org.onebusaway.berry.api.request.ObaCurrentTimeRequest;
@@ -29,25 +27,25 @@ public class CurrentTimeRequestTest extends ObaTestCase {
         super();
     }
 
-    public CurrentTimeRequestTest(String testName, TestMethod testMethod) {
-        super(testName, testMethod);
+    public CurrentTimeRequestTest(String testName) {
+        super(testName);
     }
 
     public Test suite() {
         TestSuite suite = new TestSuite("CurrentTimeRequestTest");
 
-        suite.addTest(new CurrentTimeRequestTest("testCurrentTime", new TestMethod()
+        suite.addTest(new CurrentTimeRequestTest("testCurrentTime")
         {
-            public void run(TestCase tc) {
-                ((CurrentTimeRequestTest) tc).testCurrentTime();
+            public void runTest() {
+                testCurrentTime();
             }
-        }));
-        suite.addTest(new CurrentTimeRequestTest("testNewRequest", new TestMethod()
+        });
+        suite.addTest(new CurrentTimeRequestTest("testNewRequest")
         {
-            public void run(TestCase tc) {
-                ((CurrentTimeRequestTest) tc).testNewRequest();
+            public void runTest() {
+                testNewRequest();
             }
-        }));
+        });
 
         return suite;
     }

@@ -16,7 +16,6 @@
 package org.onebusaway.berry.test;
 
 import j2meunit.framework.TestCase;
-import j2meunit.framework.TestMethod;
 
 import org.onebusaway.berry.api.Context;
 import org.onebusaway.berry.api.ObaApi;
@@ -27,8 +26,8 @@ public class ObaTestCase extends TestCase {
         super();
     }
 
-    public ObaTestCase(String testName, TestMethod testMethod) {
-        super(testName, testMethod);
+    public ObaTestCase(String testName) {
+        super(testName);
     }
 
     /**

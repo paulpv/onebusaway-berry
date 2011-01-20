@@ -3,8 +3,6 @@ package org.onebusaway.berry.test;
 import j2meunit.framework.TestCase;
 import j2meunit.rimui.TestRunner;
 
-import org.onebusaway.berry.test.api.request.test.RequestTests;
-
 public class OneBusAwayTests {
     public static void main(String[] args) {
         /*
@@ -28,7 +26,7 @@ public class OneBusAwayTests {
 
         TestCase[] testCases = new TestCase[]
         {
-            new RequestTests(),
+            new org.onebusaway.berry.test.api.request.test.AllTests(),
         };
 
         TestRunner instance = new TestRunner(testCases);

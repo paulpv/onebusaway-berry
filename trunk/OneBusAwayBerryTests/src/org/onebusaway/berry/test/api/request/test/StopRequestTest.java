@@ -16,12 +16,9 @@
 package org.onebusaway.berry.test.api.request.test;
 
 import j2meunit.framework.Test;
-import j2meunit.framework.TestCase;
-import j2meunit.framework.TestMethod;
 import j2meunit.framework.TestSuite;
 
-import java.util.Vector;
-
+import org.onebusaway.berry.api.ObaListObaRoute;
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.request.ObaStopRequest;
 import org.onebusaway.berry.api.request.ObaStopResponse;
@@ -34,25 +31,25 @@ public class StopRequestTest extends ObaTestCase {
         super();
     }
 
-    public StopRequestTest(String testName, TestMethod testMethod) {
-        super(testName, testMethod);
+    public StopRequestTest(String testName) {
+        super(testName);
     }
 
     public Test suite() {
         TestSuite suite = new TestSuite("StopRequestTest");
 
-        suite.addTest(new StopRequestTest("testKCMStop", new TestMethod()
+        suite.addTest(new StopRequestTest("testKCMStop")
         {
-            public void run(TestCase tc) {
-                ((StopRequestTest) tc).testKCMStop();
+            public void runTest() {
+                testKCMStop();
             }
-        }));
-        suite.addTest(new StopRequestTest("testNewRequest", new TestMethod()
+        });
+        suite.addTest(new StopRequestTest("testNewRequest")
         {
-            public void run(TestCase tc) {
-                ((StopRequestTest) tc).testNewRequest();
+            public void runTest() {
+                testNewRequest();
             }
-        }));
+        });
 
         return suite;
     }
@@ -72,7 +69,7 @@ public class StopRequestTest extends ObaTestCase {
             "1_8", "1_10", "1_43"
         });
 
-        final Vector /*List<ObaRoute>*/routes = response.getRoutes();
+        final ObaListObaRoute routes = response.getRoutes();
         assertNotNull(routes);
         assertEquals(routes.size(), routeIds.length);
     }

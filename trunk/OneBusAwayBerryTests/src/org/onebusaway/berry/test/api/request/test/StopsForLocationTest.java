@@ -16,8 +16,6 @@
 package org.onebusaway.berry.test.api.request.test;
 
 import j2meunit.framework.Test;
-import j2meunit.framework.TestCase;
-import j2meunit.framework.TestMethod;
 import j2meunit.framework.TestSuite;
 
 import org.onebusaway.berry.api.ObaApi;
@@ -35,37 +33,37 @@ public class StopsForLocationTest extends ObaTestCase {
         super();
     }
 
-    public StopsForLocationTest(String testName, TestMethod testMethod) {
-        super(testName, testMethod);
+    public StopsForLocationTest(String testName) {
+        super(testName);
     }
 
     public Test suite() {
         TestSuite suite = new TestSuite("StopsForLocationTest");
 
-        suite.addTest(new StopsForLocationTest("testDowntownSeattle1", new TestMethod()
+        suite.addTest(new StopsForLocationTest("testDowntownSeattle1")
         {
-            public void run(TestCase tc) {
-                ((StopsForLocationTest) tc).testDowntownSeattle1();
+            public void runTest() {
+                testDowntownSeattle1();
             }
-        }));
-        suite.addTest(new StopsForLocationTest("testQuery", new TestMethod()
+        });
+        suite.addTest(new StopsForLocationTest("testQuery")
         {
-            public void run(TestCase tc) {
-                ((StopsForLocationTest) tc).testQuery();
+            public void runTest() {
+                testQuery();
             }
-        }));
-        suite.addTest(new StopsForLocationTest("testQueryFail", new TestMethod()
+        });
+        suite.addTest(new StopsForLocationTest("testQueryFail")
         {
-            public void run(TestCase tc) {
-                ((StopsForLocationTest) tc).testQueryFail();
+            public void runTest() {
+                testQueryFail();
             }
-        }));
-        suite.addTest(new StopsForLocationTest("testOutOfRange", new TestMethod()
+        });
+        suite.addTest(new StopsForLocationTest("testOutOfRange")
         {
-            public void run(TestCase tc) {
-                ((StopsForLocationTest) tc).testOutOfRange();
+            public void runTest() {
+                testOutOfRange();
             }
-        }));
+        });
 
         return suite;
     }

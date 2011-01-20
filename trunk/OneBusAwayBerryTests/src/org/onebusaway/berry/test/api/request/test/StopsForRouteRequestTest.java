@@ -56,7 +56,7 @@ public class StopsForRouteRequestTest extends ObaTestCase {
         ObaStopsForRouteRequest request = builder.build();
         ObaStopsForRouteResponse response = (ObaStopsForRouteResponse) request.call();
         assertOK(response);
-        final Vector stops = response.getStops();
+        final Vector /*List<ObaStop>*/ stops = response.getStops();
         assertNotNull(stops);
         assertTrue(stops.size() > 0);
         // Check one

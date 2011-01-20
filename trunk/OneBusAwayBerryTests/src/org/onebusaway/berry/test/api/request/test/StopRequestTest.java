@@ -22,8 +22,6 @@ import j2meunit.framework.TestSuite;
 
 import java.util.Vector;
 
-import net.rim.device.api.util.Arrays;
-
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.request.ObaStopRequest;
 import org.onebusaway.berry.api.request.ObaStopResponse;
@@ -63,7 +61,7 @@ public class StopRequestTest extends ObaTestCase {
         assertNotNull(routeIds);
         MoreAsserts.assertContentsInAnyOrder(routeIds, new String[] { "1_8", "1_10", "1_43"});
 
-        final Vector routes = response.getRoutes();
+        final Vector /*List<ObaRoute>*/ routes = response.getRoutes();
         assertNotNull(routes);
         assertEquals(routes.size(), routeIds.length);
     }

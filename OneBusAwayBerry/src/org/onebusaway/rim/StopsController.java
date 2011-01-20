@@ -2,6 +2,8 @@ package org.onebusaway.rim;
 
 import net.rim.blackberry.api.maps.MapView;
 
+import org.onebusaway.berry.map.GeoPoint;
+
 public class StopsController
 {
     //public interface Listener {
@@ -82,5 +84,12 @@ public class StopsController
         return new RequestInfo(routeId, mCenter, 0,//view.getLatitudeSpan(),
                         0,//view.getLongitudeSpan(),
                         view.getZoom());
+    }
+
+    private final ScreenMap parent;
+
+    public StopsController(ScreenMap parent)
+    {
+        this.parent = parent;
     }
 }

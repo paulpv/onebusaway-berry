@@ -2,53 +2,51 @@
 
 package org.onebusaway.rim;
 
-import java.util.Vector;
-
-import javax.microedition.location.Coordinates;
-
-import net.rim.device.api.lbs.MapField;
+import net.rim.device.api.lbs.maps.model.MapDataModel;
+import net.rim.device.api.lbs.maps.model.MapPoint;
+import net.rim.device.api.lbs.maps.ui.MapField;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Graphics;
-import net.rim.device.api.ui.component.LabelField;
 
 /**
  * Displays a map and all the sites added to it.
  */
-public class ObaMapField extends MapField
+public class ObaMapFieldv6 extends MapField
 {
-    // Vector of sites
-    private Vector        _allSites    = new Vector();
-    //private MapFieldDemoSite _highlightedSite;          
-
     // For cursor
     private Bitmap        locationMarker;
-    private Coordinates   location;
+    private MapPoint      location;
+
+    // Vector of sites
+    //private Vector        _allSites    = new Vector();
+    //private MapFieldDemoSite _highlightedSite;          
 
     // For preferred height
-    private LabelField    _sampleLabel;
+    //private LabelField    _sampleLabel;
 
     // Instructive text
-    private int           _textHeight;
-    private boolean       _turnOffText = false;
+    //private int           _textHeight;
+    //private boolean       _turnOffText = false;
 
     private final AppMain app;
 
     /**
      * Initializes map.
      */
-    public ObaMapField()
+    public ObaMapFieldv6()
     {
         app = AppMain.get();
 
+        // TODO:(pv) Animate the cursor when it has GPS info
         locationMarker = app.getResourceBitmap("mylocation.png");
         location = null;
 
         // Sample label is only used to determine the instructive text height
         // and is declared null right after use.
-        _sampleLabel = new LabelField();
-        _textHeight = _sampleLabel.getPreferredHeight();
-        _sampleLabel = null;
+        //_sampleLabel = new LabelField();
+        //_textHeight = _sampleLabel.getPreferredHeight();
+        //_sampleLabel = null;
     }
 
     /*
@@ -176,12 +174,19 @@ public class ObaMapField extends MapField
         */
     }
 
-    public void setZoom(int zoom)
+    public void moveTo(MapPoint mapPoint)
     {
-        _turnOffText = true;
-        super.setZoom(zoom);
+        getAction().setCentre(mapPoint);
     }
 
+    public void setZoom(int zoom)
+    {
+        //_turnOffText = true;
+        //super.setZoom(zoom);
+        getAction().setZoom(zoom);
+    }
+
+    /*
     protected boolean navigationMovement(int dx, int dy, int status, int time)
     {
         // The map is shifted in relation to the current zoom level.
@@ -194,12 +199,17 @@ public class ObaMapField extends MapField
 
         return true;
     }
+    */
 
-    public void setLocation(Coordinates coordinates)
+    public void setLocation(MapPoint mapPoint)
     {
-        if (location == null || !location.equals(coordinates))
+        if (location == null || !location.equals(mapPoint))
         {
-            location = coordinates;
+            location = mapPoint;
+            
+            //MapDataModel model = getModel();
+            //model.
+            
             invalidate();
         }
     }

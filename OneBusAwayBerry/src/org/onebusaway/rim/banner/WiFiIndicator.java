@@ -121,17 +121,20 @@ public class WiFiIndicator extends Field implements BannerIndicator
 
         // Show appropriate network selection indicator
         int newSelectionFrame;
-        if (!app.getUseWiFi())
+        if (!app.isWiFiSupported())
         {
             newSelectionFrame = SELECTION_OTHER; // empty frame
         }
-        else if (bars > 0)
-        {
-            newSelectionFrame = SELECTION_OK; // green happy dot
-        }
         else
         {
-            newSelectionFrame = SELECTION_WARNING; // warning amber triangle
+            if (bars > 0)
+            {
+                newSelectionFrame = SELECTION_OK; // green happy dot
+            }
+            else
+            {
+                newSelectionFrame = SELECTION_WARNING; // warning amber triangle
+            }
         }
 
         if (newFrame != currentFrame || newSelectionFrame != currentSelectionFrame)

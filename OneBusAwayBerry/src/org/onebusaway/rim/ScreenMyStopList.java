@@ -16,6 +16,5 @@ public class ScreenMyStopList extends MainScreen
     public ScreenMyStopList()
     {
         app = AppMain.get();
-
     }
 }

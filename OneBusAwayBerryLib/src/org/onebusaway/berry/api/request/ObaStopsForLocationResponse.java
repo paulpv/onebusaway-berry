@@ -40,8 +40,7 @@ public final class ObaStopsForLocationResponse extends ObaResponseWithRefs {
 
     public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
         JSONArray jsonList = json.getJSONArray("list");
-        list = new ObaStopElement[jsonList.length()];
-        ObaApi.copyTo(jsonList, list, ObaStopElement.class);
+        list = (ObaStopElement[]) ObaApi.fromJSON(jsonList, new ObaStopElement[jsonList.length()], ObaStopElement.class);
 
         outOfRange = json.getBoolean("outOfRange");
         limitExceeded = json.getBoolean("limitExceeded");

@@ -15,10 +15,14 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import java.util.Vector;
-
 import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.ObaList;
+import org.onebusaway.berry.api.ObaListObaAgency;
+import org.onebusaway.berry.api.ObaListObaRoute;
+import org.onebusaway.berry.api.ObaListObaSituation;
+import org.onebusaway.berry.api.ObaListObaStop;
+import org.onebusaway.berry.api.ObaListObaTrip;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
@@ -43,24 +47,19 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
 
     public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
         JSONArray jsonStops = json.getJSONArray("stops");
-        stops = new ObaStopElement[jsonStops.length()];
-        ObaApi.copyTo(jsonStops, stops, ObaStopElement.class);
+        stops = (ObaStopElement[]) ObaApi.fromJSON(jsonStops, new ObaStopElement[jsonStops.length()], ObaStopElement.class);
 
         JSONArray jsonRoutes = json.getJSONArray("routes");
-        routes = new ObaRouteElement[jsonRoutes.length()];
-        ObaApi.copyTo(jsonRoutes, routes, ObaRouteElement.class);
+        routes = (ObaRouteElement[]) ObaApi.fromJSON(jsonRoutes, new ObaRouteElement[jsonRoutes.length()], ObaRouteElement.class);
 
         JSONArray jsonTrips = json.getJSONArray("trips");
-        trips = new ObaTripElement[jsonTrips.length()];
-        ObaApi.copyTo(jsonTrips, trips, ObaTripElement.class);
+        trips = (ObaTripElement[]) ObaApi.fromJSON(jsonTrips, new ObaTripElement[jsonTrips.length()], ObaTripElement.class);
 
         JSONArray jsonAgencies = json.getJSONArray("agencies");
-        agencies = new ObaAgencyElement[jsonAgencies.length()];
-        ObaApi.copyTo(jsonAgencies, agencies, ObaAgencyElement.class);
+        agencies = (ObaAgencyElement[]) ObaApi.fromJSON(jsonAgencies, new ObaAgencyElement[jsonAgencies.length()], ObaAgencyElement.class);
 
         JSONArray jsonSituations = json.getJSONArray("situations");
-        situations = new ObaSituationElement[jsonSituations.length()];
-        ObaApi.copyTo(jsonSituations, situations, ObaSituationElement.class);
+        situations = (ObaSituationElement[]) ObaApi.fromJSON(jsonSituations, new ObaSituationElement[jsonSituations.length()], ObaSituationElement.class);
     }
 
     //@Override
@@ -69,8 +68,10 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
     }
 
     //@Override
-    public Vector getStops(String[] ids) {
-        return findList(stops, ids);
+    public ObaListObaStop getStops(String[] ids) {
+        ObaListObaStop stops = new ObaListObaStop();
+        findList(this.stops, ids, stops);
+        return stops;
     }
 
     //@Override
@@ -79,8 +80,10 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
     }
 
     //@Override
-    public Vector getRoutes(String[] ids) {
-        return findList(routes, ids);
+    public ObaListObaRoute getRoutes(String[] ids) {
+        ObaListObaRoute routes = new ObaListObaRoute();
+        findList(this.routes, ids, routes);
+        return routes;
     }
 
     //@Override
@@ -89,8 +92,10 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
     }
 
     //@Override
-    public Vector getTrips(String[] ids) {
-        return findList(trips, ids);
+    public ObaListObaTrip getTrips(String[] ids) {
+        ObaListObaTrip trips = new ObaListObaTrip();
+        findList(this.trips, ids, trips);
+        return trips;
     }
 
     //@Override
@@ -99,8 +104,10 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
     }
 
     //@Override
-    public Vector getAgencies(String[] ids) {
-        return findList(agencies, ids);
+    public ObaListObaAgency getAgencies(String[] ids) {
+        ObaListObaAgency agencies = new ObaListObaAgency();
+        findList(this.agencies, ids, agencies);
+        return agencies;
     }
 
     //@Override
@@ -109,8 +116,10 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
     }
 
     //@Override
-    public Vector getSituations(String[] ids) {
-        return findList(situations, ids);
+    public ObaListObaSituation getSituations(String[] ids) {
+        ObaListObaSituation situations = new ObaListObaSituation();
+        findList(this.situations, ids, situations);
+        return situations;
     }
 
     //
@@ -127,8 +136,7 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
         return null;
     }
 
-    private static Vector findList(ObaElement[] objects, String[] ids) {
-        Vector result = new Vector();
+    private static void findList(ObaElement[] objects, String[] ids, ObaList result) {
         final int len = ids.length;
         for (int i = 0; i < len; ++i) {
             final String id = ids[i];
@@ -137,6 +145,5 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
                 result.addElement(obj);
             }
         }
-        return result;
     }
 }

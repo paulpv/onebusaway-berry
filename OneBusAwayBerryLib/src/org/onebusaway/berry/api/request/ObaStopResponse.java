@@ -15,9 +15,8 @@
  */
 package org.onebusaway.berry.api.request;
 
-import java.util.Vector;
-
 import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.ObaListObaRoute;
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.elements.ObaStopElement;
 import org.onebusaway.berry.map.GeoPoint;
@@ -38,8 +37,7 @@ public final class ObaStopResponse extends ObaResponseWithRefs implements ObaSto
     }
 
     public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        entry = new ObaStopElement();
-        ObaApi.fromJSON(json, "entry", entry);
+        entry = (ObaStopElement) ObaApi.fromJSON(json, "entry", new ObaStopElement());
     }
 
     //@Override
@@ -90,7 +88,7 @@ public final class ObaStopResponse extends ObaResponseWithRefs implements ObaSto
     /**
      * Returns the list of dereferenced routes.
      */
-    public Vector /*List<ObaRoute>*/getRoutes() {
+    public ObaListObaRoute getRoutes() {
         return references.getRoutes(entry.getRouteIds());
     }
 }

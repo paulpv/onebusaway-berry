@@ -66,8 +66,7 @@ public final class ObaStopElement implements ObaStop, JSONReceivable {
         name = json.getString("name");
         code = json.getString("code");
         JSONArray jsonRouteIds = json.getJSONArray("routeIds");
-        routeIds = new String[jsonRouteIds.length()];
-        ObaApi.copyTo(jsonRouteIds, routeIds);
+        routeIds = ObaApi.fromJSON(jsonRouteIds, new String[jsonRouteIds.length()]);
 
         point = ObaApi.makeGeoPoint(lat, lon);
     }

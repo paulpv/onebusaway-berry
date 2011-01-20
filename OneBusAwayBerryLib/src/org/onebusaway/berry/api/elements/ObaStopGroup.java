@@ -39,8 +39,7 @@ public final class ObaStopGroup implements JSONReceivable {
         public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
             type = json.getString("type");
             JSONArray jsonNames = json.getJSONArray("names");
-            names = new String[jsonNames.length()];
-            ObaApi.copyTo(jsonNames, names);
+            names = ObaApi.fromJSON(jsonNames, new String[jsonNames.length()]);
         }
 
         String getType() {
@@ -69,15 +68,12 @@ public final class ObaStopGroup implements JSONReceivable {
 
     public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
         JSONArray jsonStopIds = json.getJSONArray("stopIds");
-        stopIds = new String[jsonStopIds.length()];
-        ObaApi.copyTo(jsonStopIds, stopIds);
+        stopIds = ObaApi.fromJSON(jsonStopIds, new String[jsonStopIds.length()]);
 
         JSONArray jsonPolylines = json.getJSONArray("polylines");
-        polylines = new ObaShapeElement[jsonPolylines.length()];
-        ObaApi.copyTo(jsonPolylines, polylines, ObaShapeElement.class);
+        polylines = (ObaShapeElement[]) ObaApi.fromJSON(jsonPolylines, new ObaShapeElement[jsonPolylines.length()], ObaShapeElement.class);
 
-        name = new StopGroupName();
-        ObaApi.fromJSON(json, "name", name);
+        name = (StopGroupName) ObaApi.fromJSON(json, "name", new StopGroupName());
     }
 
     /**

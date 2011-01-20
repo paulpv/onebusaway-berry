@@ -15,7 +15,8 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import java.util.Vector;
+import org.onebusaway.berry.api.ObaListString;
+
 
 public interface ObaSituation extends ObaElement {
     public static final String REASON_TYPE_EQUIPMENT     = "equipment";
@@ -38,7 +39,7 @@ public interface ObaSituation extends ObaElement {
         /**
          * @return A list of stop IDs along the vehicle journey that are affected.
          */
-        public Vector /*List<String>*/getStopIds();
+        public ObaListString getStopIds();
     }
 
     public interface Affects {
@@ -46,7 +47,7 @@ public interface ObaSituation extends ObaElement {
          * The list of affected stop IDs.
          * @return
          */
-        public Vector /*List<String>*/getStopIds();
+        public ObaListString getStopIds();
 
         /**
          * @return An array of transit vehicle journeys the situation affects.
@@ -59,7 +60,7 @@ public interface ObaSituation extends ObaElement {
          * @return For diversion conditions, this specifies the stop IDs
          * that are diverted.
          */
-        public Vector /*List<String>*/getDiversionStopIds();
+        public ObaListString getDiversionStopIds();
 
         /**
          * @return For diversion conditions, this specifies the optional

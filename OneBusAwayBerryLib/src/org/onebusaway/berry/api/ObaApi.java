@@ -92,10 +92,24 @@ public final class ObaApi {
     /**
      * Used by both Elements and Responses, so best in the root api package,
      */
-    public static void fromJSON(JSONObject json, String key, JSONReceivable jsonReceivable) throws JSONException,
+    public static JSONReceivable fromJSON(JSONObject json, String key, JSONReceivable jsonReceivable) throws JSONException,
                     InstantiationException, IllegalAccessException {
         JSONObject jsonItem = json.getJSONObject(key);
         jsonReceivable.fromJSON(jsonItem);
+        return jsonReceivable;
+    }
+
+    public static JSONReceivable optJSON(JSONObject json, String key, JSONReceivable jsonReceivable, JSONReceivable defaultValue)
+                    throws JSONException, InstantiationException, IllegalAccessException {
+        JSONObject jsonItem;
+        try {
+            jsonItem = json.getJSONObject(key);
+        }
+        catch (JSONException e) {
+            return defaultValue;
+        }
+        jsonReceivable.fromJSON(jsonItem);
+        return jsonReceivable;
     }
 
     /**
@@ -110,7 +124,7 @@ public final class ObaApi {
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public static void copyTo(JSONArray src, JSONReceivable[] dest, Class clsItem) throws JSONException,
+    public static JSONReceivable[] fromJSON(JSONArray src, JSONReceivable[] dest, Class clsItem) throws JSONException,
                     InstantiationException, IllegalAccessException {
         if (src == null || dest == null || clsItem == null) {
             throw new IllegalArgumentException("copyTo: src, dest, and clsItem must not be null");
@@ -135,9 +149,21 @@ public final class ObaApi {
             item.fromJSON(jsonObject);
             dest[i] = item;
         }
+
+        return dest;
     }
 
-    public static void copyTo(JSONArray src, String[] dest) throws JSONException {
+    public static JSONReceivable[] optJSON(JSONArray src, JSONReceivable[] dest, Class clsItem, JSONReceivable[] defaultValue)
+                    throws InstantiationException, IllegalAccessException {
+        try {
+            return fromJSON(src, dest, clsItem);
+        }
+        catch (JSONException e) {
+            return defaultValue;
+        }
+    }
+
+    public static String[] fromJSON(JSONArray src, String[] dest) throws JSONException {
         if (src == null || dest == null) {
             throw new IllegalArgumentException("copyTo: src, and dest must not be null");
         }
@@ -149,25 +175,59 @@ public final class ObaApi {
         for (int i = 0; i < dest.length; i++) {
             dest[i] = src.getString(i);
         }
+
+        return dest;
     }
 
-    /*
-    public static void copyTo(JSONArray src, int[] dest) throws JSONException
-    {
-        if (src == null || dest == null)
-        {
-            throw new IllegalArgumentException("copyTo: src, and dest must not be null");
+    public static String[] optJSON(JSONArray src, String[] dest, String[] defaultValue)
+                    throws InstantiationException, IllegalAccessException {
+        try {
+            return fromJSON(src, dest);
         }
-        
-        if (src != null && dest != null && src.length() != dest.length)
-        {
-            throw new IllegalArgumentException("copyTo: src.length() and dest.length must equal");
-        }
-
-        for (int i = 0; i < dest.length; i++)
-        {
-            dest[i] = src.getInt(i);
+        catch (JSONException e) {
+            return defaultValue;
         }
     }
-    */
+
+    /**
+     * Get an optional Boolean value associated with a key,
+     * or null if there is no such key or if the value is not a number.
+     * If the value is a string, an attempt will be made to evaluate it as a number.
+     * 
+     * @param json
+     * @param key
+     * @return
+     */
+    public static Boolean optBoolean(JSONObject json, String key) {
+        boolean value = json.optBoolean(key);
+        return (!value) ? null : Boolean.TRUE;
+    }
+
+    /**
+     * Get an optional Integer value associated with a key,
+     * or null if there is no such key or if the value is not a number.
+     * If the value is a string, an attempt will be made to evaluate it as a number.
+     * 
+     * @param json
+     * @param key
+     * @return
+     */
+    public static Integer optInteger(JSONObject json, String key) {
+        int value = json.optInt(key);
+        return (value == 0) ? null : new Integer(value);
+    }
+
+    /**
+     * Get an optional Double value associated with a key,
+     * or null if there is no such key or if the value is not a number.
+     * If the value is a string, an attempt will be made to evaluate it as a number.
+     * 
+     * @param json
+     * @param key
+     * @return
+     */
+    public static Double optDouble(JSONObject json, String key) {
+        double value = json.optDouble(key);
+        return (value == Double.NaN) ? null : new Double(value);
+    }
 }

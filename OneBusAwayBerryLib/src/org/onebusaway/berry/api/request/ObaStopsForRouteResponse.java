@@ -15,11 +15,9 @@
  */
 package org.onebusaway.berry.api.request;
 
-import java.util.Vector;
-
 import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaApi;
-import org.onebusaway.berry.api.elements.ObaReferences;
+import org.onebusaway.berry.api.ObaListObaStop;
 import org.onebusaway.berry.api.elements.ObaShape;
 import org.onebusaway.berry.api.elements.ObaShapeElement;
 import org.onebusaway.berry.api.elements.ObaStopGrouping;
@@ -48,16 +46,13 @@ public final class ObaStopsForRouteResponse extends ObaResponseWithRefs implemen
 
         public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
             JSONArray jsonStopIds = json.getJSONArray("stopIds");
-            stopIds = new String[jsonStopIds.length()];
-            ObaApi.copyTo(jsonStopIds, stopIds);
+            stopIds = ObaApi.fromJSON(jsonStopIds, new String[jsonStopIds.length()]);
 
             JSONArray jsonStopGroupings = json.getJSONArray("stopGroupings");
-            stopGroupings = new ObaStopGrouping[jsonStopGroupings.length()];
-            ObaApi.copyTo(jsonStopGroupings, stopGroupings, ObaStopGrouping.class);
+            stopGroupings = (ObaStopGrouping[]) ObaApi.fromJSON(jsonStopGroupings, new ObaStopGrouping[jsonStopGroupings.length()], ObaStopGrouping.class);
 
             JSONArray jsonPolylines = json.getJSONArray("polylines");
-            polylines = new ObaShapeElement[jsonPolylines.length()];
-            ObaApi.copyTo(jsonPolylines, polylines, ObaShapeElement.class);
+            polylines = (ObaShapeElement[]) ObaApi.fromJSON(jsonPolylines, new ObaShapeElement[jsonPolylines.length()], ObaShapeElement.class);
         }
     }
 
@@ -68,14 +63,13 @@ public final class ObaStopsForRouteResponse extends ObaResponseWithRefs implemen
     }
 
     public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        entry = new Entry();
-        ObaApi.fromJSON(json, "entry", entry);
+        entry = (Entry) ObaApi.fromJSON(json, "entry", new Entry());
     }
 
     /**
      * Returns the list of dereferenced stops.
      */
-    public Vector /*List<ObaStop>*/getStops() {
+    public ObaListObaStop getStops() {
         return references.getStops(entry.stopIds);
     }
 

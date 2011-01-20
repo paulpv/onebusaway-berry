@@ -16,12 +16,9 @@
 package org.onebusaway.berry.test.api.request.test;
 
 import j2meunit.framework.Test;
-import j2meunit.framework.TestCase;
-import j2meunit.framework.TestMethod;
 import j2meunit.framework.TestSuite;
 
-import java.util.Vector;
-
+import org.onebusaway.berry.api.ObaListObaStop;
 import org.onebusaway.berry.api.elements.ObaShape;
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.elements.ObaStopGrouping;
@@ -35,25 +32,25 @@ public class StopsForRouteRequestTest extends ObaTestCase {
         super();
     }
 
-    public StopsForRouteRequestTest(String testName, TestMethod testMethod) {
-        super(testName, testMethod);
+    public StopsForRouteRequestTest(String testName) {
+        super(testName);
     }
 
     public Test suite() {
         TestSuite suite = new TestSuite("StopsForRouteRequestTest");
 
-        suite.addTest(new StopsForRouteRequestTest("testKCMRoute", new TestMethod()
+        suite.addTest(new StopsForRouteRequestTest("testKCMRoute")
         {
-            public void run(TestCase tc) {
-                ((StopsForRouteRequestTest) tc).testKCMRoute();
+            public void runTest() {
+                testKCMRoute();
             }
-        }));
-        suite.addTest(new StopsForRouteRequestTest("testNoShapes", new TestMethod()
+        });
+        suite.addTest(new StopsForRouteRequestTest("testNoShapes")
         {
-            public void run(TestCase tc) {
-                ((StopsForRouteRequestTest) tc).testNoShapes();
+            public void runTest() {
+                testNoShapes();
             }
-        }));
+        });
 
         return suite;
     }
@@ -63,7 +60,7 @@ public class StopsForRouteRequestTest extends ObaTestCase {
         ObaStopsForRouteRequest request = builder.build();
         ObaStopsForRouteResponse response = (ObaStopsForRouteResponse) request.call();
         assertOK(response);
-        final Vector /*List<ObaStop>*/stops = response.getStops();
+        final ObaListObaStop stops = response.getStops();
         assertNotNull(stops);
         assertTrue(stops.size() > 0);
         // Check one

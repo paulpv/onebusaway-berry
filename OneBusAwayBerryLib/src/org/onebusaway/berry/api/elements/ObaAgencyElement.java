@@ -26,17 +26,17 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  */
 public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
-    
-    public static final ObaAgencyElement EMPTY_OBJECT = new ObaAgencyElement();
-    public static final ObaAgencyElement[] EMPTY_ARRAY = new ObaAgencyElement[] {};
 
-    private String id;
-    private String name;
-    private String url;
-    private String timezone;
-    private String lang;
-    private String phone;
-    private String disclaimer;
+    public static final ObaAgencyElement   EMPTY_OBJECT = new ObaAgencyElement();
+    public static final ObaAgencyElement[] EMPTY_ARRAY  = new ObaAgencyElement[] {};
+
+    private String                         id;
+    private String                         name;
+    private String                         url;
+    private String                         timezone;
+    private String                         lang;
+    private String                         phone;
+    private String                         disclaimer;
 
     public ObaAgencyElement() {
         id = "";
@@ -47,9 +47,8 @@ public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
         phone = "";
         disclaimer = "";
     }
-    
-    public void fromJSON(JSONObject json) throws JSONException
-    {
+
+    public void fromJSON(JSONObject json) throws JSONException {
         id = json.getString("id");
         name = json.getString("name");
         url = json.getString("url");
@@ -59,34 +58,42 @@ public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
         disclaimer = json.getString("disclaimer");
     }
 
+    //@Override
     public String getId() {
         return id;
     }
 
+    //@Override
     public String getName() {
         return name;
     }
 
+    //@Override
     public String getUrl() {
         return url;
     }
 
+    //@Override
     public String getTimezone() {
         return timezone;
     }
 
+    //@Override
     public String getLang() {
         return lang;
     }
 
+    //@Override
     public String getPhone() {
         return phone;
     }
 
+    //@Override
     public String getDisclaimer() {
         return disclaimer;
     }
 
+    //@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -94,6 +101,7 @@ public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
         return result;
     }
 
+    //@Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -101,7 +109,7 @@ public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
             return false;
         if (!(obj instanceof ObaAgencyElement))
             return false;
-        ObaAgencyElement other = (ObaAgencyElement)obj;
+        ObaAgencyElement other = (ObaAgencyElement) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -111,6 +119,7 @@ public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
         return true;
     }
 
+    //@Override
     public String toString() {
         return "ObaAgencyElement [id=" + id + ", name=" + name + "]";
     }

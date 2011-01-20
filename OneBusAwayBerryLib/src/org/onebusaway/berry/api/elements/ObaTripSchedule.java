@@ -22,10 +22,10 @@ public final class ObaTripSchedule {
         //private static final StopTime EMPTY_OBJECT = new StopTime();
         private static final StopTime[] EMPTY_ARRAY = new StopTime[] {};
 
-        private final String stopId;
-        private final String stopHeadsign;
-        private final long arrivalTime;
-        private final long departureTime;
+        private final String            stopId;
+        private final String            stopHeadsign;
+        private final long              arrivalTime;
+        private final long              departureTime;
 
         StopTime() {
             stopId = "";
@@ -33,18 +33,21 @@ public final class ObaTripSchedule {
             arrivalTime = 0;
             departureTime = 0;
         }
+
         /**
          * @return The stop ID of the stop visited during the trip.
          */
         public String getStopId() {
             return stopId;
         }
+
         /**
          * @return The headsign of the trip.
          */
         public String getHeadsign() {
             return stopHeadsign;
         }
+
         /**
          * @return The time, in seconds since the service start date,
          * when the trip arrivals at the specified stop.
@@ -52,6 +55,7 @@ public final class ObaTripSchedule {
         public long getArrivalTime() {
             return arrivalTime;
         }
+
         /**
          * @return The time, in seconds since the service start date,
          * when the trip leaves the specified stop.
@@ -62,9 +66,9 @@ public final class ObaTripSchedule {
     }
 
     private final StopTime[] stopTimes;
-    private final String timeZone;
-    private final String previousTripId;
-    private final String nextTripId;
+    private final String     timeZone;
+    private final String     previousTripId;
+    private final String     nextTripId;
 
     private ObaTripSchedule() {
         stopTimes = StopTime.EMPTY_ARRAY;

@@ -22,14 +22,14 @@ import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
 public final class ObaStopGrouping implements JSONReceivable {
-    public static final ObaStopGrouping EMPTY_OBJECT = new ObaStopGrouping();
-    public static final ObaStopGrouping[] EMPTY_ARRAY = new ObaStopGrouping[] {};
+    public static final ObaStopGrouping   EMPTY_OBJECT   = new ObaStopGrouping();
+    public static final ObaStopGrouping[] EMPTY_ARRAY    = new ObaStopGrouping[] {};
 
-    public static final String TYPE_DIRECTION = "direction";
+    public static final String            TYPE_DIRECTION = "direction";
 
-    private boolean ordered;
-    private String type;
-    private ObaStopGroup[] stopGroups;
+    private boolean                       ordered;
+    private String                        type;
+    private ObaStopGroup[]                stopGroups;
 
     /**
      * Constructor.
@@ -40,15 +40,14 @@ public final class ObaStopGrouping implements JSONReceivable {
         stopGroups = ObaStopGroup.EMPTY_ARRAY;
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-    {
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
         ordered = json.getBoolean("ordered");
         type = json.getString("type");
         JSONArray jsonStopGroups = json.getJSONArray("stopGroups");
         stopGroups = new ObaStopGroup[jsonStopGroups.length()];
         ObaApi.copyTo(jsonStopGroups, stopGroups, ObaStopGroup.class);
     }
-    
+
     /**
      * Returns whether or not this grouping is ordered.
      * @return A boolean indicating whether this grouping is ordered.
@@ -75,6 +74,7 @@ public final class ObaStopGrouping implements JSONReceivable {
     }
 
     /*
+    @Override
     public String toString() {
         return ObaApi.getGson().toJson(this);
     }

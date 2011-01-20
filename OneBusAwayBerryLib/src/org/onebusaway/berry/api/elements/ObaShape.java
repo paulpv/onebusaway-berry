@@ -15,7 +15,7 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import javax.microedition.location.Coordinates;
+import java.util.Vector;
 
 public interface ObaShape {
     /**
@@ -37,14 +37,14 @@ public interface ObaShape {
      *
      * @return The decoded levels to display line.
      */
-    public int[] getLevels();
+    public Vector /*List<Integer>*/getLevels();
 
     /**
      * Returns the list of points in this line.
      *
      * @return The list of points in this line.
      */
-    public Coordinates[] getPoints();
+    public Vector /*List<GeoPoint>*/getPoints();
 
     /**
      * Returns the string encoding of the points in this line.

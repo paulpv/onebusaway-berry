@@ -24,13 +24,13 @@ import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-
 public final class ObaSituationElement implements ObaSituation, JSONReceivable {
-    public static final ObaSituationElement EMPTY_OBJECT = new ObaSituationElement();
-    public static final ObaSituationElement[] EMPTY_ARRAY = new ObaSituationElement[] {};
+    public static final ObaSituationElement   EMPTY_OBJECT = new ObaSituationElement();
+    public static final ObaSituationElement[] EMPTY_ARRAY  = new ObaSituationElement[] {};
 
     public static final class Text {
         private final String value;
+
         //private final String lang;
 
         Text() {
@@ -46,7 +46,7 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
     public static final class StopId {
         public static final StopId[] EMPTY_ARRAY = new StopId[] {};
 
-        private final String stopId;
+        private final String         stopId;
 
         public StopId() {
             stopId = null;
@@ -56,12 +56,10 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
             return stopId;
         }
 
-        public static Vector toList(StopId[] ids) {
+        public static Vector /*List<String>*/toList(StopId[] ids) {
             Vector result = new Vector(ids.length);
-            StopId id;
-            for (int i=0; i < ids.length; i++) {
-                id = ids[i];
-                result.addElement(id.getId());
+            for (int i = 0; i < ids.length; i++) {
+                result.addElement(ids[i].getId());
             }
             return result;
         }
@@ -70,9 +68,9 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
     public static final class VehicleJourneyElement implements VehicleJourney {
         public static final VehicleJourneyElement[] EMPTY_ARRAY = new VehicleJourneyElement[] {};
 
-        private final String direction;
-        private final String lineId; // routeId
-        private final StopId[] calls;
+        private final String                        direction;
+        private final String                        lineId;                                      // routeId
+        private final StopId[]                      calls;
 
         VehicleJourneyElement() {
             direction = "";
@@ -80,23 +78,26 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
             calls = StopId.EMPTY_ARRAY;
         }
 
+        //@Override
         public String getDirection() {
             return direction;
         }
 
+        //@Override
         public String getRouteId() {
             return lineId;
         }
 
-        public Vector getStopIds() {
+        //@Override
+        public Vector /*List<String>*/getStopIds() {
             return StopId.toList(calls);
         }
     }
 
     public static final class AffectsElement implements Affects {
-        public static final AffectsElement EMPTY_OBJECT = new AffectsElement();
+        public static final AffectsElement    EMPTY_OBJECT = new AffectsElement();
 
-        private final StopId[] stops;
+        private final StopId[]                stops;
         private final VehicleJourneyElement[] vehicleJourneys;
 
         AffectsElement() {
@@ -104,19 +105,20 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
             vehicleJourneys = VehicleJourneyElement.EMPTY_ARRAY;
         }
 
-        public Vector getStopIds() {
+        //@Override
+        public Vector /*List<String>*/getStopIds() {
             return StopId.toList(stops);
         }
 
+        //@Override
         public VehicleJourney[] getVehicleJourneys() {
             return vehicleJourneys;
         }
     }
 
-    public static final class ConditionDetailsElement
-            implements ConditionDetails, JSONReceivable {
-        
-        private String[] diversionStopIds;
+    public static final class ConditionDetailsElement implements ConditionDetails, JSONReceivable {
+
+        private String[]        diversionStopIds;
         private ObaShapeElement diversionPath;
 
         ConditionDetailsElement() {
@@ -124,24 +126,24 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
             diversionPath = ObaShapeElement.EMPTY_OBJECT;
         }
 
-        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-        {
+        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
             JSONArray jsonDiversionStopIds = json.getJSONArray("diversionStopIds");
             diversionStopIds = new String[jsonDiversionStopIds.length()];
             ObaApi.copyTo(jsonDiversionStopIds, diversionStopIds);
-            
+
             diversionPath = new ObaShapeElement();
             ObaApi.fromJSON(json, "diversionPath", diversionPath);
         }
-        
+
+        //@Override
         public ObaShape getDiversionPath() {
             return diversionPath;
         }
 
-        public Vector getDiversionStopIds() {
+        //@Override
+        public Vector /*List<String>*/getDiversionStopIds() {
             Vector diversionStopIds = new Vector(this.diversionStopIds.length);
-            for(int i=0; i < this.diversionStopIds.length; i++)
-            {
+            for (int i = 0; i < this.diversionStopIds.length; i++) {
                 diversionStopIds.addElement(diversionStopIds.elementAt(i));
             }
             return diversionStopIds;
@@ -151,43 +153,44 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
     public static final class ConsequenceElement implements Consequence, JSONReceivable {
         public static final ConsequenceElement[] EMPTY_ARRAY = new ConsequenceElement[] {};
 
-        private String condition;
-        private ConditionDetailsElement conditionDetails;
+        private String                           condition;
+        private ConditionDetailsElement          conditionDetails;
 
         ConsequenceElement() {
             condition = "";
             conditionDetails = null;
         }
 
-        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-        {
+        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
             condition = json.getString("condition");
             JSONObject jsonConditionDetails = json.getJSONObject("conditionDetails");
             conditionDetails = new ConditionDetailsElement();
             conditionDetails.fromJSON(jsonConditionDetails);
         }
 
+        //@Override
         public String getCondition() {
             return condition;
         }
 
+        //@Override
         public ConditionDetails getDetails() {
             return conditionDetails;
         }
     }
 
-    private String id;
-    private Text summary;
-    private Text description;
-    private Text advice;
-    private String equipmentReason;
-    private String environmentReason;
-    private String personnelReason;
-    private String miscellaneousReason;
-    private String undefinedReason;
+    private String               id;
+    private Text                 summary;
+    private Text                 description;
+    private Text                 advice;
+    private String               equipmentReason;
+    private String               environmentReason;
+    private String               personnelReason;
+    private String               miscellaneousReason;
+    private String               undefinedReason;
     //private String securityAlert;
-    private long creationTime;
-    private AffectsElement affects;
+    private long                 creationTime;
+    private AffectsElement       affects;
     private ConsequenceElement[] consequences;
 
     ObaSituationElement() {
@@ -206,64 +209,80 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
         consequences = ConsequenceElement.EMPTY_ARRAY;
     }
 
-    public void fromJSON(JSONObject jsonSituation)
-    {
+    public void fromJSON(JSONObject jsonSituation) {
         // TODO:(pv) fromJSON Auto-generated method stub
-        
+
     }
-    
+
+    //@Override
     public String getId() {
         return id;
     }
 
+    //@Override
     public String getSummary() {
         return (summary != null) ? summary.getValue() : null;
     }
 
+    //@Override
     public String getDescription() {
         return (description != null) ? description.getValue() : null;
     }
 
+    //@Override
     public String getAdvice() {
         return (advice != null) ? advice.getValue() : null;
     }
 
+    //@Override
     public String getReason() {
-        if (!TextUtils.isNullOrEmpty(equipmentReason)) {
+        if (!TextUtils.isEmpty(equipmentReason)) {
             return equipmentReason;
-        } else if (!TextUtils.isNullOrEmpty(environmentReason)) {
+        }
+        else if (!TextUtils.isEmpty(environmentReason)) {
             return environmentReason;
-        } else if (!TextUtils.isNullOrEmpty(personnelReason)) {
+        }
+        else if (!TextUtils.isEmpty(personnelReason)) {
             return personnelReason;
-        } else if (!TextUtils.isNullOrEmpty(miscellaneousReason)) {
+        }
+        else if (!TextUtils.isEmpty(miscellaneousReason)) {
             return miscellaneousReason;
-        } else {
+        }
+        else {
             return undefinedReason;
         }
     }
 
+    //@Override
     public String getReasonType() {
-        if (!TextUtils.isNullOrEmpty(equipmentReason)) {
+        if (!TextUtils.isEmpty(equipmentReason)) {
             return ObaSituation.REASON_TYPE_EQUIPMENT;
-        } else if (!TextUtils.isNullOrEmpty(environmentReason)) {
+        }
+        else if (!TextUtils.isEmpty(environmentReason)) {
             return ObaSituation.REASON_TYPE_ENVIRONMENT;
-        } else if (!TextUtils.isNullOrEmpty(personnelReason)) {
+        }
+        else if (!TextUtils.isEmpty(personnelReason)) {
             return ObaSituation.REASON_TYPE_PERSONNEL;
-        } else if (!TextUtils.isNullOrEmpty(miscellaneousReason)) {
+        }
+        else if (!TextUtils.isEmpty(miscellaneousReason)) {
             return ObaSituation.REASON_TYPE_MISCELLANEOUS;
-        } else {
+        }
+        else {
             return ObaSituation.REASON_TYPE_UNDEFINED;
         }
     }
 
+    //@Override
     public long getCreationTime() {
         return creationTime;
     }
 
+    //@Override
     public Affects getAffects() {
         return affects;
     }
 
+    //@Override
     public Consequence[] getConsequences() {
         return consequences;
     }

@@ -15,7 +15,6 @@
  */
 package org.onebusaway.berry.api.elements;
 
-
 public interface ObaTripDetails extends ObaElement {
     /**
      * @return Details on the trip's schedule. Can be null if the schedule isn't included.

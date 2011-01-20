@@ -28,72 +28,69 @@ import org.onebusaway.berry.api.elements.ObaTrip;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-public abstract class ObaResponseWithRefs extends ObaResponse implements ObaReferences
-{
+public abstract class ObaResponseWithRefs extends ObaResponse implements ObaReferences {
     protected ObaReferencesElement references;
 
-    public ObaResponseWithRefs()
-    {
+    public ObaResponseWithRefs() {
         references = ObaReferencesElement.EMPTY_OBJECT;
     }
 
-    public JSONObject fromJSON(String jsonString) throws JSONException, InstantiationException, IllegalAccessException
-    {
+    public JSONObject fromJSON(String jsonString) throws JSONException, InstantiationException, IllegalAccessException {
         JSONObject jsonData = super.fromJSON(jsonString);
-        
+
         references = new ObaReferencesElement();
         ObaApi.fromJSON(jsonData, "references", references);
 
         return jsonData;
     }
 
-    public ObaStop getStop(String id)
-    {
+    //@Override
+    public ObaStop getStop(String id) {
         return references.getStop(id);
     }
 
-    public Vector getStops(String[] ids)
-    {
+    //@Override
+    public Vector /*List<ObaStop>*/getStops(String[] ids) {
         return references.getStops(ids);
     }
 
-    public ObaRoute getRoute(String id)
-    {
+    //@Override
+    public ObaRoute getRoute(String id) {
         return references.getRoute(id);
     }
 
-    public Vector getRoutes(String[] ids)
-    {
+    //@Override
+    public Vector /*List<ObaRoute>*/getRoutes(String[] ids) {
         return references.getRoutes(ids);
     }
 
-    public ObaTrip getTrip(String id)
-    {
+    //@Override
+    public ObaTrip getTrip(String id) {
         return references.getTrip(id);
     }
 
-    public Vector getTrips(String[] ids)
-    {
+    //@Override
+    public Vector /*List<ObaTrip>*/getTrips(String[] ids) {
         return references.getTrips(ids);
     }
 
-    public ObaAgency getAgency(String id)
-    {
+    //@Override
+    public ObaAgency getAgency(String id) {
         return references.getAgency(id);
     }
 
-    public Vector getAgencies(String[] ids)
-    {
+    //@Override
+    public Vector /*List<ObaAgency>*/getAgencies(String[] ids) {
         return references.getAgencies(ids);
     }
 
-    public ObaSituation getSituation(String id)
-    {
+    //@Override
+    public ObaSituation getSituation(String id) {
         return references.getSituation(id);
     }
 
-    public Vector getSituations(String[] ids)
-    {
+    //@Override
+    public Vector /*List<ObaSituation>*/getSituations(String[] ids) {
         return references.getSituations(ids);
     }
 }

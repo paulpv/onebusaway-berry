@@ -22,37 +22,39 @@ import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
 public final class ObaStopGroup implements JSONReceivable {
-    public static final ObaStopGroup EMPTY_OBJECT = new ObaStopGroup();
-    public static final ObaStopGroup[] EMPTY_ARRAY = new ObaStopGroup[] {};
+    public static final ObaStopGroup   EMPTY_OBJECT = new ObaStopGroup();
+    public static final ObaStopGroup[] EMPTY_ARRAY  = new ObaStopGroup[] {};
 
     private static final class StopGroupName implements JSONReceivable {
         private static final StopGroupName EMPTY_OBJECT = new StopGroupName();
 
-        private String type;
-        private String[] names;
+        private String                     type;
+        private String[]                   names;
 
         public StopGroupName() {
             type = "";
-            names = ObaApi.EMPTY_ARRAY_STRING;
+            names = new String[] {};
         }
-        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-        {
+
+        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
             type = json.getString("type");
             JSONArray jsonNames = json.getJSONArray("names");
             names = new String[jsonNames.length()];
             ObaApi.copyTo(jsonNames, names);
         }
+
         String getType() {
             return type;
         }
+
         String[] getNames() {
             return names;
         }
     }
-    
-    private String[] stopIds;
-    private ObaShapeElement[] polylines;
-    private StopGroupName name;
+
+    private String[]           stopIds;
+    private ObaShapeElement[]  polylines;
+    private StopGroupName      name;
 
     public static final String TYPE_DESTINATION = "destination";
 
@@ -65,20 +67,19 @@ public final class ObaStopGroup implements JSONReceivable {
         name = StopGroupName.EMPTY_OBJECT;
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-    {
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
         JSONArray jsonStopIds = json.getJSONArray("stopIds");
         stopIds = new String[jsonStopIds.length()];
         ObaApi.copyTo(jsonStopIds, stopIds);
-        
+
         JSONArray jsonPolylines = json.getJSONArray("polylines");
         polylines = new ObaShapeElement[jsonPolylines.length()];
         ObaApi.copyTo(jsonPolylines, polylines, ObaShapeElement.class);
-        
+
         name = new StopGroupName();
         ObaApi.fromJSON(json, "name", name);
     }
-    
+
     /**
      * Returns the type of grouping.
      *
@@ -123,6 +124,7 @@ public final class ObaStopGroup implements JSONReceivable {
     }
 
     /*
+    @Override
     public String toString() {
         return ObaApi.getGson().toJson(this);
     }

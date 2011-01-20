@@ -20,95 +20,78 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
-import javax.microedition.io.HttpsConnection;
 
 import net.rim.device.api.compress.GZIPInputStream;
 
 import org.onebusaway.berry.net.Uri;
 
-public final class ObaHelp
-{
+public final class ObaHelp {
     private static final String TAG = "ObaHelp";
 
-    public static String getUri(String url) throws IOException
-    {
-        return getUri(Uri.parse(url));
+    // TODO:(pv) Accept deviceside=true; interface=wifi; apn, etc
+    //  http://developerlife.com/tutorials/?p=884
+    //  http://docs.blackberry.com/en/developers/deliverables/5779/Creating_connections_508946_11.jsp
+
+    public static String getUri(Uri uri) throws IOException {
+        return getUri(new URL(uri.toString()));
     }
 
-    public static String getUri(Uri uri) throws IOException
-    {
-        // TODO:(pv) Be even more robust:
-        // http://vasudevkamath.blogspot.com/2009/09/posting-data-via-http-from-blackberry.html
-        
-        // TODO:(pv) Accept deviceside=true; interface=wifi; apn, etc
-        //  http://developerlife.com/tutorials/?p=884
-        //  http://docs.blackberry.com/en/developers/deliverables/5779/Creating_connections_508946_11.jsp
-
-        String url = uri.toString();
-
+    public static String getUri(URL url) throws IOException {
         //Log.d(TAG, "getUri: " + uri);
 
-        HttpConnection conn;
+        boolean useGzip = false;
+        HttpConnection conn = (HttpConnection) url.openConnection();
+        //conn.setReadTimeout(30*1000);
 
-        if (uri.getScheme().equalsIgnoreCase("https"))
-        {
-            conn = (HttpsConnection) Connector.open(url);
-        }
-        else
-        {
-            conn = (HttpConnection) Connector.open(url);
-        }
+        // Request support for gzip compression
+        conn.setRequestProperty("Accept-Encoding", "gzip");
+
+        // TODO:(pv) Add OBA to Client=Agent value
+        //String clientAgent = conn.getRequestProperty("Client-Agent");
+        //conn.setRequestProperty("Client-Agent", ?);
 
         //
         // Below ideas per the original Android code and...
         // http://www.blackberryforums.com/developer-forum/181071-http-post-passing-parameters-urls.html#post1320379
         //
 
-        //conn.setReadTimeout(30*1000);
-
-        String clientAgent = conn.getRequestProperty("Client-Agent");
-        
-        // Request support for gzip compression
-        conn.setRequestProperty("Accept-Encoding", "gzip");
-
         // Make the request and get the response error code
         int responseCode = conn.getResponseCode();
-               
-        String responseMessage = conn.getResponseMessage();
-        String contentType = conn.getType();
-        String contentEncoding = conn.getHeaderField("Content-Encoding");
-        int contentLength = (int) conn.getLength();
+        //String responseMessage = conn.getResponseMessage();
+        //String contentType = conn.getType();
+
+        // TODO:(pv) Be even more robust:
+        // http://vasudevkamath.blogspot.com/2009/09/posting-data-via-http-from-blackberry.html
+
         InputStream in = conn.openInputStream();
-        
-        boolean useGzip = contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip");
-        
-        Reader reader;
-        if (useGzip)
+
+        String contentEncoding = conn.getEncoding();
+        if (contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip"))
         {
+            useGzip = true;
+        }
+
+        Reader reader;
+        if (useGzip) {
             reader = new InputStreamReader(new GZIPInputStream(in));
         }
-        else
-        {
+        else {
             reader = new InputStreamReader(in);
         }
-        
-        String content;
 
-        if (contentLength > 0)
-        {
+        String content;
+        int contentLength = (int) conn.getLength();
+        if (contentLength > 0) {
             char[] buf = new char[contentLength];
             reader.read(buf);
             content = new String(buf);
         }
-        else
-        {
+        else {
             StringBuffer sb = new StringBuffer();
             char[] buf = new char[1024];
             int n = 0;
-            while ((n = reader.read(buf)) > 0)
-            {
+            while ((n = reader.read(buf)) > 0) {
                 sb.append(buf, 0, n);
             }
             content = sb.toString();

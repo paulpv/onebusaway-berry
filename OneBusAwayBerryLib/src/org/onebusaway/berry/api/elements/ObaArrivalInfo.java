@@ -16,8 +16,8 @@
 package org.onebusaway.berry.api.elements;
 
 public final class ObaArrivalInfo {
-    public static final ObaArrivalInfo EMPTY_OBJECT = new ObaArrivalInfo();
-    public static final ObaArrivalInfo[] EMPTY_ARRAY = new ObaArrivalInfo[] {};
+    public static final ObaArrivalInfo   EMPTY_OBJECT = new ObaArrivalInfo();
+    public static final ObaArrivalInfo[] EMPTY_ARRAY  = new ObaArrivalInfo[] {};
 
     public static final class Frequency {
         private final long startTime;
@@ -43,26 +43,26 @@ public final class ObaArrivalInfo {
         }
     }
 
-    private final String routeId;
-    private final String routeShortName;
-    private final String routeLongName;
-    private final String tripId;
-    private final String tripHeadsign;
-    private final String stopId;
-    private final long predictedArrivalTime;
-    private final long scheduledArrivalTime;
-    private final long predictedDepartureTime;
-    private final long scheduledDepartureTime;
-    private final String status;
-    private final Frequency frequency;
-    private final String vehicleId;
-    private final Double distanceFromStop;
-    private final Integer numberOfStopsAway;
-    private final long serviceDate;
-    private final long lastUpdateTime;
-    private final Boolean predicted;
+    private final String               routeId;
+    private final String               routeShortName;
+    private final String               routeLongName;
+    private final String               tripId;
+    private final String               tripHeadsign;
+    private final String               stopId;
+    private final long                 predictedArrivalTime;
+    private final long                 scheduledArrivalTime;
+    private final long                 predictedDepartureTime;
+    private final long                 scheduledDepartureTime;
+    private final String               status;
+    private final Frequency            frequency;
+    private final String               vehicleId;
+    private final Double               distanceFromStop;
+    private final Integer              numberOfStopsAway;
+    private final long                 serviceDate;
+    private final long                 lastUpdateTime;
+    private final Boolean              predicted;
     private final ObaTripStatusElement tripStatus;
-    private final String[] situationIds;
+    private final String[]             situationIds;
 
     ObaArrivalInfo() {
         routeId = "";

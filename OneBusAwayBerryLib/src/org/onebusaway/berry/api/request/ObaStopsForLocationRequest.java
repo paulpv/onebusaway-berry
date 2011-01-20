@@ -15,10 +15,9 @@
  */
 package org.onebusaway.berry.api.request;
 
-import javax.microedition.location.Coordinates;
-
 import org.onebusaway.berry.api.Context;
 import org.onebusaway.berry.api.ObaCallable;
+import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.berry.net.Uri;
 
 /**
@@ -27,17 +26,16 @@ import org.onebusaway.berry.net.Uri;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopsForLocationRequest extends RequestBase
-        implements ObaCallable {
+public final class ObaStopsForLocationRequest extends RequestBase implements ObaCallable {
     protected ObaStopsForLocationRequest(Uri uri) {
         super(new ObaStopsForLocationResponse(), uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
-        public Builder(Context context, Coordinates location) {
+        public Builder(Context context, GeoPoint location) {
             super(context, BASE_PATH + "/stops-for-location.json");
-            builder.appendQueryParameter("lat", String.valueOf(location.getLatitude()));
-            builder.appendQueryParameter("lon", String.valueOf(location.getLongitude()));
+            mBuilder.appendQueryParameter("lat", String.valueOf(location.getLatitudeE6() / 1E6));
+            mBuilder.appendQueryParameter("lon", String.valueOf(location.getLongitudeE6() / 1E6));
         }
 
         /**
@@ -45,7 +43,7 @@ public final class ObaStopsForLocationRequest extends RequestBase
          * @param radius The search radius, in meters.
          */
         public Builder setRadius(int radius) {
-            builder.appendQueryParameter("radius", String.valueOf(radius));
+            mBuilder.appendQueryParameter("radius", String.valueOf(radius));
             return this;
         }
 
@@ -55,8 +53,8 @@ public final class ObaStopsForLocationRequest extends RequestBase
          * @param lonSpan The longitude span of the bounding box.
          */
         public Builder setSpan(double latSpan, double lonSpan) {
-            builder.appendQueryParameter("latSpan", String.valueOf(latSpan));
-            builder.appendQueryParameter("lonSpan", String.valueOf(lonSpan));
+            mBuilder.appendQueryParameter("latSpan", String.valueOf(latSpan));
+            mBuilder.appendQueryParameter("lonSpan", String.valueOf(lonSpan));
             return this;
         }
 
@@ -65,20 +63,18 @@ public final class ObaStopsForLocationRequest extends RequestBase
          * @param latSpan The latitude span of the bounding box in microdegrees.
          * @param lonSpan The longitude span of the bounding box in microdegrees.
          */
-        /*
         public Builder setSpan(int latSpan, int lonSpan) {
-            builder.appendQueryParameter("latSpan", String.valueOf(latSpan/1E6));
-            builder.appendQueryParameter("lonSpan", String.valueOf(lonSpan/1E6));
+            mBuilder.appendQueryParameter("latSpan", String.valueOf(latSpan / 1E6));
+            mBuilder.appendQueryParameter("lonSpan", String.valueOf(lonSpan / 1E6));
             return this;
         }
-        */
 
         /**
          * A specific route short name to search for.
          * @param query The short name query string.
          */
         public Builder setQuery(String query) {
-            builder.appendQueryParameter("query", query);
+            mBuilder.appendQueryParameter("query", query);
             return this;
         }
 
@@ -86,4 +82,16 @@ public final class ObaStopsForLocationRequest extends RequestBase
             return new ObaStopsForLocationRequest(buildUri());
         }
     }
+
+    /*
+    @Override
+    public ObaStopsForLocationResponse call() {
+        return call(ObaStopsForLocationResponse.class);
+    }
+
+    @Override
+    public String toString() {
+        return "ObaStopsForLocationRequest [mUri=" + mUri + "]";
+    }
+    */
 }

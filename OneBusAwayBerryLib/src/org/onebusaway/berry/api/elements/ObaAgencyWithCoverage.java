@@ -15,15 +15,13 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import javax.microedition.location.Coordinates;
-
 import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable 
-{
+public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable {
     public static final ObaAgencyWithCoverage[] EMPTY_ARRAY = new ObaAgencyWithCoverage[] {};
 
     private String                              agencyId;
@@ -32,63 +30,64 @@ public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable
     private double                              latSpan;
     private double                              lonSpan;
 
-    public ObaAgencyWithCoverage()
-    {
+    private GeoPoint                            point;
+
+    public ObaAgencyWithCoverage() {
         agencyId = "";
         lat = 0;
         lon = 0;
         latSpan = 0;
         lonSpan = 0;
+
+        point = ObaApi.makeGeoPoint(lat, lon);
     }
 
-    public void fromJSON(JSONObject json) throws JSONException
-    {
+    public void fromJSON(JSONObject json) throws JSONException {
         agencyId = json.getString("agencyId");
         lat = json.getDouble("lat");
         lon = json.getDouble("lon");
         latSpan = json.getDouble("latSpan");
         lonSpan = json.getDouble("lonSpan");
+
+        point = ObaApi.makeGeoPoint(lat, lon);
     }
 
-    public String getId()
-    {
+    //@Override
+    public String getId() {
         return agencyId;
     }
 
     /**
      * @return The center point of the agency's coverage area.
      */
-    public Coordinates getPoint()
-    {
-        return ObaApi.makeGeoPoint(lat, lon);
+    public GeoPoint getPoint() {
+        return point;
     }
 
     /**
      * @return The latitude height of the coverage bounding box.
      */
-    public double getLatitudeSpan()
-    {
+    public double getLatitudeSpan() {
         return latSpan;
     }
 
     /**
      * @return The longitude hight of the coverage bounding box.
      */
-    public double getLongitudeSpan()
-    {
+    public double getLongitudeSpan() {
         return lonSpan;
     }
 
-    public int hashCode()
-    {
+    //@Override
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((agencyId == null) ? 0 : agencyId.hashCode());
         return result;
     }
 
-    public boolean equals(Object obj)
-    {
+    //@Override
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
@@ -96,8 +95,7 @@ public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable
         if (!(obj instanceof ObaAgencyWithCoverage))
             return false;
         ObaAgencyWithCoverage other = (ObaAgencyWithCoverage) obj;
-        if (agencyId == null)
-        {
+        if (agencyId == null) {
             if (other.agencyId != null)
                 return false;
         }
@@ -106,8 +104,8 @@ public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable
         return true;
     }
 
-    public String toString()
-    {
+    //@Override
+    public String toString() {
         return "ObaAgencyWithCoverage [agencyId=" + agencyId + "]";
     }
 }

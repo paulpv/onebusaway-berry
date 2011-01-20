@@ -27,54 +27,51 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public final class ObaAgencyResponse extends ObaResponse implements ObaAgency, JSONReceivable
-{
+public final class ObaAgencyResponse extends ObaResponse implements ObaAgency, JSONReceivable {
     private ObaAgencyElement entry;
 
-    public ObaAgencyResponse()
-    {
+    public ObaAgencyResponse() {
         entry = ObaAgencyElement.EMPTY_OBJECT;
     }
 
-    public void fromJSON(JSONObject json) throws JSONException
-    {
+    public void fromJSON(JSONObject json) throws JSONException {
         JSONObject jsonEntry = json.getJSONObject("entry");
         entry = new ObaAgencyElement();
         entry.fromJSON(jsonEntry);
     }
 
-    public String getId()
-    {
+    //@Override
+    public String getId() {
         return entry.getId();
     }
 
-    public String getName()
-    {
+    //@Override
+    public String getName() {
         return entry.getName();
     }
 
-    public String getUrl()
-    {
+    //@Override
+    public String getUrl() {
         return entry.getUrl();
     }
 
-    public String getTimezone()
-    {
+    //@Override
+    public String getTimezone() {
         return entry.getTimezone();
     }
 
-    public String getLang()
-    {
+    //@Override
+    public String getLang() {
         return entry.getLang();
     }
 
-    public String getPhone()
-    {
+    //@Override
+    public String getPhone() {
         return entry.getPhone();
     }
 
-    public String getDisclaimer()
-    {
+    //@Override
+    public String getDisclaimer() {
         return entry.getDisclaimer();
     }
 }

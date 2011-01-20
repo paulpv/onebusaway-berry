@@ -26,22 +26,17 @@ import org.onebusaway.berry.net.Uri;
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public final class ObaCurrentTimeRequest extends RequestBase implements ObaCallable 
-{
-    protected ObaCurrentTimeRequest(Uri uri)
-    {
+public final class ObaCurrentTimeRequest extends RequestBase implements ObaCallable {
+    protected ObaCurrentTimeRequest(Uri uri) {
         super(new ObaCurrentTimeResponse(), uri);
     }
 
-    public static class Builder extends RequestBase.BuilderBase
-    {
-        public Builder(Context context)
-        {
+    public static class Builder extends RequestBase.BuilderBase {
+        public Builder(Context context) {
             super(context, BASE_PATH + "/current-time.json", true);
         }
 
-        public ObaCurrentTimeRequest build()
-        {
+        public ObaCurrentTimeRequest build() {
             return new ObaCurrentTimeRequest(buildUri());
         }
     }
@@ -51,8 +46,19 @@ public final class ObaCurrentTimeRequest extends RequestBase implements ObaCalla
      * @param context The package context.
      * @return The new request instance.
      */
-    public static ObaCurrentTimeRequest newRequest(Context context)
-    {
+    public static ObaCurrentTimeRequest newRequest(Context context) {
         return new Builder(context).build();
     }
+
+    /*
+    @Override
+    public ObaCurrentTimeResponse call() {
+        return call(ObaCurrentTimeResponse.class);
+    }
+
+    @Override
+    public String toString() {
+        return "ObaCurrentTimeRequest [mUri=" + mUri + "]";
+    }
+    */
 }

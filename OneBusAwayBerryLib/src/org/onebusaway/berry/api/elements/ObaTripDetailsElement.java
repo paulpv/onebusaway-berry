@@ -22,12 +22,12 @@ package org.onebusaway.berry.api.elements;
  *
  */
 public final class ObaTripDetailsElement implements ObaTripDetails {
-    public static final ObaTripDetailsElement EMPTY_OBJECT = new ObaTripDetailsElement();
-    public static final ObaTripDetailsElement[] EMPTY_ARRAY = new ObaTripDetailsElement[] {};
+    public static final ObaTripDetailsElement   EMPTY_OBJECT = new ObaTripDetailsElement();
+    public static final ObaTripDetailsElement[] EMPTY_ARRAY  = new ObaTripDetailsElement[] {};
 
-    private final String tripId;
-    private final ObaTripSchedule schedule;
-    private final ObaTripStatusElement status;
+    private final String                        tripId;
+    private final ObaTripSchedule               schedule;
+    private final ObaTripStatusElement          status;
 
     private ObaTripDetailsElement() {
         tripId = "";
@@ -35,14 +35,17 @@ public final class ObaTripDetailsElement implements ObaTripDetails {
         status = null;
     }
 
+    //@Override
     public ObaTripSchedule getSchedule() {
         return schedule;
     }
 
+    //@Override
     public ObaTripStatus getStatus() {
         return status;
     }
 
+    //@Override
     public String getId() {
         return tripId;
     }

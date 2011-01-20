@@ -1,120 +1,56 @@
 package org.onebusaway.berry.map;
 
-import javax.microedition.location.Coordinates;
+import java.util.Vector;
 
-public class ObaMapMarkerStop extends ObaMapMarker
-{
-    public static class StopDirections
-    {
-        public static final int UNKNOWN    = 0;
-        public static final int NORTH      = 1;
-        public static final int NORTH_EAST = 2;
-        public static final int EAST       = 3;
-        public static final int SOUTH_EAST = 4;
-        public static final int SOUTH      = 5;
-        public static final int SOUTH_WEST = 6;
-        public static final int WEST       = 7;
-        public static final int NORTH_WEST = 8;
+import org.onebusaway.berry.api.elements.ObaStop;
 
-        public static int getMin()
-        {
-            return UNKNOWN;
-        }
-
-        public static int getMax()
-        {
-            return NORTH_WEST;
-        }
+public class ObaMapMarkerStop extends ObaMapMarker {
+    public static final Vector directions;
+    static {
+        directions = new Vector();
+        directions.addElement("n");
+        directions.addElement("ne");
+        directions.addElement("e");
+        directions.addElement("se");
+        directions.addElement("s");
+        directions.addElement("sw");
+        directions.addElement("w");
+        directions.addElement("nw");
     }
 
-    public static class StopTypes
-    {
-        public static final int UNKNOWN = 0;
-        public static final int BUS     = 1;
+    protected final String     name;
+    protected boolean          favorite;
 
-        public static int getMin()
-        {
-            return UNKNOWN;
-        }
+    public ObaMapMarkerStop(String id, GeoPoint point, String name, int type, String direction, boolean favorite) {
+        super(id, point, "pin.png", "pin_focus.png");
 
-        public static int getMax()
-        {
-            return BUS;
-        }
-    }
-
-    protected final String name;
-    protected final int    type;
-    protected final int    direction;
-    protected boolean      favorite;
-
-    public ObaMapMarkerStop(String id, Coordinates coordinates, String name, int type, int direction, boolean favorite)
-    {
-        super(id, coordinates, "pin.png", "pin_focus.png");
-
-        if (direction < StopDirections.getMin() || direction > StopDirections.getMax())
-        {
-            throw new IllegalArgumentException("direction must be a value of MyStopMapMarker.StopDirections");
-        }
-
-        if (type < StopTypes.getMin() || type > StopTypes.getMax())
-        {
-            throw new IllegalArgumentException("type must be a value of MyStopMapMarker.StopTypes");
-        }
+        direction = (direction == null) ? "" : direction.toLowerCase();
 
         this.name = name;
-        this.type = type;
-        this.direction = direction;
-        setFavorite(favorite);
 
-        switch (direction)
-        {
-            case StopDirections.NORTH:
-                addOverlay("dir_n.png");
-                break;
-            case StopDirections.NORTH_EAST:
-                addOverlay("dir_ne.png");
-                break;
-            case StopDirections.EAST:
-                addOverlay("dir_e.png");
-                break;
-            case StopDirections.SOUTH_EAST:
-                addOverlay("dir_se.png");
-                break;
-            case StopDirections.SOUTH:
-                addOverlay("dir_s.png");
-                break;
-            case StopDirections.SOUTH_WEST:
-                addOverlay("dir_sw.png");
-                break;
-            case StopDirections.WEST:
-                addOverlay("dir_w.png");
-                break;
-            case StopDirections.NORTH_WEST:
-                addOverlay("dir_nw.png");
-                break;
-        }
-
-        switch (type)
-        {
-            case StopTypes.BUS:
+        switch (type) {
+            case ObaStop.LOCATION_STATION:
+            case ObaStop.LOCATION_STOP:
                 addOverlay("stop_type_bus.png");
                 break;
         }
+
+        if (directions.contains(direction)) {
+            addOverlay("dir_" + direction + ".png");
+        }
+
+        setFavorite(favorite);
     }
 
-    public boolean getFavorite()
-    {
+    public boolean getFavorite() {
         return favorite;
     }
 
-    public void setFavorite(boolean favorite)
-    {
+    public void setFavorite(boolean favorite) {
         this.favorite = favorite;
     }
 
-    public boolean getUseImageAlt()
-    {
+    public boolean getUseImageAlt() {
         return favorite || super.getUseImageAlt();
     }
 }

@@ -15,8 +15,7 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import javax.microedition.location.Coordinates;
-
+import org.onebusaway.berry.map.GeoPoint;
 
 /**
  * Interface defining a Stop element.
@@ -25,7 +24,7 @@ import javax.microedition.location.Coordinates;
  * @author Paul Watts (paulcwatts@gmail.com)
  */
 public interface ObaStop extends ObaElement {
-    public static final int LOCATION_STOP = 0;
+    public static final int LOCATION_STOP    = 0;
     public static final int LOCATION_STATION = 1;
 
     /**
@@ -47,7 +46,7 @@ public interface ObaStop extends ObaElement {
      *
      * @return The location of the stop, or null if it can't be converted to a GeoPoint.
      */
-    public Coordinates getLocation();
+    public GeoPoint getLocation();
 
     /**
      * Returns the latitude of the stop as a double.

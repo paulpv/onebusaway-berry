@@ -49,4 +49,16 @@ public final class ObaStopRequest extends RequestBase implements ObaCallable {
     public static ObaStopRequest newRequest(Context context, String stopId) {
         return new Builder(context, stopId).build();
     }
+
+    /*
+    @Override
+    public ObaStopResponse call() {
+        return call(ObaStopResponse.class);
+    }
+
+    @Override
+    public String toString() {
+        return "ObaStopRequest [mUri=" + mUri + "]";
+    }
+    */
 }

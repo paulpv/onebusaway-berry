@@ -18,11 +18,11 @@ package org.onebusaway.berry.api.elements;
 import java.util.Vector;
 
 public interface ObaSituation extends ObaElement {
-    public static final String REASON_TYPE_EQUIPMENT = "equipment";
-    public static final String REASON_TYPE_ENVIRONMENT = "environment";
-    public static final String REASON_TYPE_PERSONNEL = "personnel";
+    public static final String REASON_TYPE_EQUIPMENT     = "equipment";
+    public static final String REASON_TYPE_ENVIRONMENT   = "environment";
+    public static final String REASON_TYPE_PERSONNEL     = "personnel";
     public static final String REASON_TYPE_MISCELLANEOUS = "miscellaneous";
-    public static final String REASON_TYPE_UNDEFINED = "undefined";
+    public static final String REASON_TYPE_UNDEFINED     = "undefined";
 
     public interface VehicleJourney {
         /**
@@ -38,7 +38,7 @@ public interface ObaSituation extends ObaElement {
         /**
          * @return A list of stop IDs along the vehicle journey that are affected.
          */
-        public Vector getStopIds();
+        public Vector /*List<String>*/getStopIds();
     }
 
     public interface Affects {
@@ -46,7 +46,7 @@ public interface ObaSituation extends ObaElement {
          * The list of affected stop IDs.
          * @return
          */
-        public Vector getStopIds();
+        public Vector /*List<String>*/getStopIds();
 
         /**
          * @return An array of transit vehicle journeys the situation affects.
@@ -59,7 +59,7 @@ public interface ObaSituation extends ObaElement {
          * @return For diversion conditions, this specifies the stop IDs
          * that are diverted.
          */
-        public Vector getDiversionStopIds();
+        public Vector /*List<String>*/getDiversionStopIds();
 
         /**
          * @return For diversion conditions, this specifies the optional
@@ -70,7 +70,7 @@ public interface ObaSituation extends ObaElement {
 
     public interface Consequence {
         public static final String CONDITION_DIVERSION = "diversion";
-        public static final String CONDITION_ALTERED = "altered";
+        public static final String CONDITION_ALTERED   = "altered";
 
         /**
          * @return The string describing the consequence condition.

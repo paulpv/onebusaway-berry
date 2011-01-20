@@ -22,7 +22,7 @@ package org.onebusaway.berry.api.elements;
  */
 public interface ObaTrip extends ObaElement {
     public static final int DIRECTION_OUTBOUND = 0;
-    public static final int DIRECTION_INBOUND = 1;
+    public static final int DIRECTION_INBOUND  = 1;
 
     /**
      * @return The short name for the trip.

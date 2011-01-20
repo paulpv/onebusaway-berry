@@ -246,15 +246,18 @@ public class ObaMapField extends MapField {
      */
     private void mapMarkersAddInternal(ObaMapMarker mapMarker) {
         // TODO:(pv) Verify if we need to override mapMarker hash or equal
-        if (!markersStops.contains(mapMarker)) {
-            mapMarker.setParent(this);
-            markersStops.put(mapMarker.getId(), mapMarker);
-            System.out.println("Marker added to collection: " + mapMarker.getId());
+        String id = mapMarker.getId();
+        if (!markersStops.containsKey(id)) {
+            //mapMarker.setParent(this);
+            markersStops.put(id, mapMarker);
+            //System.out.println("Marker added to collection: " + mapMarker.getId());
         }
+        /*
         else {
             // w00t! we found an existing and skipped it!
             System.out.println("Marker already in collection: " + mapMarker.getId());
         }
+        */
     }
 
     public void mapMarkersAdd(ObaMapMarker mapMarker, boolean invalidate) {
@@ -307,7 +310,7 @@ public class ObaMapField extends MapField {
     public void mapMarkersRemove(String id, boolean invalidate) {
         synchronized (markersStops) {
             ObaMapMarker mapMarker = (ObaMapMarker) markersStops.remove(id);
-            mapMarker.setParent(null);
+            //mapMarker.setParent(null);
         }
         if (invalidate) {
             invalidate();
@@ -324,7 +327,7 @@ public class ObaMapField extends MapField {
     }
 
     public GeoPoint getGeoPoint() {
-        return new GeoPoint(getLatitude(), getLongitude());
+        return new GeoPoint(getLatitude() * 10, getLongitude() * 10);
     }
 
     public void setGpsLocked(boolean locked) {

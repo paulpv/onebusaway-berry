@@ -15,8 +15,6 @@
  */
 package org.onebusaway.berry.test.api.request.test;
 
-import javax.microedition.location.Coordinates;
-
 import j2meunit.framework.Test;
 import j2meunit.framework.TestCase;
 import j2meunit.framework.TestMethod;
@@ -28,6 +26,7 @@ import org.onebusaway.berry.api.elements.ObaRoute;
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.request.ObaStopsForLocationRequest;
 import org.onebusaway.berry.api.request.ObaStopsForLocationResponse;
+import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.berry.test.ObaTestCase;
 
 
@@ -57,7 +56,7 @@ public class StopsForLocationTest extends ObaTestCase {
     }
     
     public void testDowntownSeattle1() {
-        final Coordinates pt = ObaApi.makeGeoPoint(47.610980, -122.33845);
+        final GeoPoint pt = ObaApi.makeGeoPoint(47.610980, -122.33845);
 
         ObaStopsForLocationRequest.Builder builder =
                 new ObaStopsForLocationRequest.Builder(getContext(), pt);
@@ -80,7 +79,7 @@ public class StopsForLocationTest extends ObaTestCase {
     }
 
     public void testQuery() {
-        final Coordinates pt = ObaApi.makeGeoPoint(47.25331, -122.44040);
+        final GeoPoint pt = ObaApi.makeGeoPoint(47.25331, -122.44040);
 
         ObaStopsForLocationResponse response =
             (ObaStopsForLocationResponse) new ObaStopsForLocationRequest.Builder(getContext(), pt)
@@ -101,7 +100,7 @@ public class StopsForLocationTest extends ObaTestCase {
     }
 
     public void testQueryFail() {
-        final Coordinates pt = ObaApi.makeGeoPoint(47.25331, -122.44040);
+        final GeoPoint pt = ObaApi.makeGeoPoint(47.25331, -122.44040);
 
         ObaStopsForLocationResponse response =
             (ObaStopsForLocationResponse) new ObaStopsForLocationRequest.Builder(getContext(), pt)
@@ -117,7 +116,7 @@ public class StopsForLocationTest extends ObaTestCase {
 
     public void testOutOfRange() {
         // This is just to make sure we copy and call newRequest() at least once
-        final Coordinates pt = ObaApi.makeGeoPoint(48.85808, 2.29498);
+        final GeoPoint pt = ObaApi.makeGeoPoint(48.85808, 2.29498);
 
         ObaStopsForLocationRequest request =
                 new ObaStopsForLocationRequest.Builder(getContext(), pt).build();

@@ -44,8 +44,7 @@ public final class ObaStopGrouping implements JSONReceivable {
         ordered = json.getBoolean("ordered");
         type = json.getString("type");
         JSONArray jsonStopGroups = json.getJSONArray("stopGroups");
-        stopGroups = new ObaStopGroup[jsonStopGroups.length()];
-        ObaApi.copyTo(jsonStopGroups, stopGroups, ObaStopGroup.class);
+        stopGroups = (ObaStopGroup[]) ObaApi.fromJSON(jsonStopGroups, new ObaStopGroup[jsonStopGroups.length()], ObaStopGroup.class);
     }
 
     /**

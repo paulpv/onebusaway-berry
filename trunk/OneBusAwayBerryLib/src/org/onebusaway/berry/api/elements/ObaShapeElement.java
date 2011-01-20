@@ -15,9 +15,9 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import java.util.Vector;
-
 import org.onebusaway.berry.api.JSONReceivable;
+import org.onebusaway.berry.api.ObaListGeoPoint;
+import org.onebusaway.berry.api.ObaListInteger;
 import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
@@ -54,13 +54,17 @@ public final class ObaShapeElement implements ObaShape, JSONReceivable {
     }
 
     //@Override
-    public Vector /*List<Integer>*/getLevels() {
-        return decodeLevels(levels, length);
+    public ObaListInteger getLevels() {
+        ObaListInteger levels = new ObaListInteger(length);
+        decodeLevels(this.levels, levels);
+        return levels;
     }
 
     //@Override
-    public Vector /*List<GeoPoint>*/getPoints() {
-        return decodeLine(points, length);
+    public ObaListGeoPoint getPoints() {
+        ObaListGeoPoint points = new ObaListGeoPoint(length); 
+        decodeLine(this.points, points);
+        return points;
     }
 
     //@Override
@@ -80,9 +84,8 @@ public final class ObaShapeElement implements ObaShape, JSONReceivable {
      *      of points that are contained in the encoded string.
      * @return A list of points from the encoded string.
      */
-    public static Vector /*List<GeoPoint>*/decodeLine(String encoded, int numPoints) {
+    public static void  decodeLine(String encoded, ObaListGeoPoint array) {
         //assert(numPoints >= 0);
-        Vector array = new Vector(numPoints);
 
         final int len = encoded.length();
         int i = 0;
@@ -122,8 +125,6 @@ public final class ObaShapeElement implements ObaShape, JSONReceivable {
             // The polyline encodes in degrees * 1E5, we need degrees * 1E6
             array.addElement(new GeoPoint(lat * 10, lon * 10));
         }
-
-        return array;
     }
 
     /**
@@ -136,9 +137,8 @@ public final class ObaShapeElement implements ObaShape, JSONReceivable {
      *      of points that are contained in the encoded string.
      * @return A list of levels from the encoded string.
      */
-    public static Vector /*List<Integer>*/decodeLevels(String encoded, int numPoints) {
+    public static void decodeLevels(String encoded, ObaListInteger array) {
         //assert(numPoints >= 0);
-        Vector array = new Vector(numPoints);
 
         final int len = encoded.length();
         int i = 0;
@@ -158,7 +158,5 @@ public final class ObaShapeElement implements ObaShape, JSONReceivable {
 
             array.addElement(new Integer(result));
         }
-
-        return array;
     }
 }

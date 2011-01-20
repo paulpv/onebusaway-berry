@@ -15,10 +15,9 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import java.util.Vector;
-
 import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.ObaListString;
 import org.onebusaway.berry.api.TextUtils;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
@@ -56,8 +55,8 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
             return stopId;
         }
 
-        public static Vector /*List<String>*/toList(StopId[] ids) {
-            Vector result = new Vector(ids.length);
+        public static ObaListString toList(StopId[] ids) {
+            ObaListString result = new ObaListString(ids.length);
             for (int i = 0; i < ids.length; i++) {
                 result.addElement(ids[i].getId());
             }
@@ -89,7 +88,7 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
         }
 
         //@Override
-        public Vector /*List<String>*/getStopIds() {
+        public ObaListString getStopIds() {
             return StopId.toList(calls);
         }
     }
@@ -106,7 +105,7 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
         }
 
         //@Override
-        public Vector /*List<String>*/getStopIds() {
+        public ObaListString getStopIds() {
             return StopId.toList(stops);
         }
 
@@ -128,11 +127,9 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
 
         public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
             JSONArray jsonDiversionStopIds = json.getJSONArray("diversionStopIds");
-            diversionStopIds = new String[jsonDiversionStopIds.length()];
-            ObaApi.copyTo(jsonDiversionStopIds, diversionStopIds);
+            diversionStopIds = ObaApi.fromJSON(jsonDiversionStopIds, new String[jsonDiversionStopIds.length()]);
 
-            diversionPath = new ObaShapeElement();
-            ObaApi.fromJSON(json, "diversionPath", diversionPath);
+            diversionPath = (ObaShapeElement) ObaApi.fromJSON(json, "diversionPath", new ObaShapeElement());
         }
 
         //@Override
@@ -141,8 +138,8 @@ public final class ObaSituationElement implements ObaSituation, JSONReceivable {
         }
 
         //@Override
-        public Vector /*List<String>*/getDiversionStopIds() {
-            Vector diversionStopIds = new Vector(this.diversionStopIds.length);
+        public ObaListString getDiversionStopIds() {
+            ObaListString diversionStopIds = new ObaListString(this.diversionStopIds.length);
             for (int i = 0; i < this.diversionStopIds.length; i++) {
                 diversionStopIds.addElement(diversionStopIds.elementAt(i));
             }

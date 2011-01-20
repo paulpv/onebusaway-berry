@@ -15,32 +15,35 @@
  */
 package org.onebusaway.berry.api.elements;
 
+import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.map.GeoPoint;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
-public final class ObaTripStatusElement implements ObaTripStatus {
+public final class ObaTripStatusElement implements ObaTripStatus, JSONReceivable {
     protected static final ObaTripStatusElement EMPTY_OBJECT = new ObaTripStatusElement();
 
-    private final long                          serviceDate;
-    private final boolean                       predicted;
-    private final long                          scheduleDeviation;
-    private final String                        vehicleId;
-    private final String                        closestStop;
-    private final long                          closestStopTimeOffset;
-    private final Position                      position;
-    private final String                        activeTripId;
-    private final Double                        distanceAlongTrip;
-    private final Double                        scheduledDistanceAlongTrip;
-    private final Double                        totalDistanceAlongTrip;
-    private final Double                        orientation;
-    private final String                        nextStop;
-    private final long                          nextStopTimeOffset;
-    private final String                        phase;
-    private final String                        status;
-    private final Long                          lastUpdateTime;
-    private final Position                      lastKnownLocation;
-    private final Double                        lastKnownOrientation;
+    private long                          serviceDate;
+    private boolean                       predicted;
+    private long                          scheduleDeviation;
+    private String                        vehicleId;
+    private String                        closestStop;
+    private long                          closestStopTimeOffset;
+    private Position                      position;
+    private String                        activeTripId;
+    private Double                        distanceAlongTrip;
+    private Double                        scheduledDistanceAlongTrip;
+    private Double                        totalDistanceAlongTrip;
+    private Double                        orientation;
+    private String                        nextStop;
+    private long                          nextStopTimeOffset;
+    private String                        phase;
+    private String                        status;
+    private Long                          lastUpdateTime;
+    private Position                      lastKnownLocation;
+    private Double                        lastKnownOrientation;
 
-    ObaTripStatusElement() {
+    public ObaTripStatusElement() {
         serviceDate = 0;
         predicted = false;
         scheduleDeviation = 0;
@@ -62,6 +65,29 @@ public final class ObaTripStatusElement implements ObaTripStatus {
         lastKnownOrientation = null;
     }
 
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+        // TODO Auto-generated method stub
+        serviceDate = 0;
+        predicted = false;
+        scheduleDeviation = 0;
+        vehicleId = "";
+        closestStop = "";
+        closestStopTimeOffset = 0;
+        position = null;
+        activeTripId = null;
+        distanceAlongTrip = null;
+        scheduledDistanceAlongTrip = null;
+        totalDistanceAlongTrip = null;
+        orientation = null;
+        nextStop = null;
+        nextStopTimeOffset = 0;
+        phase = null;
+        status = null;
+        lastUpdateTime = null;
+        lastKnownLocation = null;
+        lastKnownOrientation = null;
+    }
+    
     //@Override
     public long getServiceDate() {
         return serviceDate;

@@ -38,7 +38,7 @@ public final class ObaHelp {
     }
 
     public static String getUri(URL url) throws IOException {
-        //Log.d(TAG, "getUri: " + uri);
+        Log.d(TAG, "getUri: " + url);
 
         boolean useGzip = false;
         HttpConnection conn = (HttpConnection) url.openConnection();
@@ -100,6 +100,8 @@ public final class ObaHelp {
         in.close();
         conn.close();
 
+        Log.d(TAG, "getUri: content=" + content);
+        
         return content;
     }
 }

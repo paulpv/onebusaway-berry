@@ -15,9 +15,12 @@
  */
 package org.onebusaway.berry.api.request;
 
-import java.util.Vector;
-
 import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.ObaListObaAgency;
+import org.onebusaway.berry.api.ObaListObaRoute;
+import org.onebusaway.berry.api.ObaListObaSituation;
+import org.onebusaway.berry.api.ObaListObaStop;
+import org.onebusaway.berry.api.ObaListObaTrip;
 import org.onebusaway.berry.api.elements.ObaAgency;
 import org.onebusaway.berry.api.elements.ObaReferences;
 import org.onebusaway.berry.api.elements.ObaReferencesElement;
@@ -38,8 +41,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
     public JSONObject fromJSON(String jsonString) throws JSONException, InstantiationException, IllegalAccessException {
         JSONObject jsonData = super.fromJSON(jsonString);
 
-        references = new ObaReferencesElement();
-        ObaApi.fromJSON(jsonData, "references", references);
+        references = (ObaReferencesElement) ObaApi.fromJSON(jsonData, "references", new ObaReferencesElement());
 
         return jsonData;
     }
@@ -50,7 +52,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
     }
 
     //@Override
-    public Vector /*List<ObaStop>*/getStops(String[] ids) {
+    public ObaListObaStop getStops(String[] ids) {
         return references.getStops(ids);
     }
 
@@ -60,7 +62,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
     }
 
     //@Override
-    public Vector /*List<ObaRoute>*/getRoutes(String[] ids) {
+    public ObaListObaRoute getRoutes(String[] ids) {
         return references.getRoutes(ids);
     }
 
@@ -70,7 +72,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
     }
 
     //@Override
-    public Vector /*List<ObaTrip>*/getTrips(String[] ids) {
+    public ObaListObaTrip getTrips(String[] ids) {
         return references.getTrips(ids);
     }
 
@@ -80,7 +82,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
     }
 
     //@Override
-    public Vector /*List<ObaAgency>*/getAgencies(String[] ids) {
+    public ObaListObaAgency getAgencies(String[] ids) {
         return references.getAgencies(ids);
     }
 
@@ -90,7 +92,7 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
     }
 
     //@Override
-    public Vector /*List<ObaSituation>*/getSituations(String[] ids) {
+    public ObaListObaSituation getSituations(String[] ids) {
         return references.getSituations(ids);
     }
 }

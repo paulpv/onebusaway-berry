@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request;
+package org.onebusaway.berry.api.request;
 
-import android.content.Context;
-import android.net.Uri;
-
-import java.util.concurrent.Callable;
+import org.onebusaway.berry.api.Context;
+import org.onebusaway.berry.api.ObaCallable;
+import org.onebusaway.berry.net.Uri;
 
 public final class ObaArrivalInfoRequest extends RequestBase implements
-        Callable<ObaArrivalInfoResponse> {
+        ObaCallable {
 
     protected ObaArrivalInfoRequest(Uri uri) {
-        super(uri);
+        super(new ObaArrivalInfoResponse(), uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -47,9 +46,10 @@ public final class ObaArrivalInfoRequest extends RequestBase implements
         return new Builder(context, stopId).build();
     }
 
+    /*
     @Override
     public ObaArrivalInfoResponse call() {
         return call(ObaArrivalInfoResponse.class);
     }
-
+    */
 }

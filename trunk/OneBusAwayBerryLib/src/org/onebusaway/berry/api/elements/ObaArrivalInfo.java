@@ -15,21 +15,33 @@
  */
 package org.onebusaway.berry.api.elements;
 
-public final class ObaArrivalInfo {
+import org.onebusaway.berry.api.JSONReceivable;
+import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.json.me.JSONArray;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
+
+public final class ObaArrivalInfo implements JSONReceivable {
     public static final ObaArrivalInfo   EMPTY_OBJECT = new ObaArrivalInfo();
     public static final ObaArrivalInfo[] EMPTY_ARRAY  = new ObaArrivalInfo[] {};
 
-    public static final class Frequency {
-        private final long startTime;
-        private final long endTime;
-        private final long headway;
+    public static final class Frequency implements JSONReceivable {
+        private long startTime;
+        private long endTime;
+        private long headway;
 
-        Frequency() {
+        public Frequency() {
             startTime = 0;
             endTime = 0;
             headway = 0;
         }
 
+        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+            startTime = json.getLong("startTime");
+            endTime = json.getLong("endTime");
+            headway = json.getLong("headway");
+        }
+        
         public long getStartTime() {
             return startTime;
         }
@@ -43,28 +55,28 @@ public final class ObaArrivalInfo {
         }
     }
 
-    private final String               routeId;
-    private final String               routeShortName;
-    private final String               routeLongName;
-    private final String               tripId;
-    private final String               tripHeadsign;
-    private final String               stopId;
-    private final long                 predictedArrivalTime;
-    private final long                 scheduledArrivalTime;
-    private final long                 predictedDepartureTime;
-    private final long                 scheduledDepartureTime;
-    private final String               status;
-    private final Frequency            frequency;
-    private final String               vehicleId;
-    private final Double               distanceFromStop;
-    private final Integer              numberOfStopsAway;
-    private final long                 serviceDate;
-    private final long                 lastUpdateTime;
-    private final Boolean              predicted;
-    private final ObaTripStatusElement tripStatus;
-    private final String[]             situationIds;
+    private String               routeId;
+    private String               routeShortName;
+    private String               routeLongName;
+    private String               tripId;
+    private String               tripHeadsign;
+    private String               stopId;
+    private long                 predictedArrivalTime;
+    private long                 scheduledArrivalTime;
+    private long                 predictedDepartureTime;
+    private long                 scheduledDepartureTime;
+    private String               status;
+    private Frequency            frequency;
+    private String               vehicleId;
+    private Double               distanceFromStop;
+    private Integer              numberOfStopsAway;
+    private long                 serviceDate;
+    private long                 lastUpdateTime;
+    private Boolean              predicted;
+    private ObaTripStatusElement tripStatus;
+    private String[]             situationIds;
 
-    ObaArrivalInfo() {
+    public ObaArrivalInfo() {
         routeId = "";
         routeShortName = "";
         routeLongName = "";
@@ -87,6 +99,30 @@ public final class ObaArrivalInfo {
         situationIds = null;
     }
 
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+        routeId = json.getString("routeId");
+        routeShortName = json.getString("routeShortName");
+        routeLongName = json.getString("routeLongName");
+        tripId = json.getString("tripId");
+        tripHeadsign = json.getString("tripHeadsign");
+        stopId = json.getString("stopId");
+        predictedArrivalTime = json.getLong("predictedArrivalTime");
+        scheduledArrivalTime = json.getLong("scheduledArrivalTime");
+        predictedDepartureTime = json.getLong("predictedDepartureTime");
+        scheduledDepartureTime = json.getLong("scheduledDepartureTime");
+        status = json.getString("status");
+        frequency = (Frequency) ObaApi.optJSON(json, "frequency", new Frequency(), null);
+        vehicleId = json.optString("vehicleId");
+        distanceFromStop = ObaApi.optDouble(json, "distanceFromStop");
+        numberOfStopsAway = ObaApi.optInteger(json, "numberOfStopsAway");
+        serviceDate = json.getLong("serviceDate");
+        lastUpdateTime = json.getLong("lastUpdateTime");
+        predicted = ObaApi.optBoolean(json, "predicted");
+        tripStatus = (ObaTripStatusElement) ObaApi.optJSON(json, "tripStatus", new ObaTripStatusElement(), null);
+        JSONArray jsonSituationIds = json.getJSONArray("situationIds");
+        situationIds = ObaApi.optJSON(jsonSituationIds, new String[jsonSituationIds.length()], null);
+    }
+    
     /**
      * @return The ID of the route.
      */

@@ -15,15 +15,14 @@
  */
 package org.onebusaway.berry.api.elements;
 
-
 public final class ObaStopScheduleElement implements ObaStopSchedule {
     public static final ObaStopScheduleElement EMPTY_OBJECT = new ObaStopScheduleElement();
 
-    private final ObaStopElement stop;
-    private final String timeZone;
-    private final long date;
-    private final CalendarDay[] stopCalendarDays;
-    private final ObaRouteSchedule[] stopRouteSchedules;
+    private final ObaStopElement               stop;
+    private final String                       timeZone;
+    private final long                         date;
+    private final CalendarDay[]                stopCalendarDays;
+    private final ObaRouteSchedule[]           stopRouteSchedules;
 
     ObaStopScheduleElement() {
         stop = ObaStopElement.EMPTY_OBJECT;
@@ -33,22 +32,27 @@ public final class ObaStopScheduleElement implements ObaStopSchedule {
         stopRouteSchedules = ObaRouteSchedule.EMPTY_ARRAY;
     }
 
+    //@Override
     public ObaStop getStop() {
         return stop;
     }
 
+    //@Override
     public String getTimeZone() {
         return timeZone;
     }
 
+    //@Override
     public long getDate() {
         return date;
     }
 
+    //@Override
     public CalendarDay[] getCalendarDays() {
         return stopCalendarDays;
     }
 
+    //@Override
     public ObaRouteSchedule[] getRouteSchedules() {
         return stopRouteSchedules;
     }

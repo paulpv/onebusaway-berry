@@ -1,4 +1,4 @@
-package org.onebusaway.berry.net;
+package org.onebusaway.berry.api;
 
 /**
  * Functional mock of Java's/Android's AssertionError class.
@@ -7,10 +7,12 @@ package org.onebusaway.berry.net;
  * @author pv
  *
  */
-public class AssertionError extends Error
-{
-    public AssertionError(Exception e)
-    {
+public class AssertionError extends Error {
+    public AssertionError() {
+        super();
+    }
+
+    public AssertionError(Exception e) {
         super(e.toString());
     }
 }

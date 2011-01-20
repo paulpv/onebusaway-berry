@@ -2,30 +2,24 @@ package org.onebusaway.berry.map;
 
 import java.util.Timer;
 
-import javax.microedition.location.Coordinates;
-
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Graphics;
 
-public class ObaMapMarkerLocation extends ObaMapMarker
-{
+public class ObaMapMarkerLocation extends ObaMapMarker {
     protected Timer   timerMarker = null;
     protected boolean isGpsLocked = false;
     protected int     colorMarker;
 
-    public ObaMapMarkerLocation(String id, Coordinates coordinates)
-    {
-        super(id, coordinates, "mylocation.png");
+    public ObaMapMarkerLocation(String id, GeoPoint point) {
+        super(id, point, "mylocation.png");
     }
 
-    protected void drawBitmap(Graphics g, int x, int y, boolean isGpsLocked)
-    {
+    protected void drawBitmap(Graphics g, int x, int y, boolean isGpsLocked) {
         super.drawBitmap(g, x, y);
 
         // Draw pulsing effect on my location if GPS is acquired
 
-        if (!isGpsLocked)
-        {
+        if (!isGpsLocked) {
             return;
         }
 

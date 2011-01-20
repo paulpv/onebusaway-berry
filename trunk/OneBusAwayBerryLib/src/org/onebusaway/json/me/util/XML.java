@@ -81,20 +81,20 @@ public class XML {
         for (int i = 0, len = string.length(); i < len; i++) {
             char c = string.charAt(i);
             switch (c) {
-            case '&':
-                sb.append("&amp;");
-                break;
-            case '<':
-                sb.append("&lt;");
-                break;
-            case '>':
-                sb.append("&gt;");
-                break;
-            case '"':
-                sb.append("&quot;");
-                break;
-            default:
-                sb.append(c);
+                case '&':
+                    sb.append("&amp;");
+                    break;
+                case '<':
+                    sb.append("&lt;");
+                    break;
+                case '>':
+                    sb.append("&gt;");
+                    break;
+                case '"':
+                    sb.append("&quot;");
+                    break;
+                default:
+                    sb.append(c);
             }
         }
         return sb.toString();
@@ -108,28 +108,27 @@ public class XML {
      * @return true if the close tag is processed.
      * @throws JSONException
      */
-    private static boolean parse(XMLTokener x, JSONObject context,
-                                 String name) throws JSONException {
-        char       c;
-        int        i;
-        String     n;
+    private static boolean parse(XMLTokener x, JSONObject context, String name) throws JSONException {
+        char c;
+        int i;
+        String n;
         JSONObject o = null;
-        String     s;
-        Object     t;
+        String s;
+        Object t;
 
-// Test for and skip past these forms:
-//      <!-- ... -->
-//      <!   ...   >
-//      <![  ... ]]>
-//      <?   ...  ?>
-// Report errors for these forms:
-//      <>
-//      <=
-//      <<
+        // Test for and skip past these forms:
+        //      <!-- ... -->
+        //      <!   ...   >
+        //      <![  ... ]]>
+        //      <?   ...  ?>
+        // Report errors for these forms:
+        //      <>
+        //      <=
+        //      <<
 
         t = x.nextToken();
 
-// <!
+        // <!
 
         if (t == BANG) {
             c = x.next();
@@ -139,7 +138,8 @@ public class XML {
                     return false;
                 }
                 x.back();
-            } else if (c == '[') {
+            }
+            else if (c == '[') {
                 t = x.nextToken();
                 if (t.equals("CDATA")) {
                     if (x.next() == '[') {
@@ -157,22 +157,27 @@ public class XML {
                 t = x.nextMeta();
                 if (t == null) {
                     throw x.syntaxError("Missing '>' after '<!'.");
-                } else if (t == LT) {
+                }
+                else if (t == LT) {
                     i += 1;
-                } else if (t == GT) {
+                }
+                else if (t == GT) {
                     i -= 1;
                 }
-            } while (i > 0);
+            }
+            while (i > 0);
             return false;
-        } else if (t == QUEST) {
+        }
+        else if (t == QUEST) {
 
-// <?
+            // <?
 
             x.skipPast("?>");
             return false;
-        } else if (t == SLASH) {
+        }
+        else if (t == SLASH) {
 
-// Close tag </
+            // Close tag </
 
             if (name == null || !x.nextToken().equals(name)) {
                 throw x.syntaxError("Mismatched close tag");
@@ -182,13 +187,15 @@ public class XML {
             }
             return true;
 
-        } else if (t instanceof Character) {
+        }
+        else if (t instanceof Character) {
             throw x.syntaxError("Misshaped tag");
 
-// Open tag <
+            // Open tag <
 
-        } else {
-            n = (String)t;
+        }
+        else {
+            n = (String) t;
             t = null;
             o = new JSONObject();
             for (;;) {
@@ -196,10 +203,10 @@ public class XML {
                     t = x.nextToken();
                 }
 
-// attribute = value
+                // attribute = value
 
                 if (t instanceof String) {
-                    s = (String)t;
+                    s = (String) t;
                     t = x.nextToken();
                     if (t == EQ) {
                         t = x.nextToken();
@@ -208,22 +215,25 @@ public class XML {
                         }
                         o.accumulate(s, t);
                         t = null;
-                    } else {
+                    }
+                    else {
                         o.accumulate(s, "");
                     }
 
-// Empty tag <.../>
+                    // Empty tag <.../>
 
-                } else if (t == SLASH) {
+                }
+                else if (t == SLASH) {
                     if (x.nextToken() != GT) {
                         throw x.syntaxError("Misshaped tag");
                     }
                     context.accumulate(n, o);
                     return false;
 
-// Content, between <...> and </...>
+                    // Content, between <...> and </...>
 
-                } else if (t == GT) {
+                }
+                else if (t == GT) {
                     for (;;) {
                         t = x.nextContent();
                         if (t == null) {
@@ -231,35 +241,38 @@ public class XML {
                                 throw x.syntaxError("Unclosed tag " + name);
                             }
                             return false;
-                        } else if (t instanceof String) {
-                            s = (String)t;
+                        }
+                        else if (t instanceof String) {
+                            s = (String) t;
                             if (s.length() > 0) {
                                 o.accumulate("content", s);
                             }
 
-// Nested element
+                            // Nested element
 
-                        } else if (t == LT) {
+                        }
+                        else if (t == LT) {
                             if (parse(x, o, n)) {
                                 if (o.length() == 0) {
                                     context.accumulate(n, "");
-                                } else if (o.length() == 1 &&
-                                       o.opt("content") != null) {
+                                }
+                                else if (o.length() == 1 && o.opt("content") != null) {
                                     context.accumulate(n, o.opt("content"));
-                                } else {
+                                }
+                                else {
                                     context.accumulate(n, o);
                                 }
                                 return false;
                             }
                         }
                     }
-                } else {
+                }
+                else {
                     throw x.syntaxError("Misshaped tag");
                 }
             }
         }
     }
-
 
     /**
      * Convert a well-formed (but not necessarily valid) XML string into a
@@ -285,7 +298,6 @@ public class XML {
         return o;
     }
 
-
     /**
      * Convert a JSONObject into a well-formed, element-normal XML string.
      * @param o A JSONObject.
@@ -296,7 +308,6 @@ public class XML {
         return toString(o, null);
     }
 
-
     /**
      * Convert a JSONObject into a well-formed, element-normal XML string.
      * @param o A JSONObject.
@@ -304,20 +315,19 @@ public class XML {
      * @return A string.
      * @throws JSONException
      */
-    public static String toString(Object o, String tagName)
-            throws JSONException {
+    public static String toString(Object o, String tagName) throws JSONException {
         StringBuffer b = new StringBuffer();
-        int          i;
-        JSONArray    ja;
-        JSONObject   jo;
-        String       k;
-        Enumeration  keys;
-        int          len;
-        String       s;
-        Object       v;
+        int i;
+        JSONArray ja;
+        JSONObject jo;
+        String k;
+        Enumeration keys;
+        int len;
+        String s;
+        Object v;
         if (o instanceof JSONObject) {
 
-// Emit <tagName>
+            // Emit <tagName>
 
             if (tagName != null) {
                 b.append('<');
@@ -325,24 +335,25 @@ public class XML {
                 b.append('>');
             }
 
-// Loop thru the keys.
+            // Loop thru the keys.
 
-            jo = (JSONObject)o;
+            jo = (JSONObject) o;
             keys = jo.keys();
             while (keys.hasMoreElements()) {
                 k = keys.nextElement().toString();
                 v = jo.get(k);
                 if (v instanceof String) {
-                    s = (String)v;
-                } else {
+                    s = (String) v;
+                }
+                else {
                     s = null;
                 }
 
-// Emit content in body
+                // Emit content in body
 
                 if (k.equals("content")) {
                     if (v instanceof JSONArray) {
-                        ja = (JSONArray)v;
+                        ja = (JSONArray) v;
                         len = ja.length();
                         for (i = 0; i < len; i += 1) {
                             if (i > 0) {
@@ -350,32 +361,36 @@ public class XML {
                             }
                             b.append(escape(ja.get(i).toString()));
                         }
-                    } else {
+                    }
+                    else {
                         b.append(escape(v.toString()));
                     }
 
-// Emit an array of similar keys
+                    // Emit an array of similar keys
 
-                } else if (v instanceof JSONArray) {
-                    ja = (JSONArray)v;
+                }
+                else if (v instanceof JSONArray) {
+                    ja = (JSONArray) v;
                     len = ja.length();
                     for (i = 0; i < len; i += 1) {
                         b.append(toString(ja.get(i), k));
                     }
-                } else if (v.equals("")) {
+                }
+                else if (v.equals("")) {
                     b.append('<');
                     b.append(k);
                     b.append("/>");
 
-// Emit a new tag <k>
+                    // Emit a new tag <k>
 
-                } else {
+                }
+                else {
                     b.append(toString(v, k));
                 }
             }
             if (tagName != null) {
 
-// Emit the </tagname> close tag
+                // Emit the </tagname> close tag
 
                 b.append("</");
                 b.append(tagName);
@@ -383,22 +398,22 @@ public class XML {
             }
             return b.toString();
 
-// XML does not have good support for arrays. If an array appears in a place
-// where XML is lacking, synthesize an <array> element.
+            // XML does not have good support for arrays. If an array appears in a place
+            // where XML is lacking, synthesize an <array> element.
 
-        } else if (o instanceof JSONArray) {
-            ja = (JSONArray)o;
+        }
+        else if (o instanceof JSONArray) {
+            ja = (JSONArray) o;
             len = ja.length();
             for (i = 0; i < len; ++i) {
-                b.append(toString(
-                    ja.opt(i), (tagName == null) ? "array" : tagName));
+                b.append(toString(ja.opt(i), (tagName == null) ? "array" : tagName));
             }
             return b.toString();
-        } else {
+        }
+        else {
             s = (o == null) ? "null" : escape(o.toString());
-            return (tagName == null) ? "\"" + s + "\"" :
-                (s.length() == 0) ? "<" + tagName + "/>" :
-                "<" + tagName + ">" + s + "</" + tagName + ">";
+            return (tagName == null) ? "\"" + s + "\"" : (s.length() == 0) ? "<" + tagName + "/>" : "<" + tagName + ">" + s
+                            + "</" + tagName + ">";
         }
     }
 }

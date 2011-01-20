@@ -22,13 +22,13 @@ package org.onebusaway.berry.api.elements;
  * @author Paul Watts (paulcwatts@gmail.com)
  */
 public interface ObaRoute extends ObaElement {
-    public static final int TYPE_TRAM = 0;
-    public static final int TYPE_SUBWAY = 1;
-    public static final int TYPE_RAIL = 2;
-    public static final int TYPE_BUS = 3;
-    public static final int TYPE_FERRY = 4;
-    public static final int TYPE_CABLECAR = 5;
-    public static final int TYPE_GONDOLA = 6;
+    public static final int TYPE_TRAM      = 0;
+    public static final int TYPE_SUBWAY    = 1;
+    public static final int TYPE_RAIL      = 2;
+    public static final int TYPE_BUS       = 3;
+    public static final int TYPE_FERRY     = 4;
+    public static final int TYPE_CABLECAR  = 5;
+    public static final int TYPE_GONDOLA   = 6;
     public static final int TYPE_FUNICULAR = 7; // You can't spell "funicular" without "fun"!
 
     /**

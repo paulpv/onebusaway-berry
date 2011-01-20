@@ -22,7 +22,6 @@ import org.onebusaway.berry.api.ObaInteger;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-
 /**
  * Object defining a Route element.
  * {@link http://code.google.com/p/onebusaway/wiki/OneBusAwayRestApi_RouteElementV2}
@@ -30,18 +29,18 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  */
 public final class ObaRouteElement implements ObaRoute, JSONReceivable {
-    public static final ObaRouteElement EMPTY_OBJECT = new ObaRouteElement();
-    public static final ObaRouteElement[] EMPTY_ARRAY = new ObaRouteElement[] {};
+    public static final ObaRouteElement   EMPTY_OBJECT = new ObaRouteElement();
+    public static final ObaRouteElement[] EMPTY_ARRAY  = new ObaRouteElement[] {};
 
-    private String id;
-    private String shortName;
-    private String longName;
-    private String description;
-    private int type;
-    private String url;
-    private String color;
-    private String textColor;
-    private String agencyId;
+    private String                        id;
+    private String                        shortName;
+    private String                        longName;
+    private String                        description;
+    private int                           type;
+    private String                        url;
+    private String                        color;
+    private String                        textColor;
+    private String                        agencyId;
 
     public ObaRouteElement() {
         id = "";
@@ -55,8 +54,7 @@ public final class ObaRouteElement implements ObaRoute, JSONReceivable {
         agencyId = "";
     }
 
-    public void fromJSON(JSONObject json) throws JSONException
-    {
+    public void fromJSON(JSONObject json) throws JSONException {
         id = json.getString("id");
         shortName = json.getString("shortName");
         longName = json.getString("longName");
@@ -66,44 +64,54 @@ public final class ObaRouteElement implements ObaRoute, JSONReceivable {
         color = json.getString("color");
         textColor = json.getString("textColor");
         agencyId = json.getString("agencyId");
-}
+    }
 
+    //@Override
     public String getId() {
         return id;
     }
 
+    //@Override
     public String getShortName() {
         return shortName;
     }
 
+    //@Override
     public String getLongName() {
         return longName;
     }
 
+    //@Override
     public String getDescription() {
         return description;
     }
 
+    //@Override
     public int getType() {
         return type;
     }
 
+    //@Override
     public String getUrl() {
         return url;
     }
 
+    //@Override
     public int getColor() {
         return 0xFF000000 | ObaInteger.getInteger(color, Color.WHITE);
     }
 
+    //@Override
     public int getTextColor() {
         return 0xFF000000 | ObaInteger.getInteger(textColor, Color.BLACK);
     }
 
+    //@Override
     public String getAgencyId() {
         return agencyId;
     }
 
+    //@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -111,6 +119,7 @@ public final class ObaRouteElement implements ObaRoute, JSONReceivable {
         return result;
     }
 
+    //@Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -118,7 +127,7 @@ public final class ObaRouteElement implements ObaRoute, JSONReceivable {
             return false;
         if (!(obj instanceof ObaRouteElement))
             return false;
-        ObaRouteElement other = (ObaRouteElement)obj;
+        ObaRouteElement other = (ObaRouteElement) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -128,6 +137,7 @@ public final class ObaRouteElement implements ObaRoute, JSONReceivable {
         return true;
     }
 
+    //@Override
     public String toString() {
         return "ObaRouteElement [id=" + id + "]";
     }

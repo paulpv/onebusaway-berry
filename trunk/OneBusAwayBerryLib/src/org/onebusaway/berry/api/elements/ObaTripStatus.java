@@ -15,10 +15,8 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import javax.microedition.location.Coordinates;
-
 import org.onebusaway.berry.api.ObaApi;
-
+import org.onebusaway.berry.map.GeoPoint;
 
 public interface ObaTripStatus {
     public static final class Position {
@@ -33,7 +31,7 @@ public interface ObaTripStatus {
             return lon;
         }
 
-        public Coordinates getPoint() {
+        public GeoPoint getPoint() {
             return ObaApi.makeGeoPoint(lat, lon);
         }
     }
@@ -83,7 +81,7 @@ public interface ObaTripStatus {
      * If real-time arrival data is available, the position will take that into account,
      * otherwise the position reflects the scheduled position of the vehicle.
      */
-    public Coordinates getPosition();
+    public GeoPoint getPosition();
 
     /**
      * @return The trip ID of the trip the vehicle is actively serving.
@@ -146,7 +144,7 @@ public interface ObaTripStatus {
      * This differs from the position, in that the position is potentially
      * extrapolated forward from the last known position and other data.
      */
-    public Coordinates getLastKnownLocation();
+    public GeoPoint getLastKnownLocation();
 
     /**
      * @return The last known orientation value received in real-time from the transit vehicle.

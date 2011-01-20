@@ -26,22 +26,17 @@ import org.onebusaway.berry.net.Uri;
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public final class ObaAgencyRequest extends RequestBase implements ObaCallable
-{
-    protected ObaAgencyRequest(Uri uri)
-    {
+public final class ObaAgencyRequest extends RequestBase implements ObaCallable {
+    protected ObaAgencyRequest(Uri uri) {
         super(new ObaAgencyResponse(), uri);
     }
 
-    public static class Builder extends RequestBase.BuilderBase
-    {
-        public Builder(Context context, String agencyId)
-        {
+    public static class Builder extends RequestBase.BuilderBase {
+        public Builder(Context context, String agencyId) {
             super(context, getPathWithId("/agency/", agencyId));
         }
 
-        public ObaAgencyRequest build()
-        {
+        public ObaAgencyRequest build() {
             return new ObaAgencyRequest(buildUri());
         }
     }
@@ -52,8 +47,20 @@ public final class ObaAgencyRequest extends RequestBase implements ObaCallable
      * @param routeId The agency Id to request.
      * @return The new request instance.
      */
-    public static ObaAgencyRequest newRequest(Context context, String agencyId)
-    {
+    public static ObaAgencyRequest newRequest(Context context, String agencyId) {
         return new Builder(context, agencyId).build();
     }
+
+    /*
+    @Override
+    public ObaAgencyResponse call() {
+        return call(ObaAgencyResponse.class);
+    }
+
+
+    @Override
+    public String toString() {
+        return "ObaAgencyRequest [mUri=" + mUri + "]";
+    }
+    */
 }

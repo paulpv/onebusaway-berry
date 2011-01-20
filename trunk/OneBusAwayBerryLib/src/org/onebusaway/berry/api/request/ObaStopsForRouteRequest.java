@@ -25,8 +25,7 @@ import org.onebusaway.berry.net.Uri;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopsForRouteRequest extends RequestBase
-        implements ObaCallable {
+public final class ObaStopsForRouteRequest extends RequestBase implements ObaCallable {
     protected ObaStopsForRouteRequest(Uri uri) {
         super(new ObaStopsForRouteResponse(), uri);
     }
@@ -37,8 +36,7 @@ public final class ObaStopsForRouteRequest extends RequestBase
         }
 
         public Builder setIncludeShapes(boolean includePolylines) {
-            builder.appendQueryParameter("includePolylines",
-                    includePolylines ? "true" : "false");
+            mBuilder.appendQueryParameter("includePolylines", includePolylines ? "true" : "false");
             return this;
         }
 
@@ -46,4 +44,16 @@ public final class ObaStopsForRouteRequest extends RequestBase
             return new ObaStopsForRouteRequest(buildUri());
         }
     }
+
+    /*
+    @Override
+    public ObaStopsForRouteResponse call() {
+        return call(ObaStopsForRouteResponse.class);
+    }
+
+    @Override
+    public String toString() {
+        return "ObaStopsForRouteRequest [mUri=" + mUri + "]";
+    }
+    */
 }

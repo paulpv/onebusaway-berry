@@ -20,19 +20,18 @@ import org.onebusaway.berry.api.ObaInteger;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-
 public final class ObaTripElement implements ObaTrip, JSONReceivable {
-    public static final ObaTripElement EMPTY_OBJECT = new ObaTripElement();
-    public static final ObaTripElement[] EMPTY_ARRAY = new ObaTripElement[] {};
+    public static final ObaTripElement   EMPTY_OBJECT = new ObaTripElement();
+    public static final ObaTripElement[] EMPTY_ARRAY  = new ObaTripElement[] {};
 
-    private String id;
-    private String tripShortName;
-    private String shapeId;
-    private String directionId;
-    private String serviceId;
-    private String tripHeadsign;
-    private String timeZone;
-    private String routeId;
+    private String                       id;
+    private String                       tripShortName;
+    private String                       shapeId;
+    private String                       directionId;
+    private String                       serviceId;
+    private String                       tripHeadsign;
+    private String                       timeZone;
+    private String                       routeId;
 
     public ObaTripElement() {
         id = "";
@@ -45,8 +44,7 @@ public final class ObaTripElement implements ObaTrip, JSONReceivable {
         routeId = "";
     }
 
-    public void fromJSON(JSONObject json) throws JSONException
-    {
+    public void fromJSON(JSONObject json) throws JSONException {
         id = json.getString("id");
         tripShortName = json.getString("tripShortName");
         shapeId = json.getString("shapeId");
@@ -57,34 +55,42 @@ public final class ObaTripElement implements ObaTrip, JSONReceivable {
         routeId = json.getString("routeId");
     }
 
+    //@Override
     public String getId() {
         return id;
     }
 
+    //@Override
     public String getShortName() {
         return tripShortName;
     }
 
+    //@Override
     public String getShapeId() {
         return shapeId;
     }
 
+    //@Override
     public int getDirectionId() {
         return ObaInteger.getInteger(directionId, DIRECTION_OUTBOUND);
     }
 
+    //@Override
     public String getServiceId() {
         return serviceId;
     }
 
+    //@Override
     public String getHeadsign() {
         return tripHeadsign;
     }
 
+    //@Override
     public String getTimezone() {
         return timeZone;
     }
 
+    //@Override
     public String getRouteId() {
         return routeId;
     }

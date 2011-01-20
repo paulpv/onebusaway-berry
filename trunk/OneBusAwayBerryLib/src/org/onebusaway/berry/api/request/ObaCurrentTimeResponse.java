@@ -19,19 +19,16 @@ import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-public final class ObaCurrentTimeResponse extends ObaResponse implements JSONReceivable
-{
+public final class ObaCurrentTimeResponse extends ObaResponse implements JSONReceivable {
     private long   time;
     private String readableTime;
 
-    public ObaCurrentTimeResponse()
-    {
+    public ObaCurrentTimeResponse() {
         time = 0;
         readableTime = "";
     }
 
-    public void fromJSON(JSONObject json) throws JSONException
-    {
+    public void fromJSON(JSONObject json) throws JSONException {
         time = json.getLong("time");
         readableTime = json.getString("readableTime");
     }
@@ -39,16 +36,14 @@ public final class ObaCurrentTimeResponse extends ObaResponse implements JSONRec
     /**
      * @return The time as milliseconds past the epoch.
      */
-    public long getTime()
-    {
+    public long getTime() {
         return time;
     }
 
     /**
      * @return The time in ISO8601 format.
      */
-    public String getReadableTime()
-    {
+    public String getReadableTime() {
         return readableTime;
     }
 }

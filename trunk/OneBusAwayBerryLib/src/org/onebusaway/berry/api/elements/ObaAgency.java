@@ -15,7 +15,6 @@
  */
 package org.onebusaway.berry.api.elements;
 
-
 /**
  * Interface that defines an Agency element
  * {@link http://code.google.com/p/onebusaway/wiki/OneBusAwayRestApi_AgencyElementV2}

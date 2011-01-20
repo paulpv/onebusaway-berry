@@ -4,6 +4,9 @@ package org.onebusaway.berry.map;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.microedition.location.Coordinates;
 
 import net.rim.device.api.lbs.MapField;
 import net.rim.device.api.system.Bitmap;
@@ -11,46 +14,46 @@ import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.XYPoint;
 
-public class ObaMapField extends MapField
-{
-    protected final Hashtable     markersStops             = new Hashtable();
+public class ObaMapField extends MapField {
+    public static final GeoPoint   GEOPOINT_SEATTLE         = new GeoPoint(47.6063889, -122.3308333);
+
+    protected final Hashtable      markersStops             = new Hashtable();
     protected ObaMapMarkerLocation markerLocation           = null;
 
     // Used for outputting debugging geometry during touch events.
     // The drawn geometry can be a bit buggy, but it meets my current needs. 
-    protected static final int    TOUCH_INDICATOR_RADIUS   = 10;
-    protected static final int    TOUCH_INDICATOR_DIAMETER = TOUCH_INDICATOR_RADIUS * 2;
-    int                           touchX1                  = -1;
-    int                           touchX2                  = -1;
-    int                           touchY1                  = -1;
-    int                           touchY2                  = -1;
+    protected static final int     TOUCH_INDICATOR_RADIUS   = 10;
+    protected static final int     TOUCH_INDICATOR_DIAMETER = TOUCH_INDICATOR_RADIUS * 2;
+    int                            touchX1                  = -1;
+    int                            touchX2                  = -1;
+    int                            touchY1                  = -1;
+    int                            touchY2                  = -1;
 
-    protected void paint(Graphics g)
-    {
+    /**
+     * First, calls the super.paint(g).
+     * Then, draws (for debugging purposes) a circle for the last two points touched.
+     * Finally, locks markersStops and draws only the ones that are visible in the current view.  
+     */
+    protected void paint(Graphics g) {
         super.paint(g);
 
-        if (touchX1 != -1 && touchY1 != -1)
-        {
-            if (touchX2 == -1 && touchY2 == -1)
-            {
+        if (touchX1 != -1 && touchY1 != -1) {
+            if (touchX2 == -1 && touchY2 == -1) {
                 g.setColor(Color.GREEN);
             }
-            else
-            {
+            else {
                 g.setColor(Color.RED);
             }
             g.drawArc(touchX1 - TOUCH_INDICATOR_RADIUS, touchY1 - TOUCH_INDICATOR_RADIUS, //
                             TOUCH_INDICATOR_DIAMETER, TOUCH_INDICATOR_DIAMETER, 0, 360);
         }
 
-        if (touchX2 != -1 && touchY2 != -1)
-        {
+        if (touchX2 != -1 && touchY2 != -1) {
             g.setColor(Color.BLUE);
             g.drawArc(touchX2 - TOUCH_INDICATOR_RADIUS, touchY2 - TOUCH_INDICATOR_RADIUS, //
                             TOUCH_INDICATOR_DIAMETER, TOUCH_INDICATOR_DIAMETER, 0, 360);
 
-            if (touchX1 != -1 && touchY1 != -1)
-            {
+            if (touchX1 != -1 && touchY1 != -1) {
                 g.setColor(Color.MAGENTA);
                 int x = Math.min(touchX1, touchX2);
                 int y = Math.min(touchY1, touchY2);
@@ -64,39 +67,34 @@ public class ObaMapField extends MapField
         int height = getPreferredHeight();
 
         ObaMapMarker marker;
+        GeoPoint markerGeoPoint;
+        Coordinates markerCoordinates;
         XYPoint markerXY;
-        int markerX;
-        int markerY;
         Bitmap markerBitmap;
         int markerWidth;
         int markerHeight;
 
-        synchronized (markersStops)
-        {
+        synchronized (markersStops) {
             Enumeration markers = markersStops.elements();
-            while (markers.hasMoreElements())
-            {
+            while (markers.hasMoreElements()) {
                 marker = (ObaMapMarker) markers.nextElement();
 
+                markerGeoPoint = marker.getPoint();
+                markerCoordinates = new Coordinates(markerGeoPoint.getLatitude(), markerGeoPoint.getLongitude(), Float.NaN);
                 markerXY = new XYPoint();
-                convertWorldToField(marker.getCoordinates(), markerXY);
-                markerX = markerXY.x;
-                markerY = markerXY.y;
+                convertWorldToField(markerCoordinates, markerXY);
 
                 markerBitmap = marker.getBitmap();
                 markerWidth = markerBitmap.getWidth();
                 markerHeight = markerBitmap.getHeight();
 
-                if (markerX + markerWidth < 0 || markerX - markerWidth > width //
-                                || markerY + markerHeight < 0 || markerY - markerHeight > height)
-                {
-                    //MyApp.log("Not drawing " + marker);
-                }
-                else
-                {
+                if (markerXY.x - markerWidth >= 0 && markerXY.x + markerWidth <= width //
+                                && markerXY.y - markerHeight >= 0 || markerXY.y + markerHeight <= height) {
                     //MyApp.log("Drawing " + marker);
-                    marker.drawBitmap(g, markerX, markerY);
-                    //g.drawBitmap(markerX, markerY, markerWidth, markerHeight, markerBitmap, 0, 0);
+                    marker.drawBitmap(g, markerXY.x, markerXY.y);
+                }
+                else {
+                    //MyApp.log("Not drawing " + marker);
                 }
             }
         }
@@ -190,6 +188,7 @@ public class ObaMapField extends MapField
                                 {
                                     zoomOut();
                                 }
+                                fieldChangeNotify(ObaMapAction.ACTION_ZOOM_CHANGE);
                             }
                         }
                         return true;
@@ -220,6 +219,7 @@ public class ObaMapField extends MapField
                     //MyApp.log("MOVE d=(" + dx + "," + dy + ")");
 
                     move(dx, dy);
+                    fieldChangeNotify(ObaMapAction.ACTION_CENTRE_CHANGE);
                 }
                 return true;
 
@@ -235,47 +235,100 @@ public class ObaMapField extends MapField
     */
     //#endif
 
-    public void invalidate()
-    {
+    public void invalidate() {
         super.invalidate();
     }
 
-    public void mapMarkersAdd(ObaMapMarker mapMarker, boolean invalidate)
-    {
-        synchronized (markersStops)
-        {
+    /**
+     * Adds the marker to markersStops only if it doesn't already exist.
+     * Does *not* lock, and does *not* invalidate the field.
+     * @param mapMarker
+     */
+    private void mapMarkersAddInternal(ObaMapMarker mapMarker) {
+        // TODO:(pv) Verify if we need to override mapMarker hash or equal
+        if (!markersStops.contains(mapMarker)) {
             mapMarker.setParent(this);
             markersStops.put(mapMarker.getId(), mapMarker);
-            if (invalidate)
-            {
-                //mapMarker.invalidate();
-            }
+            System.out.println("Marker added to collection: " + mapMarker.getId());
+        }
+        else {
+            // w00t! we found an existing and skipped it!
+            System.out.println("Marker already in collection: " + mapMarker.getId());
         }
     }
 
-    public void mapMarkersRemove(String id, boolean invalidate)
-    {
-        synchronized (markersStops)
-        {
+    public void mapMarkersAdd(ObaMapMarker mapMarker, boolean invalidate) {
+        synchronized (markersStops) {
+            mapMarkersAddInternal(mapMarker);
+        }
+
+        if (invalidate) {
+            invalidate();
+        }
+    }
+
+    public void mapMarkersAdd(Vector mapMarkers, boolean invalidate) {
+        if (mapMarkers == null) {
+            return;
+        }
+
+        synchronized (markersStops) {
+            ObaMapMarker mapMarker;
+            Enumeration mapMarkerEnum = mapMarkers.elements();
+            while (mapMarkerEnum.hasMoreElements()) {
+                mapMarker = (ObaMapMarker) mapMarkerEnum.nextElement();
+                mapMarkersAddInternal(mapMarker);
+            }
+        }
+
+        if (invalidate) {
+            invalidate();
+        }
+    }
+
+    public void mapMarkersAdd(ObaMapMarker[] mapMarkers, boolean invalidate) {
+        if (mapMarkers == null) {
+            return;
+        }
+
+        synchronized (markersStops) {
+            ObaMapMarker mapMarker;
+            for (int i = 0; i < mapMarkers.length; i++) {
+                mapMarker = mapMarkers[i];
+                mapMarkersAddInternal(mapMarker);
+            }
+        }
+
+        if (invalidate) {
+            invalidate();
+        }
+    }
+
+    public void mapMarkersRemove(String id, boolean invalidate) {
+        synchronized (markersStops) {
             ObaMapMarker mapMarker = (ObaMapMarker) markersStops.remove(id);
             mapMarker.setParent(null);
-            if (invalidate)
-            {
-                //mapMarker.invalidate();
-            }
+        }
+        if (invalidate) {
+            invalidate();
         }
     }
 
-    public void mapLocationAdd(ObaMapMarkerLocation markerLocation)
-    {
+    public void mapLocationAdd(ObaMapMarkerLocation markerLocation) {
         this.markerLocation = markerLocation;
         //markerLocation.invalidate();
     }
 
-    public void setGpsLocked(boolean locked)
-    {
-        synchronized (this)
-        {
+    public void moveTo(GeoPoint point) {
+        super.moveTo(point.getLatitudeE6() / 10, point.getLongitudeE6() / 10);
+    }
+
+    public GeoPoint getGeoPoint() {
+        return new GeoPoint(getLatitude(), getLongitude());
+    }
+
+    public void setGpsLocked(boolean locked) {
+        synchronized (this) {
             /*
             isGpsLocked = locked;
             

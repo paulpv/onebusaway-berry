@@ -32,26 +32,25 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  */
 public final class ObaStopsForRouteResponse extends ObaResponseWithRefs implements JSONReceivable {
-    
+
     private static final class Entry implements JSONReceivable {
         private static final Entry EMPTY_OBJECT = new Entry();
 
-        private String[] stopIds;
-        private ObaStopGrouping[] stopGroupings;
-        private ObaShapeElement[] polylines;
+        private String[]           stopIds;
+        private ObaStopGrouping[]  stopGroupings;
+        private ObaShapeElement[]  polylines;
 
         public Entry() {
-            stopIds = ObaApi.EMPTY_ARRAY_STRING;
+            stopIds = new String[] {};
             stopGroupings = ObaStopGrouping.EMPTY_ARRAY;
             polylines = ObaShapeElement.EMPTY_ARRAY;
         }
 
-        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-        {
+        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
             JSONArray jsonStopIds = json.getJSONArray("stopIds");
             stopIds = new String[jsonStopIds.length()];
             ObaApi.copyTo(jsonStopIds, stopIds);
-            
+
             JSONArray jsonStopGroupings = json.getJSONArray("stopGroupings");
             stopGroupings = new ObaStopGrouping[jsonStopGroupings.length()];
             ObaApi.copyTo(jsonStopGroupings, stopGroupings, ObaStopGrouping.class);
@@ -68,16 +67,15 @@ public final class ObaStopsForRouteResponse extends ObaResponseWithRefs implemen
         entry = Entry.EMPTY_OBJECT;
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-    {
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
         entry = new Entry();
         ObaApi.fromJSON(json, "entry", entry);
     }
-    
+
     /**
      * Returns the list of dereferenced stops.
      */
-    public Vector getStops() {
+    public Vector /*List<ObaStop>*/getStops() {
         return references.getStops(entry.stopIds);
     }
 
@@ -93,9 +91,5 @@ public final class ObaStopsForRouteResponse extends ObaResponseWithRefs implemen
      */
     public ObaStopGrouping[] getStopGroupings() {
         return entry.stopGroupings;
-    }
-
-    protected ObaReferences getRefs() {
-        return references;
     }
 }

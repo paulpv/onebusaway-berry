@@ -22,7 +22,6 @@ import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-
 /**
  * Response object for ObaStopsForLocation objects.
  * @author Paul Watts (paulcwatts@gmail.com)
@@ -30,17 +29,16 @@ import org.onebusaway.json.me.JSONObject;
 public final class ObaStopsForLocationResponse extends ObaResponseWithRefs {
 
     private ObaStopElement[] list;
-    private boolean outOfRange;
-    private boolean limitExceeded;
-    
+    private boolean          outOfRange;
+    private boolean          limitExceeded;
+
     public ObaStopsForLocationResponse() {
         list = ObaStopElement.EMPTY_ARRAY;
         outOfRange = false;
         limitExceeded = false;
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-    {
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
         JSONArray jsonList = json.getJSONArray("list");
         list = new ObaStopElement[jsonList.length()];
         ObaApi.copyTo(jsonList, list, ObaStopElement.class);
@@ -48,7 +46,7 @@ public final class ObaStopsForLocationResponse extends ObaResponseWithRefs {
         outOfRange = json.getBoolean("outOfRange");
         limitExceeded = json.getBoolean("limitExceeded");
     }
-    
+
     /**
      * @return The list of stops.
      */

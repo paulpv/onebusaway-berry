@@ -15,10 +15,9 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import javax.microedition.location.Coordinates;
-
 import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
@@ -29,11 +28,10 @@ import org.onebusaway.json.me.JSONObject;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopElement implements ObaStop, JSONReceivable
-{
+public final class ObaStopElement implements ObaStop, JSONReceivable {
     public static final ObaStopElement   EMPTY_OBJECT = new ObaStopElement();
     public static final ObaStopElement[] EMPTY_ARRAY  = new ObaStopElement[] {};
-    public static final String[]         EMPTY_ROUTES = ObaApi.EMPTY_ARRAY_STRING;
+    public static final String[]         EMPTY_ROUTES = new String[] {};
 
     private String                       id;
     private double                       lat;
@@ -44,8 +42,9 @@ public final class ObaStopElement implements ObaStop, JSONReceivable
     private String                       code;
     private String[]                     routeIds;
 
-    public ObaStopElement()
-    {
+    private GeoPoint                     point;
+
+    public ObaStopElement() {
         id = "";
         lat = 0;
         lon = 0;
@@ -54,10 +53,11 @@ public final class ObaStopElement implements ObaStop, JSONReceivable
         name = "";
         code = "";
         routeIds = EMPTY_ROUTES;
+
+        point = ObaApi.makeGeoPoint(lat, lon);
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-    {
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
         id = json.getString("id");
         lat = json.getDouble("lat");
         lon = json.getDouble("lon");
@@ -68,94 +68,56 @@ public final class ObaStopElement implements ObaStop, JSONReceivable
         JSONArray jsonRouteIds = json.getJSONArray("routeIds");
         routeIds = new String[jsonRouteIds.length()];
         ObaApi.copyTo(jsonRouteIds, routeIds);
+
+        point = ObaApi.makeGeoPoint(lat, lon);
     }
 
-    /*
-    public String toJSON() throws JSONException
-    {
-        try
-        {
-            JSONObject inner = new JSONObject();
-            inner.put("id", id);
-            inner.getDouble("lat", lat);
-            inner.getDouble("lon", lon);
-            inner.put("direction", direction);
-            inner.put("locationType", locationType);
-            inner.put("name", name);
-            inner.put("code", code);
-            JSONArray routeIds = new JSONArray();
-            if (this.routeIds != null)
-            {
-                for (int i = 0; i < this.routeIds.length; i++)
-                {
-                    routeIds.put(this.routeIds[i]);
-                }
-            }
-            inner.put("routeIds", routeIds);
-            return inner.toString();
-        }
-        catch (JSONException ex)
-        {
-            throw ex;
-        }
-    }
-    */
-
-    public String getId()
-    {
+    public String getId() {
         return id;
     }
 
-    public String getStopCode()
-    {
+    public String getStopCode() {
         return code;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public Coordinates getLocation()
-    {
-        return ObaApi.makeGeoPoint(lat, lon);
+    public GeoPoint getLocation() {
+        return point;
     }
 
-    public double getLatitude()
-    {
+    public double getLatitude() {
         return lat;
     }
 
-    public double getLongitude()
-    {
+    public double getLongitude() {
         return lon;
     }
 
-    public String getDirection()
-    {
+    public String getDirection() {
         return direction;
     }
 
-    public int getLocationType()
-    {
+    public int getLocationType() {
         return locationType;
     }
 
-    public String[] getRouteIds()
-    {
+    public String[] getRouteIds() {
         return routeIds;
     }
 
-    public int hashCode()
-    {
+    //@Override
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
 
-    public boolean equals(Object obj)
-    {
+    //@Override
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
@@ -163,8 +125,7 @@ public final class ObaStopElement implements ObaStop, JSONReceivable
         if (!(obj instanceof ObaStopElement))
             return false;
         ObaStopElement other = (ObaStopElement) obj;
-        if (id == null)
-        {
+        if (id == null) {
             if (other.id != null)
                 return false;
         }
@@ -173,8 +134,8 @@ public final class ObaStopElement implements ObaStop, JSONReceivable
         return true;
     }
 
-    public String toString()
-    {
+    //@Override
+    public String toString() {
         return "ObaStopElement [direction=" + direction + ", id=" + id + ", name=" + name + "]";
     }
 }

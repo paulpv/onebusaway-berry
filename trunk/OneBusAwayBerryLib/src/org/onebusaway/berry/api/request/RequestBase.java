@@ -26,70 +26,59 @@ import org.onebusaway.berry.api.TextUtils;
 import org.onebusaway.berry.net.Uri;
 import org.onebusaway.berry.settings.ObaSettings;
 import org.onebusaway.json.me.JSONException;
-import org.onebusaway.json.me.JSONObject;
 
 /**
  * The base class for Oba requests.
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public class RequestBase
-{
-    protected final ObaResponse response;
-    protected final Uri   uri;
+public class RequestBase {
+    protected final ObaResponse mResponse;
+    protected final Uri         mUri;
 
-    protected RequestBase(ObaResponse response, Uri uri)
-    {
-        if (response == null)
-        {
-            throw new IllegalArgumentException("response must be a non-null instance of ObaResponse");
+    protected RequestBase(ObaResponse response, Uri uri) {
+        if (response == null) {
+            throw new IllegalArgumentException("response must not be null");
         }
 
-        this.response = response;
-        this.uri = uri;
+        mResponse = response;
+        mUri = uri;
     }
 
-    public String toString()
-    {
+    public String toString() {
         return TextUtils.getShortClassName(this) + //
-                        " { response=" + TextUtils.getShortClassName(response) + //
-                        ", uri=\"" + uri + "\" }";
+                        " { response=" + TextUtils.getShortClassName(mResponse) + //
+                        ", uri=\"" + mUri + "\" }";
     }
 
-    private static String getServer(Context context)
-    {
+    private static String getServer(Context context) {
         return ObaSettings.getSettings().getApiServerName();
     }
 
-    public static class BuilderBase
-    {
+    public static class BuilderBase {
         private static final String   API_KEY_ANDROID    = "v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc=cGF1bGN3YXR0c0BnbWFpbC5jb20=";
         private static final String   API_KEY_BLACKBERRY = "84050538-4d94-4f19-b05e-5221c86eda95";
         protected static final String BASE_PATH          = "/api/where";
 
-        protected final Uri.Builder   builder;
-        private String                apiKey             = API_KEY_BLACKBERRY;
+        protected final Uri.Builder   mBuilder;
+        private String                mApiKey            = API_KEY_BLACKBERRY;
 
-        protected BuilderBase(Context context, String path)
-        {
+        protected BuilderBase(Context context, String path) {
             this(context, path, false);
         }
 
-        protected BuilderBase(Context context, String path, boolean noVersion)
-        {
-            builder = new Uri.Builder();
-            builder.scheme("http");
-            builder.authority(getServer(context));
-            builder.path(path);
-            if (!noVersion)
-            {
-                builder.appendQueryParameter("version", ObaApi.VERSION2);
+        protected BuilderBase(Context context, String path, boolean noVersion) {
+            mBuilder = new Uri.Builder();
+            mBuilder.scheme("http");
+            mBuilder.authority(getServer(context));
+            mBuilder.path(path);
+            if (!noVersion) {
+                mBuilder.appendQueryParameter("version", ObaApi.VERSION2);
             }
-            ObaApi.setAppInfo(builder);
+            ObaApi.setAppInfo(mBuilder);
         }
 
-        protected static String getPathWithId(String pathElement, String id)
-        {
+        protected static String getPathWithId(String pathElement, String id) {
             StringBuffer builder = new StringBuffer(BASE_PATH);
             builder.append(pathElement);
             builder.append(id);
@@ -97,10 +86,9 @@ public class RequestBase
             return builder.toString();
         }
 
-        protected Uri buildUri()
-        {
-            builder.appendQueryParameter("key", apiKey);
-            return builder.build();
+        protected Uri buildUri() {
+            mBuilder.appendQueryParameter("key", mApiKey);
+            return mBuilder.build();
         }
 
         /**
@@ -111,9 +99,8 @@ public class RequestBase
          * Because this is implemented in the base class, it can't return 'this'
          * to use the standard builder pattern. Oh well, it's only for test.
          */
-        public void setServer(String server)
-        {
-            builder.authority(server);
+        public void setServer(String server) {
+            mBuilder.authority(server);
         }
 
         /**
@@ -122,54 +109,45 @@ public class RequestBase
          * Because this is implemented in the base class, it can't return 'this'
          * to use the standard builder pattern. Oh well, it's only for test.
          */
-        public void setApiKey(String key)
-        {
-            apiKey = key;
+        public void setApiKey(String key) {
+            mApiKey = key;
         }
     }
 
-    public ObaResponse call()
-    {
-        try
-        {
+    public ObaResponse call() {
+        try {
             // Example requests:
             // Initial startup out of service area:
             // http://api.onebusaway.org/api/where/stops-for-location.json?version=2&app_ver=11&app_uid=5284047f4ffb4e04824a2fd1d1f0cd62&lat=36.149777&lon=-95.993398&latSpan=0.0&lonSpan=360.0&key=v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc%3DcGF1bGN3YXR0c0BnbWFpbC5jb20%3D
             // Initial request for Seattle:
             // http://api.onebusaway.org/api/where/stops-for-location.json?version=2&app_ver=11&app_uid=5284047f4ffb4e04824a2fd1d1f0cd62&lat=47.60599&lon=-122.33178&latSpan=0.012441&lonSpan=0.013732&key=v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc%3DcGF1bGN3YXR0c0BnbWFpbC5jb20%3D
 
-            String jsonStringResponse = ObaHelp.getUri(uri);
+            String jsonStringResponse = ObaHelp.getUri(mUri);
 
             // Example responses:
             // ObaCurrentTimeRequest {"text":"OK","data":{"time":1294877371929,"readableTime":"2011-01-12T16:09:31-08:00"},"code":200,"version":1}
 
-            response.fromJSON(jsonStringResponse);
+            mResponse.fromJSON(jsonStringResponse);
         }
-        catch (FileNotFoundException e)
-        {
-            response.fromError(ObaApi.OBA_NOT_FOUND, e);
+        catch (FileNotFoundException e) {
+            mResponse.fromError(ObaApi.OBA_NOT_FOUND, e);
         }
-        catch (IOException e)
-        {
-            response.fromError(ObaApi.OBA_IO_EXCEPTION, e);
+        catch (IOException e) {
+            mResponse.fromError(ObaApi.OBA_IO_EXCEPTION, e);
         }
-        catch (JSONException e)
-        {
-            response.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        catch (JSONException e) {
+            mResponse.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
-        catch (InstantiationException e)
-        {
-            response.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        catch (InstantiationException e) {
+            mResponse.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
-        catch (IllegalAccessException e)
-        {
-            response.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        catch (IllegalAccessException e) {
+            mResponse.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
-        catch (Exception e)
-        {
-            response.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+        catch (Exception e) {
+            mResponse.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
 
-        return response;
+        return mResponse;
     }
 }

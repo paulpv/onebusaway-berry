@@ -18,69 +18,57 @@ import org.onebusaway.berry.OBAResource;
  * @author pv
  *
  */
-public class ObaPermissions
-{
+public class ObaPermissions {
     private static final MyApplicationPermissionsTable permissionsTable = new MyApplicationPermissionsTable();
 
-    public static boolean checkPermissions(boolean checkOptional)
-    {
+    public static boolean checkPermissions(boolean checkOptional) {
         return permissionsTable.checkPermissions(checkOptional);
     }
 
-    public static class MyApplicationPermissionsTable extends Hashtable
-    {
+    public static class MyApplicationPermissionsTable extends Hashtable {
         private static ReasonProvider reasonProvider = null;
 
         static ResourceBundle         resources      = ResourceBundle.getBundle(OBAResource.BUNDLE_ID, OBAResource.BUNDLE_NAME);
 
-        public static String getString(int resourceKey)
-        {
+        public static String getString(int resourceKey) {
             return resources.getString(resourceKey);
         }
 
-        protected class MyApplicationPermission
-        {
+        protected class MyApplicationPermission {
             private final int     id;
             private final String  name;
             private final boolean required;
             private final String  reason;
 
-            public MyApplicationPermission(int id, String name, boolean required, int resourceKey)
-            {
+            public MyApplicationPermission(int id, String name, boolean required, int resourceKey) {
                 this.id = id;
                 this.name = name;
                 this.required = required;
                 this.reason = getString(resourceKey);
             }
 
-            public String toString()
-            {
+            public String toString() {
                 return "{id=" + id + ", name=\"" + name + "\", required=" + required + ", reason=\"" + reason + "\"";
             }
 
-            public int getId()
-            {
+            public int getId() {
                 return id;
             }
 
-            public String getName()
-            {
+            public String getName() {
                 return name;
             }
 
-            public boolean getRequired()
-            {
+            public boolean getRequired() {
                 return required;
             }
 
-            public String getReason()
-            {
+            public String getReason() {
                 return reason;
             }
         }
 
-        public MyApplicationPermissionsTable()
-        {
+        public MyApplicationPermissionsTable() {
             //
             // NOTE: Some BBs, especially ones under BES policy control, may have these permanently disabled.
             // Think *very* carefully about what permissions you *absolutely require* and
@@ -128,24 +116,18 @@ public class ObaPermissions
             registerReasonProvider();
         }
 
-        protected void registerReasonProvider()
-        {
-            synchronized (this)
-            {
-                try
-                {
-                    if (reasonProvider != null)
-                    {
+        protected void registerReasonProvider() {
+            synchronized (this) {
+                try {
+                    if (reasonProvider != null) {
                         unregisterReasonProvider();
                         reasonProvider = null;
                     }
                     reasonProvider = new ReasonProvider()
                     {
-                        public String getMessage(int permissionID)
-                        {
+                        public String getMessage(int permissionID) {
                             MyApplicationPermission wmcApplicationPermission = (MyApplicationPermission) get(permissionID);
-                            if (wmcApplicationPermission == null)
-                            {
+                            if (wmcApplicationPermission == null) {
                                 return getString(OBAResource.PERMISSION_REASON_OTHER);
                             }
                             return wmcApplicationPermission.getReason();
@@ -156,83 +138,66 @@ public class ObaPermissions
                     apm.addReasonProvider(ad, reasonProvider);
 
                 }
-                catch (ControlledAccessException e)
-                {
+                catch (ControlledAccessException e) {
                     // Apparently lack of IPC permissions makes this call non-functional
                 }
             }
         }
 
-        protected void unregisterReasonProvider()
-        {
-            synchronized (this)
-            {
-                try
-                {
+        protected void unregisterReasonProvider() {
+            synchronized (this) {
+                try {
                     ApplicationPermissionsManager apm = ApplicationPermissionsManager.getInstance();
                     apm.removeReasonProvider(reasonProvider);
                     reasonProvider = null;
                 }
-                catch (ControlledAccessException e)
-                {
+                catch (ControlledAccessException e) {
                     // Apparently lack of IPC permissions makes this call non-functional
                 }
             }
         }
 
-        public MyApplicationPermission put(int key, MyApplicationPermission value)
-        {
+        public MyApplicationPermission put(int key, MyApplicationPermission value) {
             return (MyApplicationPermission) put(new Integer(key), value);
         }
 
-        public MyApplicationPermission put(MyApplicationPermission wmcApplicationPermission)
-        {
+        public MyApplicationPermission put(MyApplicationPermission wmcApplicationPermission) {
             return put(wmcApplicationPermission.getId(), wmcApplicationPermission);
         }
 
-        public Object put(Object key, Object value)
-        {
-            if (!(key instanceof Integer))
-            {
+        public Object put(Object key, Object value) {
+            if (!(key instanceof Integer)) {
                 throw new IllegalArgumentException("key must be of type Integer");
             }
-            if (!(value instanceof MyApplicationPermission))
-            {
+            if (!(value instanceof MyApplicationPermission)) {
                 throw new IllegalArgumentException("key must be of type WmcApplicationPermission");
             }
             return super.put(key, value);
         }
 
-        public MyApplicationPermission get(int key)
-        {
+        public MyApplicationPermission get(int key) {
             return (MyApplicationPermission) get(new Integer(key));
         }
 
-        public Object get(Object key)
-        {
-            if (!(key instanceof Integer))
-            {
+        public Object get(Object key) {
+            if (!(key instanceof Integer)) {
                 throw new IllegalArgumentException("key must be of type Integer");
             }
             return super.get(key);
         }
 
-        private boolean hasPermissions(ApplicationPermissions requestedPermissions, boolean requireAll)
-        {
+        private boolean hasPermissions(ApplicationPermissions requestedPermissions, boolean requireAll) {
             MyApplicationPermission permission;
             int permissionId;
             int permissionValue;
 
             Enumeration enumValues = elements();
-            while (enumValues.hasMoreElements())
-            {
+            while (enumValues.hasMoreElements()) {
                 permission = ((MyApplicationPermission) enumValues.nextElement());
                 permissionId = permission.getId();
                 permissionValue = requestedPermissions.getPermission(permissionId);
-                if (permissionValue != ApplicationPermissions.VALUE_ALLOW)
-                {
-                    if (requireAll && permission.getRequired())
-                    {
+                if (permissionValue != ApplicationPermissions.VALUE_ALLOW) {
+                    if (requireAll && permission.getRequired()) {
                         return false;
                     }
                 }
@@ -240,14 +205,12 @@ public class ObaPermissions
             return true;
         }
 
-        private ApplicationPermissions getAllRequestedPermissions()
-        {
+        private ApplicationPermissions getAllRequestedPermissions() {
             ApplicationPermissions permissions = new ApplicationPermissions();
 
             MyApplicationPermission wtcPermission;
             Enumeration wtcPermissions = elements();
-            while (wtcPermissions.hasMoreElements())
-            {
+            while (wtcPermissions.hasMoreElements()) {
                 wtcPermission = ((MyApplicationPermission) wtcPermissions.nextElement());
                 permissions.addPermission(wtcPermission.getId());
             }
@@ -272,20 +235,17 @@ public class ObaPermissions
          * @param checkExtended true, if extended permissions should be verified
          * @return true, if the application has sufficient permissions to start
          */
-        public boolean checkPermissions(boolean requireAll)
-        {
+        public boolean checkPermissions(boolean requireAll) {
             ApplicationPermissionsManager apm = ApplicationPermissionsManager.getInstance();
             ApplicationPermissions originalPermissions = apm.getApplicationPermissions();
 
-            if (hasPermissions(originalPermissions, requireAll))
-            {
+            if (hasPermissions(originalPermissions, requireAll)) {
                 return true;
             }
 
             // Request that the user change permissions
             boolean acceptance = apm.invokePermissionsRequest(getAllRequestedPermissions());
-            if (!acceptance)
-            {
+            if (!acceptance) {
                 // If the complete request was not accepted, make sure we at least
                 // got the minimum required permissions before starting.
                 return hasPermissions(apm.getApplicationPermissions(), false);

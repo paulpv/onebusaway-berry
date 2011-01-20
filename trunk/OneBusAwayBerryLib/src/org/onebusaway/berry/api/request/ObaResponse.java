@@ -25,21 +25,18 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public abstract class ObaResponse implements JSONReceivable
-{
+public abstract class ObaResponse implements JSONReceivable {
     private String version;
     private int    code;
     private String text;
 
-    public ObaResponse()
-    {
+    public ObaResponse() {
         version = ObaApi.VERSION1;
         code = 0;
         text = "ERROR";
     }
 
-    protected void fromError(int obaErrorCode, Throwable err)
-    {
+    protected void fromError(int obaErrorCode, Throwable err) {
         this.version = ObaApi.VERSION2;
         this.code = obaErrorCode;
         this.text = (err == null) ? "UNKNOWN ERROR" : err.toString();
@@ -55,8 +52,7 @@ public abstract class ObaResponse implements JSONReceivable
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public JSONObject fromJSON(String jsonString) throws JSONException, InstantiationException, IllegalAccessException
-    {
+    public JSONObject fromJSON(String jsonString) throws JSONException, InstantiationException, IllegalAccessException {
         JSONObject json = new JSONObject(jsonString);
 
         this.version = json.getString("version");
@@ -71,24 +67,21 @@ public abstract class ObaResponse implements JSONReceivable
     /**
      * @return The version of this response.
      */
-    public String getVersion()
-    {
+    public String getVersion() {
         return version;
     }
 
     /**
      * @return The status code (one of the ObaApi.OBA_ constants)
      */
-    public int getCode()
-    {
+    public int getCode() {
         return code;
     }
 
     /**
      * @return The status text.
      */
-    public String getText()
-    {
+    public String getText() {
         return text;
     }
 }

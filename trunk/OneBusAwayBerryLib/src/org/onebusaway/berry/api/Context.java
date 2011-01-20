@@ -6,6 +6,5 @@ package org.onebusaway.berry.api;
  * @author pv
  *
  */
-public class Context
-{
+public class Context {
 }

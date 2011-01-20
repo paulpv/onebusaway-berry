@@ -24,14 +24,14 @@ import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
 public final class ObaReferencesElement implements ObaReferences, JSONReceivable {
-    
+
     public static final ObaReferencesElement EMPTY_OBJECT = new ObaReferencesElement();
 
-    private ObaStopElement[] stops;
-    private ObaRouteElement[] routes;
-    private ObaTripElement[] trips;
-    private ObaAgencyElement[] agencies;
-    private ObaSituationElement[] situations;
+    private ObaStopElement[]                 stops;
+    private ObaRouteElement[]                routes;
+    private ObaTripElement[]                 trips;
+    private ObaAgencyElement[]               agencies;
+    private ObaSituationElement[]            situations;
 
     public ObaReferencesElement() {
         stops = ObaStopElement.EMPTY_ARRAY;
@@ -41,8 +41,7 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
         situations = ObaSituationElement.EMPTY_ARRAY;
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-    {
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
         JSONArray jsonStops = json.getJSONArray("stops");
         stops = new ObaStopElement[jsonStops.length()];
         ObaApi.copyTo(jsonStops, stops, ObaStopElement.class);
@@ -50,62 +49,67 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
         JSONArray jsonRoutes = json.getJSONArray("routes");
         routes = new ObaRouteElement[jsonRoutes.length()];
         ObaApi.copyTo(jsonRoutes, routes, ObaRouteElement.class);
-        
+
         JSONArray jsonTrips = json.getJSONArray("trips");
         trips = new ObaTripElement[jsonTrips.length()];
         ObaApi.copyTo(jsonTrips, trips, ObaTripElement.class);
-        
+
         JSONArray jsonAgencies = json.getJSONArray("agencies");
         agencies = new ObaAgencyElement[jsonAgencies.length()];
         ObaApi.copyTo(jsonAgencies, agencies, ObaAgencyElement.class);
-        
+
         JSONArray jsonSituations = json.getJSONArray("situations");
         situations = new ObaSituationElement[jsonSituations.length()];
         ObaApi.copyTo(jsonSituations, situations, ObaSituationElement.class);
     }
-    
+
+    //@Override
     public ObaStop getStop(String id) {
         return (ObaStop) findById(stops, id);
     }
 
-    public Vector getStops(String[] ids)
-    {
+    //@Override
+    public Vector getStops(String[] ids) {
         return findList(stops, ids);
     }
 
+    //@Override
     public ObaRoute getRoute(String id) {
         return (ObaRoute) findById(routes, id);
     }
 
-    public Vector getRoutes(String[] ids)
-    {
+    //@Override
+    public Vector getRoutes(String[] ids) {
         return findList(routes, ids);
     }
 
+    //@Override
     public ObaTrip getTrip(String id) {
         return (ObaTrip) findById(trips, id);
     }
 
-    public Vector getTrips(String[] ids)
-    {
+    //@Override
+    public Vector getTrips(String[] ids) {
         return findList(trips, ids);
     }
 
+    //@Override
     public ObaAgency getAgency(String id) {
         return (ObaAgency) findById(agencies, id);
     }
 
-    public Vector getAgencies(String[] ids)
-    {
+    //@Override
+    public Vector getAgencies(String[] ids) {
         return findList(agencies, ids);
     }
 
+    //@Override
     public ObaSituation getSituation(String id) {
         return (ObaSituation) findById(situations, id);
     }
 
-    public Vector getSituations(String[] ids)
-    {
+    //@Override
+    public Vector getSituations(String[] ids) {
         return findList(situations, ids);
     }
 
@@ -114,7 +118,7 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
     //
     private static ObaElement findById(ObaElement[] objects, String id) {
         final int len = objects.length;
-        for (int i=0; i < len; ++i) {
+        for (int i = 0; i < len; ++i) {
             final ObaElement obj = objects[i];
             if (obj.getId().equals(id)) {
                 return obj;
@@ -122,17 +126,17 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
         }
         return null;
     }
-    
+
     private static Vector findList(ObaElement[] objects, String[] ids) {
-        Vector results = new Vector();
+        Vector result = new Vector();
         final int len = ids.length;
-        for (int i=0; i < len; ++i) {
+        for (int i = 0; i < len; ++i) {
             final String id = ids[i];
             final ObaElement obj = findById(objects, id);
             if (obj != null) {
-                results.addElement(obj);
+                result.addElement(obj);
             }
         }
-        return results;
+        return result;
     }
 }

@@ -1,17 +1,14 @@
 package org.onebusaway.berry.settings;
 
-public abstract class Property
-{
+public abstract class Property {
     private final String propName;
 
-    protected Property(ObaSettings settings, String propName)
-    {
+    protected Property(ObaSettings settings, String propName) {
         this.propName = propName;
         settings.registerProperty(propName, this);
     }
 
-    public final String getName()
-    {
+    public final String getName() {
         return this.propName;
     }
 

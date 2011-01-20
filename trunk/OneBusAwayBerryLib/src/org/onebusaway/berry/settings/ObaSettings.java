@@ -7,103 +7,85 @@ import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotOpenException;
 
-public class ObaSettings
-{
-    private static ObaSettings    obaSettings          = null;
+public class ObaSettings {
+    private static ObaSettings obaSettings = null;
 
-    public static ObaSettings getSettings()
-    {
-        if (obaSettings == null)
-        {
+    public static ObaSettings getSettings() {
+        if (obaSettings == null) {
             obaSettings = new ObaSettings();
             obaSettings.load();
         }
         return obaSettings;
     }
 
-    private static final String   RECORD_STORE_NAME    = "OneBusAway_Settings_v1";
+    private static final String   RECORD_STORE_NAME = "OneBusAway_Settings_v1";
 
-    private final Hashtable       propMap              = new Hashtable();
-    private final Vector          propList             = new Vector();
+    private final Hashtable       propMap           = new Hashtable();
+    private final Vector          propList          = new Vector();
     private static RecordStore    recordStore;
 
     // to add new property:
     // 1) add variable of appropriate Property subclass
     // 2) add settings getter/setter
-    private final BooleanProperty permissionsOk        = new BooleanProperty(this, "permissionsOk", false);
-    private final StringProperty  apiServerName        = new StringProperty(this, "apiServerName", "api.onebusaway.org");
+    private final BooleanProperty permissionsOk     = new BooleanProperty(this, "permissionsOk", false);
+    private final StringProperty  apiServerName     = new StringProperty(this, "apiServerName", "api.onebusaway.org");
 
     //
     // BEGIN: settings getters/setters
     //
 
-    public boolean getPermissionsOk()
-    {
+    public boolean getPermissionsOk() {
         return permissionsOk.getValue();
     }
 
-    public void setPermissionsOk(boolean permissionsOk)
-    {
+    public void setPermissionsOk(boolean permissionsOk) {
         this.permissionsOk.setValue(permissionsOk);
     }
 
-    public String getApiServerName()
-    {
+    public String getApiServerName() {
         return apiServerName.getValue();
     }
 
-    public void setApiServerName(String apiServerName)
-    {
+    public void setApiServerName(String apiServerName) {
         this.apiServerName.setValue(apiServerName);
     }
 
     //
     // END: settings getters/setters
     //
-    
-    public void clearSettings()
-    {
-        try
-        {
+
+    public void clearSettings() {
+        try {
             RecordStore.deleteRecordStore(RECORD_STORE_NAME);
         }
-        catch (RecordStoreException rse)
-        {
+        catch (RecordStoreException rse) {
         }
     }
 
-    public void load()
-    {
+    public void load() {
         int numRecords;
 
         // statically synchronized
-        synchronized (RecordStore.class)
-        {
-            try
-            {
+        synchronized (RecordStore.class) {
+            try {
                 recordStore = RecordStore.openRecordStore(RECORD_STORE_NAME, true);
                 numRecords = recordStore.getNumRecords();
             }
-            catch (RecordStoreException rse)
-            {
+            catch (RecordStoreException rse) {
                 // shouldn't happen
                 return;
             }
         }
 
-        if (numRecords > 0)
-        {
+        if (numRecords > 0) {
             String data = "";
 
-            try
-            {
+            try {
                 int recSize = recordStore.getRecordSize(1);
-                if (recSize > 0)
-                {
+                if (recSize > 0) {
                     byte[] recData = new byte[recSize];
                     recData = recordStore.getRecord(1);
-                    if (recData != null)
-                    {
+                    if (recData != null) {
                         data = new String(recData, 0, recData.length);
                     }
                 }
@@ -114,19 +96,16 @@ public class ObaSettings
                 data = "";
             }
 
-            while (data.length() > 0)
-            {
+            while (data.length() > 0) {
                 // get property name
                 int nextIndex = data.indexOf('\n');
                 String kvp;
 
-                if (nextIndex >= 0)
-                {
+                if (nextIndex >= 0) {
                     kvp = data.substring(0, nextIndex);
                     data = data.substring(nextIndex + 1);
                 }
-                else
-                {
+                else {
                     kvp = data;
                     data = "";
                 }
@@ -136,61 +115,49 @@ public class ObaSettings
                 int equalsIndex = kvp.indexOf('=');
                 String key;
                 String value;
-                if (equalsIndex >= 0)
-                {
+                if (equalsIndex >= 0) {
                     key = kvp.substring(0, equalsIndex);
                     value = kvp.substring(equalsIndex + 1);
                 }
-                else
-                {
+                else {
                     // shouldn't happen
                     key = kvp;
                     value = "";
                 }
 
                 Property prop = (Property) propMap.get(key);
-                if (prop != null)
-                {
+                if (prop != null) {
                     prop.setStringValue(value);
                 }
             }
         }
 
-        try
-        {
+        try {
             recordStore.closeRecordStore();
         }
-        catch (RecordStoreNotOpenException rsnoe)
-        {
+        catch (RecordStoreNotOpenException rsnoe) {
         }
-        catch (RecordStoreException rse)
-        {
+        catch (RecordStoreException rse) {
         }
     }
 
     // Add a new record to the record store
-    public synchronized void saveRecord()
-    {
+    public synchronized void saveRecord() {
         // statically synchronized
-        synchronized (RecordStore.class)
-        {
-            try
-            {
+        synchronized (RecordStore.class) {
+            try {
                 recordStore = RecordStore.openRecordStore(RECORD_STORE_NAME, true);
             }
-            catch (RecordStoreException rse)
-            {
+            catch (RecordStoreException rse) {
             }
         }
 
         // store the data
         StringBuffer sb = new StringBuffer();
 
-        for (int i = 0; i < propList.size(); ++i)
-        {
+        for (int i = 0; i < propList.size(); ++i) {
             Property prop = (Property) propList.elementAt(i);
-            if (!prop.isDefaultValue())
-            {
+            if (!prop.isDefaultValue()) {
                 sb.append(prop.getName());
                 sb.append('=');
                 sb.append(prop.getStringValue());
@@ -201,87 +168,69 @@ public class ObaSettings
         String record = sb.toString();
         byte[] b = record.getBytes();
 
-        try
-        {
+        try {
             // statically synchronized
-            synchronized (RecordStore.class)
-            {
-                if (recordStore.getNumRecords() > 0)
-                {
+            synchronized (RecordStore.class) {
+                if (recordStore.getNumRecords() > 0) {
                     recordStore.setRecord(1, b, 0, b.length);
                 }
-                else
-                {
+                else {
                     recordStore.addRecord(b, 0, b.length);
                 }
             }
         }
-        catch (RecordStoreException rse)
-        {
+        catch (RecordStoreException rse) {
         }
 
-        try
-        {
+        try {
             recordStore.closeRecordStore();
         }
-        catch (RecordStoreNotOpenException rsnoe)
-        {
+        catch (RecordStoreNotOpenException rsnoe) {
         }
-        catch (RecordStoreException rse)
-        {
+        catch (RecordStoreException rse) {
         }
     }
 
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = 0;
-        for (int i = 0; i < propList.size(); ++i)
-        {
+        for (int i = 0; i < propList.size(); ++i) {
             Property prop = (Property) propList.elementAt(i);
             result = 31 * result + prop.getValueHashCode();
         }
         return result;
     }
 
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (obj == null)
-        {
+        if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass())
-        {
+        if (getClass() != obj.getClass()) {
             return false;
         }
 
         ObaSettings other = (ObaSettings) obj;
 
-        for (int i = 0; i < propList.size(); ++i)
-        {
+        for (int i = 0; i < propList.size(); ++i) {
             Property myProp = (Property) propList.elementAt(i);
             Property otherProp = (Property) other.propMap.get(myProp.getName());
-            if (!myProp.valuesEqual(otherProp))
-            {
+            if (!myProp.valuesEqual(otherProp)) {
                 return false;
             }
         }
         return true;
     }
 
-    public ObaSettings copy()
-    {
+    public ObaSettings copy() {
         ObaSettings settings = new ObaSettings();
 
         Property thisProp;
         String propName;
         Property otherProp;
 
-        for (int i = 0; i < propList.size(); ++i)
-        {
+        for (int i = 0; i < propList.size(); ++i) {
             thisProp = (Property) propList.elementAt(i);
             propName = thisProp.getName();
             otherProp = (Property) settings.propMap.get(propName);
@@ -291,11 +240,9 @@ public class ObaSettings
         return settings;
     }
 
-    protected void registerProperty(String propName, Property property)
-    {
+    protected void registerProperty(String propName, Property property) {
         Object oldValue = propMap.put(propName, property);
-        if (oldValue != null)
-        {
+        if (oldValue != null) {
             throw new IllegalArgumentException("Duplicate property: " + propName);
         }
         propList.addElement(property);

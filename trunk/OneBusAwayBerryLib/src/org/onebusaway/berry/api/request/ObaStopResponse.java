@@ -17,12 +17,10 @@ package org.onebusaway.berry.api.request;
 
 import java.util.Vector;
 
-import javax.microedition.location.Coordinates;
-
 import org.onebusaway.berry.api.ObaApi;
-import org.onebusaway.berry.api.elements.ObaReferencesElement;
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.elements.ObaStopElement;
+import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
@@ -32,52 +30,59 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Peavyhouse (pv@swooby.com) BB JME
  */
 public final class ObaStopResponse extends ObaResponseWithRefs implements ObaStop {
-    
+
     private ObaStopElement entry;
 
     public ObaStopResponse() {
-        references = ObaReferencesElement.EMPTY_OBJECT;
         entry = ObaStopElement.EMPTY_OBJECT;
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException
-    {
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
         entry = new ObaStopElement();
         ObaApi.fromJSON(json, "entry", entry);
     }
-    
+
+    //@Override
     public String getId() {
         return entry.getId();
     }
 
+    //@Override
     public String getStopCode() {
         return entry.getStopCode();
     }
 
+    //@Override
     public String getName() {
         return entry.getName();
     }
 
-    public Coordinates/*GeoPoint*/ getLocation() {
+    //@Override
+    public GeoPoint getLocation() {
         return entry.getLocation();
     }
 
+    //@Override
     public double getLatitude() {
         return entry.getLatitude();
     }
 
+    //@Override
     public double getLongitude() {
         return entry.getLatitude();
     }
 
+    //@Override
     public String getDirection() {
         return entry.getDirection();
     }
 
+    //@Override
     public int getLocationType() {
         return entry.getLocationType();
     }
 
+    //@Override
     public String[] getRouteIds() {
         return entry.getRouteIds();
     }
@@ -85,7 +90,7 @@ public final class ObaStopResponse extends ObaResponseWithRefs implements ObaSto
     /**
      * Returns the list of dereferenced routes.
      */
-    public Vector getRoutes() {
+    public Vector /*List<ObaRoute>*/getRoutes() {
         return references.getRoutes(entry.getRouteIds());
     }
 }

@@ -18,6 +18,10 @@ package org.onebusaway.berry.api.elements;
 import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.map.GeoPoint;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public interface ObaTripStatus {
     public static final class Position {
         private final double lat = 0;

@@ -18,6 +18,7 @@ package org.onebusaway.berry.api.elements;
 /**
  * Base interface for any element that has an ID.
  * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
 public interface ObaElement {
     /**

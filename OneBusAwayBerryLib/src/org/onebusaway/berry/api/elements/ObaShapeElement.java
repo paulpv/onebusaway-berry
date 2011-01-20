@@ -22,6 +22,10 @@ import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public final class ObaShapeElement implements ObaShape, JSONReceivable {
 
     public static final ObaShapeElement   EMPTY_OBJECT = new ObaShapeElement();

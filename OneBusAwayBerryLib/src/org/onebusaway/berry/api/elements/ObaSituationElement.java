@@ -23,6 +23,10 @@ import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public final class ObaSituationElement implements ObaSituation, JSONReceivable {
     public static final ObaSituationElement   EMPTY_OBJECT = new ObaSituationElement();
     public static final ObaSituationElement[] EMPTY_ARRAY  = new ObaSituationElement[] {};

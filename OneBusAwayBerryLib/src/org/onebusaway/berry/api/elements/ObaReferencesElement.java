@@ -27,6 +27,10 @@ import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public final class ObaReferencesElement implements ObaReferences, JSONReceivable {
 
     public static final ObaReferencesElement EMPTY_OBJECT = new ObaReferencesElement();

@@ -20,6 +20,10 @@ import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public final class ObaTripStatusElement implements ObaTripStatus, JSONReceivable {
     protected static final ObaTripStatusElement EMPTY_OBJECT = new ObaTripStatusElement();
 

@@ -86,4 +86,11 @@ public final class ObaStopsForRouteResponse extends ObaResponseWithRefs implemen
     public ObaStopGrouping[] getStopGroupings() {
         return entry.stopGroupings;
     }
+
+    /*
+    @Override
+    protected ObaReferences getRefs() {
+        return data.references;
+    }
+    */
 }

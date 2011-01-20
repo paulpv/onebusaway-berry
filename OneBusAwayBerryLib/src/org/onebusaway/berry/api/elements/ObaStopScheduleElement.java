@@ -15,6 +15,10 @@
  */
 package org.onebusaway.berry.api.elements;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public final class ObaStopScheduleElement implements ObaStopSchedule {
     public static final ObaStopScheduleElement EMPTY_OBJECT = new ObaStopScheduleElement();
 

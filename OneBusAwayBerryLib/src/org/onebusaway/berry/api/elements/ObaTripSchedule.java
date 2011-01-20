@@ -15,6 +15,10 @@
  */
 package org.onebusaway.berry.api.elements;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public final class ObaTripSchedule {
     public static final ObaTripSchedule EMPTY_OBJECT = new ObaTripSchedule();
 

@@ -26,6 +26,12 @@ import net.rim.device.api.compress.GZIPInputStream;
 
 import org.onebusaway.berry.net.Uri;
 
+/**
+ * 
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ *
+ */
 public final class ObaHelp {
     private static final String TAG = "ObaHelp";
 

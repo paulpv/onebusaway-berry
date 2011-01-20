@@ -21,6 +21,10 @@ import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public final class ObaStopGrouping implements JSONReceivable {
     public static final ObaStopGrouping   EMPTY_OBJECT   = new ObaStopGrouping();
     public static final ObaStopGrouping[] EMPTY_ARRAY    = new ObaStopGrouping[] {};

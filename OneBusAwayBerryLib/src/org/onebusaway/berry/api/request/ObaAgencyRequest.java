@@ -47,8 +47,8 @@ public final class ObaAgencyRequest extends RequestBase implements ObaCallable {
      * @param routeId The agency Id to request.
      * @return The new request instance.
      */
-    public static ObaAgencyRequest newRequest(Context context, String agencyId) {
-        return new Builder(context, agencyId).build();
+    public static ObaAgencyRequest newRequest(Context context, String agency) {
+        return new Builder(context, agency).build();
     }
 
     /*

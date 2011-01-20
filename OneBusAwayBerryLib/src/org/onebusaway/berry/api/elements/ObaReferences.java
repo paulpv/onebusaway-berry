@@ -25,6 +25,7 @@ import org.onebusaway.berry.api.ObaListObaTrip;
 /**
  * Interface representing the <references> object in responses.
  * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
 public interface ObaReferences {
     /**

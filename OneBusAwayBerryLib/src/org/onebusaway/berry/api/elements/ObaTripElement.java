@@ -20,6 +20,10 @@ import org.onebusaway.berry.api.ObaInteger;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public final class ObaTripElement implements ObaTrip, JSONReceivable {
     public static final ObaTripElement   EMPTY_OBJECT = new ObaTripElement();
     public static final ObaTripElement[] EMPTY_ARRAY  = new ObaTripElement[] {};

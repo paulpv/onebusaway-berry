@@ -19,7 +19,7 @@ package org.onebusaway.berry.api.elements;
  * Extended information for a specific trip
  * {@link http://code.google.com/p/onebusaway/wiki/OneBusAwayRestApi_TripDetails}
  * @author Paul Watts (paulcwatts@gmail.com)
- *
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
 public final class ObaTripDetailsElement implements ObaTripDetails {
     public static final ObaTripDetailsElement   EMPTY_OBJECT = new ObaTripDetailsElement();

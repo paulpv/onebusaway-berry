@@ -18,7 +18,10 @@ package org.onebusaway.berry.api.elements;
 import org.onebusaway.berry.api.ObaListGeoPoint;
 import org.onebusaway.berry.api.ObaListInteger;
 
-
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public interface ObaShape {
     /**
      * Returns the number of points in the line.

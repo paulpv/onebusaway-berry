@@ -22,6 +22,7 @@ import org.onebusaway.berry.map.GeoPoint;
  * {@link http://code.google.com/p/onebusaway/wiki/OneBusAwayRestApi_StopElementV2}
  *
  * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
 public interface ObaStop extends ObaElement {
     public static final int LOCATION_STOP    = 0;

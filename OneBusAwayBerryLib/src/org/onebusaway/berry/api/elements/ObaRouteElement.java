@@ -27,6 +27,7 @@ import org.onebusaway.json.me.JSONObject;
  * {@link http://code.google.com/p/onebusaway/wiki/OneBusAwayRestApi_RouteElementV2}
  *
  * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
 public final class ObaRouteElement implements ObaRoute, JSONReceivable {
     public static final ObaRouteElement   EMPTY_OBJECT = new ObaRouteElement();

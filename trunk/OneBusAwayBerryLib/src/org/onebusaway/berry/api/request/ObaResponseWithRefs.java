@@ -95,4 +95,8 @@ public abstract class ObaResponseWithRefs extends ObaResponse implements ObaRefe
     public ObaListObaSituation getSituations(String[] ids) {
         return references.getSituations(ids);
     }
+
+    /*
+    abstract protected ObaReferences getRefs();
+    */
 }

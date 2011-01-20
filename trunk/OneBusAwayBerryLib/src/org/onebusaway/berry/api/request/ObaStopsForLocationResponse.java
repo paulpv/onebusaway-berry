@@ -66,4 +66,11 @@ public final class ObaStopsForLocationResponse extends ObaResponseWithRefs {
     public boolean getLimitExceeded() {
         return limitExceeded;
     }
+
+    /*
+    @Override
+    protected ObaReferences getRefs() {
+        return data.references;
+    }
+    */
 }

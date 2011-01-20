@@ -15,6 +15,10 @@
  */
 package org.onebusaway.berry.api.elements;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public interface ObaStopSchedule {
     /**
      * Element that lists out all the days that a particular stop has service.

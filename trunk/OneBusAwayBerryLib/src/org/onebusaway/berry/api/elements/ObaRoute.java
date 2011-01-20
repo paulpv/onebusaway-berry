@@ -20,6 +20,7 @@ package org.onebusaway.berry.api.elements;
  * {@link http://code.google.com/p/onebusaway/wiki/OneBusAwayRestApi_RouteElementV2}
  *
  * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
 public interface ObaRoute extends ObaElement {
     public static final int TYPE_TRAM      = 0;

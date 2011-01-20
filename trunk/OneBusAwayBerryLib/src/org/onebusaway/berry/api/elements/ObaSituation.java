@@ -17,7 +17,10 @@ package org.onebusaway.berry.api.elements;
 
 import org.onebusaway.berry.api.ObaListString;
 
-
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public interface ObaSituation extends ObaElement {
     public static final String REASON_TYPE_EQUIPMENT     = "equipment";
     public static final String REASON_TYPE_ENVIRONMENT   = "environment";

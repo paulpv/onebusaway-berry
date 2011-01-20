@@ -91,4 +91,11 @@ public final class ObaStopResponse extends ObaResponseWithRefs implements ObaSto
     public ObaListObaRoute getRoutes() {
         return references.getRoutes(entry.getRouteIds());
     }
+
+    /*
+    @Override
+    protected ObaReferences getRefs() {
+        return data.references;
+    }
+    */
 }

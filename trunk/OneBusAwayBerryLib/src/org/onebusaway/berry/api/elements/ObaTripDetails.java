@@ -15,6 +15,10 @@
  */
 package org.onebusaway.berry.api.elements;
 
+/**
+ * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
+ */
 public interface ObaTripDetails extends ObaElement {
     /**
      * @return Details on the trip's schedule. Can be null if the schedule isn't included.

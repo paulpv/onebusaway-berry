@@ -19,6 +19,7 @@ package org.onebusaway.berry.api.elements;
  * Interface for a Trip element
  * {@link http://code.google.com/p/onebusaway/wiki/OneBusAwayRestApi_TripElementV2}
  * @author Paul Watts (paulcwatts@gmail.com)
+ * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
 public interface ObaTrip extends ObaElement {
     public static final int DIRECTION_OUTBOUND = 0;

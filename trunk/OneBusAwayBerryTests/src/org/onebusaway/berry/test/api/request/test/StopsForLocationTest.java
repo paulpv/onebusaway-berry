@@ -29,13 +29,12 @@ import org.onebusaway.berry.api.request.ObaStopsForLocationResponse;
 import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.berry.test.ObaTestCase;
 
-
 public class StopsForLocationTest extends ObaTestCase {
-    
+
     public StopsForLocationTest() {
         super();
     }
-    
+
     public StopsForLocationTest(String testName, TestMethod testMethod) {
         super(testName, testMethod);
     }
@@ -44,22 +43,37 @@ public class StopsForLocationTest extends ObaTestCase {
         TestSuite suite = new TestSuite("StopsForLocationTest");
 
         suite.addTest(new StopsForLocationTest("testDowntownSeattle1", new TestMethod()
-        { public void run(TestCase tc) {((StopsForLocationTest)tc).testDowntownSeattle1(); } }));
+        {
+            public void run(TestCase tc) {
+                ((StopsForLocationTest) tc).testDowntownSeattle1();
+            }
+        }));
         suite.addTest(new StopsForLocationTest("testQuery", new TestMethod()
-        { public void run(TestCase tc) {((StopsForLocationTest)tc).testQuery(); } }));
+        {
+            public void run(TestCase tc) {
+                ((StopsForLocationTest) tc).testQuery();
+            }
+        }));
         suite.addTest(new StopsForLocationTest("testQueryFail", new TestMethod()
-        { public void run(TestCase tc) {((StopsForLocationTest)tc).testQueryFail(); } }));
+        {
+            public void run(TestCase tc) {
+                ((StopsForLocationTest) tc).testQueryFail();
+            }
+        }));
         suite.addTest(new StopsForLocationTest("testOutOfRange", new TestMethod()
-        { public void run(TestCase tc) {((StopsForLocationTest)tc).testOutOfRange(); } }));
+        {
+            public void run(TestCase tc) {
+                ((StopsForLocationTest) tc).testOutOfRange();
+            }
+        }));
 
         return suite;
     }
-    
+
     public void testDowntownSeattle1() {
         final GeoPoint pt = ObaApi.makeGeoPoint(47.610980, -122.33845);
 
-        ObaStopsForLocationRequest.Builder builder =
-                new ObaStopsForLocationRequest.Builder(getContext(), pt);
+        ObaStopsForLocationRequest.Builder builder = new ObaStopsForLocationRequest.Builder(getContext(), pt);
         ObaStopsForLocationRequest request = builder.build();
         ObaStopsForLocationResponse response = (ObaStopsForLocationResponse) request.call();
         assertOK(response);
@@ -82,10 +96,7 @@ public class StopsForLocationTest extends ObaTestCase {
         final GeoPoint pt = ObaApi.makeGeoPoint(47.25331, -122.44040);
 
         ObaStopsForLocationResponse response =
-            (ObaStopsForLocationResponse) new ObaStopsForLocationRequest.Builder(getContext(), pt)
-            .setQuery("26")
-            .build()
-            .call();
+            (ObaStopsForLocationResponse) new ObaStopsForLocationRequest.Builder(getContext(), pt).setQuery("26").build().call();
         assertOK(response);
         final ObaStop[] list = response.getStops();
         assertTrue(list.length > 0);
@@ -103,10 +114,7 @@ public class StopsForLocationTest extends ObaTestCase {
         final GeoPoint pt = ObaApi.makeGeoPoint(47.25331, -122.44040);
 
         ObaStopsForLocationResponse response =
-            (ObaStopsForLocationResponse) new ObaStopsForLocationRequest.Builder(getContext(), pt)
-            .setQuery("112423")
-            .build()
-            .call();
+            (ObaStopsForLocationResponse) new ObaStopsForLocationRequest.Builder(getContext(), pt).setQuery("112423").build().call();
         assertOK(response);
         final ObaStop[] list = response.getStops();
         assertEquals(0, list.length);
@@ -118,8 +126,7 @@ public class StopsForLocationTest extends ObaTestCase {
         // This is just to make sure we copy and call newRequest() at least once
         final GeoPoint pt = ObaApi.makeGeoPoint(48.85808, 2.29498);
 
-        ObaStopsForLocationRequest request =
-                new ObaStopsForLocationRequest.Builder(getContext(), pt).build();
+        ObaStopsForLocationRequest request = new ObaStopsForLocationRequest.Builder(getContext(), pt).build();
         ObaStopsForLocationResponse response = (ObaStopsForLocationResponse) request.call();
         assertOK(response);
         assertTrue(response.getOutOfRange());

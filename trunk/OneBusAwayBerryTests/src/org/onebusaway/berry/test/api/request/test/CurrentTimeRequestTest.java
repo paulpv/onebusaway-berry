@@ -24,8 +24,7 @@ import org.onebusaway.berry.api.request.ObaCurrentTimeRequest;
 import org.onebusaway.berry.api.request.ObaCurrentTimeResponse;
 import org.onebusaway.berry.test.ObaTestCase;
 
-public class CurrentTimeRequestTest extends ObaTestCase
-{
+public class CurrentTimeRequestTest extends ObaTestCase {
     public CurrentTimeRequestTest() {
         super();
     }
@@ -33,18 +32,26 @@ public class CurrentTimeRequestTest extends ObaTestCase
     public CurrentTimeRequestTest(String testName, TestMethod testMethod) {
         super(testName, testMethod);
     }
-    
+
     public Test suite() {
         TestSuite suite = new TestSuite("CurrentTimeRequestTest");
 
         suite.addTest(new CurrentTimeRequestTest("testCurrentTime", new TestMethod()
-        { public void run(TestCase tc) {((CurrentTimeRequestTest)tc).testCurrentTime(); } }));
+        {
+            public void run(TestCase tc) {
+                ((CurrentTimeRequestTest) tc).testCurrentTime();
+            }
+        }));
         suite.addTest(new CurrentTimeRequestTest("testNewRequest", new TestMethod()
-        { public void run(TestCase tc) {((CurrentTimeRequestTest)tc).testNewRequest(); } }));
+        {
+            public void run(TestCase tc) {
+                ((CurrentTimeRequestTest) tc).testNewRequest();
+            }
+        }));
 
         return suite;
     }
-    
+
     public void testCurrentTime() {
         ObaCurrentTimeRequest.Builder builder = new ObaCurrentTimeRequest.Builder(getContext());
         ObaCurrentTimeRequest request = builder.build();

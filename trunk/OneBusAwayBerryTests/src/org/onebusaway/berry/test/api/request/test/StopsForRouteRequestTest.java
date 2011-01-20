@@ -34,7 +34,7 @@ public class StopsForRouteRequestTest extends ObaTestCase {
     public StopsForRouteRequestTest() {
         super();
     }
-    
+
     public StopsForRouteRequestTest(String testName, TestMethod testMethod) {
         super(testName, testMethod);
     }
@@ -43,20 +43,27 @@ public class StopsForRouteRequestTest extends ObaTestCase {
         TestSuite suite = new TestSuite("StopsForRouteRequestTest");
 
         suite.addTest(new StopsForRouteRequestTest("testKCMRoute", new TestMethod()
-        { public void run(TestCase tc) {((StopsForRouteRequestTest)tc).testKCMRoute(); } }));
+        {
+            public void run(TestCase tc) {
+                ((StopsForRouteRequestTest) tc).testKCMRoute();
+            }
+        }));
         suite.addTest(new StopsForRouteRequestTest("testNoShapes", new TestMethod()
-        { public void run(TestCase tc) {((StopsForRouteRequestTest)tc).testNoShapes(); } }));
+        {
+            public void run(TestCase tc) {
+                ((StopsForRouteRequestTest) tc).testNoShapes();
+            }
+        }));
 
         return suite;
     }
-    
+
     public void testKCMRoute() {
-        ObaStopsForRouteRequest.Builder builder =
-                new ObaStopsForRouteRequest.Builder(getContext(), "1_44");
+        ObaStopsForRouteRequest.Builder builder = new ObaStopsForRouteRequest.Builder(getContext(), "1_44");
         ObaStopsForRouteRequest request = builder.build();
         ObaStopsForRouteResponse response = (ObaStopsForRouteResponse) request.call();
         assertOK(response);
-        final Vector /*List<ObaStop>*/ stops = response.getStops();
+        final Vector /*List<ObaStop>*/stops = response.getStops();
         assertNotNull(stops);
         assertTrue(stops.size() > 0);
         // Check one
@@ -72,10 +79,7 @@ public class StopsForRouteRequestTest extends ObaTestCase {
 
     public void testNoShapes() {
         ObaStopsForRouteResponse response =
-            (ObaStopsForRouteResponse) new ObaStopsForRouteRequest.Builder(getContext(), "1_44")
-            .setIncludeShapes(false)
-            .build()
-            .call();
+            (ObaStopsForRouteResponse) new ObaStopsForRouteRequest.Builder(getContext(), "1_44").setIncludeShapes(false).build().call();
         assertOK(response);
         final ObaShape[] shapes = response.getShapes();
         assertNotNull(shapes);

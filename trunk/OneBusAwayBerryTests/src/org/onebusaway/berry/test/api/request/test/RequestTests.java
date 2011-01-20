@@ -8,7 +8,7 @@ import j2meunit.framework.TestSuite;
  * Unit test suite for the LogicMail.mail classes
  */
 public class RequestTests extends TestCase {
-    
+
     public Test suite() {
         TestSuite suite = new TestSuite("OneBusAway.request");
         suite.addTest(new CurrentTimeRequestTest().suite());

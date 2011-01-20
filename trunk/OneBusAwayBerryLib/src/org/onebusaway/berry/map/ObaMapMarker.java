@@ -9,7 +9,7 @@ import net.rim.device.api.ui.Graphics;
 import org.onebusaway.berry.api.elements.ObaStopElement;
 
 public class ObaMapMarker {
-    protected ObaMapField    parent         = null;
+    //protected ObaMapField    parent         = null;
     protected final String   id;
     protected final GeoPoint point;
     protected final Bitmap   imageMain;
@@ -88,9 +88,11 @@ public class ObaMapMarker {
         this.useImageAlt = useImageAlt;
     }
 
+    /*
     public void setParent(ObaMapField parent) {
         this.parent = parent;
     }
+    */
 
     public Bitmap getBitmap() {
         return (imageAlt != null && getUseImageAlt()) ? imageAlt : imageMain;

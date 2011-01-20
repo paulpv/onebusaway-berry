@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="com/joulespersecond/oba/" kind="src" path="src"/>
+	<classpathentry excluding="com/joulespersecond/oba/|org/onebusaway/rim/ObaMapFieldv6.java|org/onebusaway/rim/GeoLocation.java|org/onebusaway/rim/StopOverlay.java|org/onebusaway/rim/StopsController.java|org/onebusaway/rim/MyLocationOverlay.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/net.rim.ejde.BlackBerryVMInstallType/BlackBerry JRE 6.0.0"/>
 	<classpathentry kind="src" path=".locale_interfaces"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/OneBusAwayBerryLib"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

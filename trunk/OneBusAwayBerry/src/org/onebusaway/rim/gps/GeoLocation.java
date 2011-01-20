@@ -1,15 +1,16 @@
-package org.onebusaway.rim;
+package org.onebusaway.rim.gps;
 
-import javax.microedition.location.Coordinates;
 import javax.microedition.location.Location;
+
+import net.rim.device.api.lbs.maps.model.MapPoint;
 
 public class GeoLocation
 {
-    final Coordinates coordinates;
+    final MapPoint mapPoint;
 
-    final long        timestamp;
-    final double      latitude, longitude;
-    final float       altitude, speed, course;
+    final long     timestamp;
+    final double   latitude, longitude;
+    final float    altitude, speed, course;
 
     public GeoLocation(Location location)
     {
@@ -20,7 +21,7 @@ public class GeoLocation
         speed = location.getSpeed();
         course = location.getCourse();
 
-        coordinates = new Coordinates(latitude, longitude, altitude);
+        mapPoint = new MapPoint(latitude, longitude);
     }
 
     public String toString()
@@ -59,8 +60,8 @@ public class GeoLocation
         return course;
     }
 
-    public Coordinates getCoordinates()
+    public MapPoint getMapPoint()
     {
-        return coordinates;
+        return mapPoint;
     }
 }

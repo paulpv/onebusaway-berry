@@ -5,10 +5,8 @@ import j2meunit.rimui.TestRunner;
 
 import org.onebusaway.berry.test.api.request.test.RequestTests;
 
-public class OneBusAwayTests
-{
-    public static void main(String[] args)
-    {
+public class OneBusAwayTests {
+    public static void main(String[] args) {
         /*
         StringBuffer sb = new StringBuffer("args=[");
         for(int i=0; i<args.length; i++) {

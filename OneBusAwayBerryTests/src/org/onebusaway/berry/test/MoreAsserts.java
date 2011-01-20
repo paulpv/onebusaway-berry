@@ -15,15 +15,13 @@ import java.util.Hashtable;
  * @author pv
  * 
  */
-public class MoreAsserts
-{
+public class MoreAsserts {
     /**
      * Variant of assertContentsInAnyOrder(String, Iterable, Object...) using a generic message.
      * @param actual
      * @param expected
      */
-    public static void assertContentsInAnyOrder(Object[] actual, Object[] expected)
-    {
+    public static void assertContentsInAnyOrder(Object[] actual, Object[] expected) {
         assertContentsInAnyOrder(null, actual, expected);
     }
 
@@ -33,29 +31,24 @@ public class MoreAsserts
      * @param actual
      * @param expected
      */
-    public static void assertContentsInAnyOrder(String message, Object[] actual, Object[] expected)
-    {
+    public static void assertContentsInAnyOrder(String message, Object[] actual, Object[] expected) {
         Hashtable expectedMap = new Hashtable(expected.length);
         Object expectedObj;
-        for (int i = 0; i < expected.length; i++)
-        {
+        for (int i = 0; i < expected.length; i++) {
             expectedObj = expected[i];
             expectedMap.put(expectedObj, expectedObj);
         }
 
         Object actualObj;
-        for (int i = 0; i < actual.length; i++)
-        {
+        for (int i = 0; i < actual.length; i++) {
             actualObj = actual[i];
-            if (expectedMap.remove(actualObj) == null)
-            {
+            if (expectedMap.remove(actualObj) == null) {
                 failWithMessage(message, "Extra object in actual: (" + actualObj.toString() + ")");
             }
         }
     }
 
-    private static void failWithMessage(String userMessage, String ourMessage)
-    {
+    private static void failWithMessage(String userMessage, String ourMessage) {
         new Assert().fail((userMessage == null) ? ourMessage : userMessage + ' ' + ourMessage);
     }
 }

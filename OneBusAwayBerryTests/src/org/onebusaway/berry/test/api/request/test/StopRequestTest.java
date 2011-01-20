@@ -33,7 +33,7 @@ public class StopRequestTest extends ObaTestCase {
     public StopRequestTest() {
         super();
     }
-    
+
     public StopRequestTest(String testName, TestMethod testMethod) {
         super(testName, testMethod);
     }
@@ -42,13 +42,21 @@ public class StopRequestTest extends ObaTestCase {
         TestSuite suite = new TestSuite("StopRequestTest");
 
         suite.addTest(new StopRequestTest("testKCMStop", new TestMethod()
-        { public void run(TestCase tc) {((StopRequestTest)tc).testKCMStop(); } }));
+        {
+            public void run(TestCase tc) {
+                ((StopRequestTest) tc).testKCMStop();
+            }
+        }));
         suite.addTest(new StopRequestTest("testNewRequest", new TestMethod()
-        { public void run(TestCase tc) {((StopRequestTest)tc).testNewRequest(); } }));
+        {
+            public void run(TestCase tc) {
+                ((StopRequestTest) tc).testNewRequest();
+            }
+        }));
 
         return suite;
     }
-    
+
     public void testKCMStop() {
         ObaStopRequest.Builder builder = new ObaStopRequest.Builder(getContext(), "1_29261");
         ObaStopRequest request = builder.build();
@@ -59,9 +67,12 @@ public class StopRequestTest extends ObaTestCase {
         assertEquals(ObaStop.LOCATION_STOP, response.getLocationType());
         final String[] routeIds = response.getRouteIds();
         assertNotNull(routeIds);
-        MoreAsserts.assertContentsInAnyOrder(routeIds, new String[] { "1_8", "1_10", "1_43"});
+        MoreAsserts.assertContentsInAnyOrder(routeIds, new String[]
+        {
+            "1_8", "1_10", "1_43"
+        });
 
-        final Vector /*List<ObaRoute>*/ routes = response.getRoutes();
+        final Vector /*List<ObaRoute>*/routes = response.getRoutes();
         assertNotNull(routes);
         assertEquals(routes.size(), routeIds.length);
     }

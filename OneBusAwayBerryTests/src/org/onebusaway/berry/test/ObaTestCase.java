@@ -22,15 +22,12 @@ import org.onebusaway.berry.api.Context;
 import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.api.request.ObaResponse;
 
-public class ObaTestCase extends TestCase
-{
-    public ObaTestCase()
-    {
+public class ObaTestCase extends TestCase {
+    public ObaTestCase() {
         super();
     }
-    
-    public ObaTestCase(String testName, TestMethod testMethod)
-    {
+
+    public ObaTestCase(String testName, TestMethod testMethod) {
         super(testName, testMethod);
     }
 
@@ -38,25 +35,21 @@ public class ObaTestCase extends TestCase
      * No-op method used as a placeholder for better compatibility w/ Android code.
      * @return
      */
-    protected Context getContext()
-    {
+    protected Context getContext() {
         return ObaApi.getContext();
     }
 
-    public void assertOK(ObaResponse response)
-    {
+    public void assertOK(ObaResponse response) {
         assertNotNull(response);
         assertEquals(ObaApi.OBA_OK, response.getCode());
     }
 
-    public void assertNotNullOrEmpty(String s)
-    {
+    public void assertNotNullOrEmpty(String s) {
         assertNotNull(s);
         assertTrue(s.length() > 0);
     }
-    
-    public void assertFalse(boolean condition)
-    {
+
+    public void assertFalse(boolean condition) {
         assertTrue(!condition);
     }
 }

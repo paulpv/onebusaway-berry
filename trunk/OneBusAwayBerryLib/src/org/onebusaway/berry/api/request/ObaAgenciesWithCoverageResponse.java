@@ -13,40 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request;
+package org.onebusaway.berry.api.request;
 
-import com.joulespersecond.oba.elements.ObaAgencyWithCoverage;
-import com.joulespersecond.oba.elements.ObaReferences;
-import com.joulespersecond.oba.elements.ObaReferencesElement;
+import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.elements.ObaAgencyWithCoverage;
+import org.onebusaway.json.me.JSONArray;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 public final class ObaAgenciesWithCoverageResponse extends ObaResponseWithRefs {
-    private static final class Data {
-        private static final Data EMPTY_OBJECT = new Data();
+    
+    private ObaAgencyWithCoverage[] list = ObaAgencyWithCoverage.EMPTY_ARRAY;
+    private boolean limitExceeded = false;
 
-        private final ObaReferencesElement references = ObaReferencesElement.EMPTY_OBJECT;
-        private final ObaAgencyWithCoverage[] list = ObaAgencyWithCoverage.EMPTY_ARRAY;
-        private final boolean limitExceeded = false;
-
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+        JSONArray jsonList = json.getJSONArray("list");
+        list = (ObaAgencyWithCoverage[]) ObaApi.fromJSON(jsonList, new ObaAgencyWithCoverage[jsonList.length()], ObaAgencyWithCoverage.class);
+        limitExceeded = json.getBoolean("limitExceeded");
     }
-    private final Data data;
-
-    private ObaAgenciesWithCoverageResponse() {
-        data = Data.EMPTY_OBJECT;
-    }
-
+    
     public ObaAgencyWithCoverage[] getAgencies() {
-        return data.list;
+        return list;
     }
 
     /**
      * @return Whether the request exceeded the maximum response size.
      */
     public boolean getLimitExceeded() {
-        return data.limitExceeded;
+        return limitExceeded;
     }
 
+    /*
     @Override
     protected ObaReferences getRefs() {
         return data.references;
     }
+    */
 }

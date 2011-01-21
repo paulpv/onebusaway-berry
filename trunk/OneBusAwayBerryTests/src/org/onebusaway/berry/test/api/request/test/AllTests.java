@@ -24,10 +24,23 @@ public class AllTests extends TestCase {
     public Test suite() {
         TestSuite suite = new TestSuite("OneBusAway.request.AllTests");
         suite.addTest(new ArrivalInfoRequestTest().suite());
+        suite.addTest(new AgenciesWithCoverageTest().suite());
         suite.addTest(new CurrentTimeRequestTest().suite());
         suite.addTest(new StopRequestTest().suite());
         suite.addTest(new StopsForLocationTest().suite());
         suite.addTest(new StopsForRouteRequestTest().suite());
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/AgencyRequestTest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/FailTest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/RouteIdsForAgencyRequestTest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/RouteRequestTest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/RoutesForLocationTest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/ScheduleForStopTest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/ShapeRequestTest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/ShapeTest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/StopIdsForAgencyRequestTest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/TripDetailsRequest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/TripRequestTest.java
+        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/TripsForLocationTest.java        
         return suite;
     }
 }

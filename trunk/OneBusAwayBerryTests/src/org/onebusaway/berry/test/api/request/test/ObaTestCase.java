@@ -13,16 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request.test;
+package org.onebusaway.berry.test.api.request.test;
 
-import android.test.AndroidTestCase;
+import j2meunit.framework.TestCase;
 
-import com.joulespersecond.oba.ObaApi;
-import com.joulespersecond.oba.request.ObaResponse;
+import org.onebusaway.berry.api.Context;
+import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.request.ObaResponse;
 
-public class ObaTestCase extends AndroidTestCase {
-    public static void assertOK(ObaResponse response) {
+public class ObaTestCase extends TestCase {
+    public ObaTestCase() {
+        super();
+    }
+
+    public ObaTestCase(String testName) {
+        super(testName);
+    }
+
+    /**
+     * No-op method used as a placeholder for better compatibility w/ Android code.
+     * @return
+     */
+    protected Context getContext() {
+        return ObaApi.getContext();
+    }
+
+    public void assertOK(ObaResponse response) {
         assertNotNull(response);
         assertEquals(ObaApi.OBA_OK, response.getCode());
+    }
+
+    public void assertNotNullOrEmpty(String s) {
+        assertNotNull(s);
+        assertTrue(s.length() > 0);
+    }
+
+    public void assertFalse(boolean condition) {
+        assertTrue(!condition);
     }
 }

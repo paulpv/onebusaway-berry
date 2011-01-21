@@ -24,7 +24,6 @@ import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.elements.ObaStopGrouping;
 import org.onebusaway.berry.api.request.ObaStopsForRouteRequest;
 import org.onebusaway.berry.api.request.ObaStopsForRouteResponse;
-import org.onebusaway.berry.test.ObaTestCase;
 
 public class StopsForRouteRequestTest extends ObaTestCase {
 

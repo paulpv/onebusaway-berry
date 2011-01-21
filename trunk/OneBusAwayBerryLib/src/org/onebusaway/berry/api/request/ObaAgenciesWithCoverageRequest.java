@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request;
+package org.onebusaway.berry.api.request;
 
-import android.content.Context;
-import android.net.Uri;
-
-import java.util.concurrent.Callable;
+import org.onebusaway.berry.api.Context;
+import org.onebusaway.berry.api.ObaCallable;
+import org.onebusaway.berry.net.Uri;
 
 /**
  * List all supported agencies along with the center of their coverage area.
@@ -26,10 +25,10 @@ import java.util.concurrent.Callable;
  * @author Paul Watts (paulcwatts@gmail.com)
  */
 public final class ObaAgenciesWithCoverageRequest extends RequestBase implements
-        Callable<ObaAgenciesWithCoverageResponse> {
+        ObaCallable {
 
     protected ObaAgenciesWithCoverageRequest(Uri uri) {
-        super(uri);
+        super(new ObaAgenciesWithCoverageResponse(), uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -51,6 +50,7 @@ public final class ObaAgenciesWithCoverageRequest extends RequestBase implements
         return new Builder(context).build();
     }
 
+    /*
     @Override
     public ObaAgenciesWithCoverageResponse call() {
         return call(ObaAgenciesWithCoverageResponse.class);
@@ -60,4 +60,5 @@ public final class ObaAgenciesWithCoverageRequest extends RequestBase implements
     public String toString() {
         return "ObaAgenciesWithCoverageRequest [mUri=" + mUri + "]";
     }
+    */
 }

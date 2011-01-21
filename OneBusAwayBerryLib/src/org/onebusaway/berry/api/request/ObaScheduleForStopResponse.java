@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request;
+package org.onebusaway.berry.api.request;
 
-import com.joulespersecond.oba.elements.ObaReferences;
-import com.joulespersecond.oba.elements.ObaReferencesElement;
-import com.joulespersecond.oba.elements.ObaRouteSchedule;
-import com.joulespersecond.oba.elements.ObaStop;
-import com.joulespersecond.oba.elements.ObaStopSchedule;
-import com.joulespersecond.oba.elements.ObaStopScheduleElement;
+import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.elements.ObaRouteSchedule;
+import org.onebusaway.berry.api.elements.ObaStop;
+import org.onebusaway.berry.api.elements.ObaStopSchedule;
+import org.onebusaway.berry.api.elements.ObaStopScheduleElement;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * Response object for ObaScheduleForStopRequest requests.
@@ -28,45 +29,42 @@ import com.joulespersecond.oba.elements.ObaStopScheduleElement;
  */
 public final class ObaScheduleForStopResponse extends ObaResponseWithRefs
         implements ObaStopSchedule {
-    private static final class Data {
-        private static final Data EMPTY_OBJECT = new Data();
 
-        private final ObaReferencesElement references = ObaReferencesElement.EMPTY_OBJECT;
-        private final ObaStopScheduleElement entry = ObaStopScheduleElement.EMPTY_OBJECT;
-    }
-    private final Data data;
-
-    private ObaScheduleForStopResponse() {
-        data = Data.EMPTY_OBJECT;
+    private ObaStopScheduleElement entry = ObaStopScheduleElement.EMPTY_OBJECT;
+    
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+        entry = (ObaStopScheduleElement) ObaApi.fromJSON(json, "entry", new ObaStopScheduleElement());
     }
 
-    @Override
+    //@Override
     public ObaStop getStop() {
-        return data.entry.getStop();
+        return entry.getStop();
     }
 
-    @Override
+    //@Override
     public String getTimeZone() {
-        return data.entry.getTimeZone();
+        return entry.getTimeZone();
     }
 
-    @Override
+    //@Override
     public long getDate() {
-        return data.entry.getDate();
+        return entry.getDate();
     }
 
-    @Override
+    //@Override
     public CalendarDay[] getCalendarDays() {
-        return data.entry.getCalendarDays();
+        return entry.getCalendarDays();
     }
 
-    @Override
+    //@Override
     public ObaRouteSchedule[] getRouteSchedules() {
-        return data.entry.getRouteSchedules();
+        return entry.getRouteSchedules();
     }
 
+    /*
     @Override
     protected ObaReferences getRefs() {
         return data.references;
     }
+    */
 }

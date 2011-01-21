@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request;
+package org.onebusaway.berry.api.request;
 
-import android.content.Context;
-import android.net.Uri;
-import android.text.format.Time;
+import java.util.Date;
 
-import java.util.concurrent.Callable;
+import org.onebusaway.berry.api.Context;
+import org.onebusaway.berry.api.ObaCallable;
+import org.onebusaway.berry.api.Time;
+import org.onebusaway.berry.net.Uri;
 
 /**
  * Retrieve the full schedule for a stop on a particular day
@@ -28,9 +29,9 @@ import java.util.concurrent.Callable;
  * @author Paul Watts (paulcwatts@gmail.com)
  */
 public final class ObaScheduleForStopRequest extends RequestBase
-        implements Callable<ObaScheduleForStopResponse> {
+        implements ObaCallable {
     protected ObaScheduleForStopRequest(Uri uri) {
-        super(uri);
+        super(new ObaScheduleForStopResponse(), uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -53,6 +54,7 @@ public final class ObaScheduleForStopRequest extends RequestBase
         }
     }
 
+    /*
     @Override
     public ObaScheduleForStopResponse call() {
         return call(ObaScheduleForStopResponse.class);
@@ -62,4 +64,5 @@ public final class ObaScheduleForStopRequest extends RequestBase
     public String toString() {
         return "ObaScheduleForStopRequest [mUri=" + mUri + "]";
     }
+    */
 }

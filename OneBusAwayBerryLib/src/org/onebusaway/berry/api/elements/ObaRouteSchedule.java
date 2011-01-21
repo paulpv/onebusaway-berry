@@ -15,31 +15,38 @@
  */
 package org.onebusaway.berry.api.elements;
 
+import org.onebusaway.berry.api.JSONReceivable;
+import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.elements.ObaStopSchedule.CalendarDay;
+import org.onebusaway.json.me.JSONArray;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
+
 /**
  * @author Paul Watts (paulcwatts@gmail.com)
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public final class ObaRouteSchedule {
+public final class ObaRouteSchedule implements JSONReceivable {
     public static final ObaRouteSchedule   EMPTY_OBJECT = new ObaRouteSchedule();
     public static final ObaRouteSchedule[] EMPTY_ARRAY  = new ObaRouteSchedule[] {};
 
-    public static final class Time {
+    public static final class Time implements JSONReceivable {
         private static final Time[] EMPTY_ARRAY = new Time[] {};
 
-        private final String        tripId;
-        private final String        serviceId;
-        private final String        stopHeadsign;
-        private final long          arrivalTime;
-        private final long          departureTime;
+        private String        tripId = "";
+        private String        serviceId = "";
+        private String        stopHeadsign = "";
+        private long          arrivalTime = 0;
+        private long          departureTime = 0;
 
-        Time() {
-            tripId = "";
-            serviceId = "";
-            stopHeadsign = "";
-            arrivalTime = 0;
-            departureTime = 0;
+        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+            tripId = json.getString("tripId");
+            serviceId = json.getString("serviceId");
+            stopHeadsign = json.getString("stopHeadsign");
+            arrivalTime = json.getLong("arrivalTime");
+            departureTime = json.getLong("departureTime");
         }
-
+        
         /**
          * @return The ID for the trip of the scheduled transit vehicle.
          */
@@ -78,17 +85,18 @@ public final class ObaRouteSchedule {
         }
     }
 
-    public static final class Direction {
+    public static final class Direction implements JSONReceivable {
         private static final Direction[] EMPTY_ARRAY = new Direction[] {};
 
-        private final String             tripHeadsign;
-        private final Time[]             scheduleStopTimes;
+        private String             tripHeadsign = "";
+        private Time[]             scheduleStopTimes = Time.EMPTY_ARRAY;
 
-        Direction() {
-            tripHeadsign = "";
-            scheduleStopTimes = Time.EMPTY_ARRAY;
+        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+            tripHeadsign = json.getString("tripHeadsign");
+            JSONArray jsonScheduleStopTimes = json.getJSONArray("scheduleStopTimes");
+            scheduleStopTimes = (Time[]) ObaApi.fromJSON(jsonScheduleStopTimes, new Time[jsonScheduleStopTimes.length()], Time.class);
         }
-
+        
         /**
          * @return The direction of travel, indicated by the trip's headsign.
          */
@@ -104,14 +112,15 @@ public final class ObaRouteSchedule {
         }
     }
 
-    private final String    routeId;
-    private final Direction stopRouteDirectionSchedules[];
+    private String      routeId = "";
+    private Direction[] stopRouteDirectionSchedules = Direction.EMPTY_ARRAY;
 
-    private ObaRouteSchedule() {
-        routeId = "";
-        stopRouteDirectionSchedules = Direction.EMPTY_ARRAY;
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+        routeId = json.getString("routeId");
+        JSONArray jsonStopRouteDirectionSchedules = json.getJSONArray("stopRouteDirectionSchedules");
+        stopRouteDirectionSchedules = (Direction[]) ObaApi.fromJSON(jsonStopRouteDirectionSchedules, new Direction[jsonStopRouteDirectionSchedules.length()], Direction.class);
     }
-
+    
     /**
      * @return The route ID for this schedule.
      */

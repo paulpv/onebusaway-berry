@@ -1,6 +1,7 @@
 package org.onebusaway.berry.test;
 
 import j2meunit.framework.TestCase;
+import j2meunit.framework.TestSuite;
 import j2meunit.rimui.TestRunner;
 
 public class OneBusAwayTests {
@@ -24,13 +25,10 @@ public class OneBusAwayTests {
         }
         */
 
-        TestCase[] testCases = new TestCase[]
-        {
-            new org.onebusaway.berry.test.api.request.test.AllTests(),
-        };
+        TestSuite testSuite = new TestSuite();
+        testSuite.addTest(new org.onebusaway.berry.test.api.request.test.AllTests().suite());
 
-        TestRunner instance = new TestRunner(testCases);
-
+        TestRunner instance = new TestRunner(testSuite);
         instance.enterEventDispatcher();
     }
 }

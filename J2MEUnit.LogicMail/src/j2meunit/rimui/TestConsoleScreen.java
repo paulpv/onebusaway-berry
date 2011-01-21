@@ -108,11 +108,21 @@ public class TestConsoleScreen extends MainScreen implements TestListener {
      * Creates a new instance of TestConsoleScreen
      */
     public TestConsoleScreen(TestCase[] testCases) {
+        this();
+        mainTestSuite = createTestSuite(testCases);
+        populateTestTree(mainTestSuite, 0);
+    }
+    
+    public TestConsoleScreen(TestSuite testSuite) {
+        this();
+        mainTestSuite = testSuite;
+        populateTestTree(mainTestSuite, 0);
+    }
+    
+    private TestConsoleScreen() {
         initializeFields();
         testTreeItems = new Hashtable();
-        mainTestSuite = createTestSuite(testCases);
         elapsedTime = -1;
-        populateTestTree(mainTestSuite, 0);
     }
 
     private void initializeFields() {

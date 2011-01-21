@@ -32,6 +32,7 @@
 package j2meunit.rimui;
 
 import j2meunit.framework.TestCase;
+import j2meunit.framework.TestSuite;
 import net.rim.device.api.ui.UiApplication;
 
 /**
@@ -43,5 +44,10 @@ public class TestRunner extends UiApplication {
     /** Creates a new instance of TestRunner */
     public TestRunner(TestCase[] testCases) {
         pushScreen(new TestConsoleScreen(testCases));
+    }
+
+    /** Creates a new instance of TestRunner */
+    public TestRunner(TestSuite testSuite) {
+        pushScreen(new TestConsoleScreen(testSuite));
     }
 }

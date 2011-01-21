@@ -26,6 +26,7 @@ public class AllTests extends TestCase {
         suite.addTest(new ArrivalInfoRequestTest().suite());
         suite.addTest(new AgenciesWithCoverageTest().suite());
         suite.addTest(new CurrentTimeRequestTest().suite());
+        //suite.addTest(new ScheduleForStopTest().suite()); // TODO:(pv) Fails: verify if the same in Android.
         suite.addTest(new StopRequestTest().suite());
         suite.addTest(new StopsForLocationTest().suite());
         suite.addTest(new StopsForRouteRequestTest().suite());
@@ -34,7 +35,6 @@ public class AllTests extends TestCase {
         //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/RouteIdsForAgencyRequestTest.java
         //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/RouteRequestTest.java
         //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/RoutesForLocationTest.java
-        //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/ScheduleForStopTest.java
         //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/ShapeRequestTest.java
         //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/ShapeTest.java
         //OneBusAwayBerryTests/src/org/onebusaway/berry/test/api/request/test/StopIdsForAgencyRequestTest.java

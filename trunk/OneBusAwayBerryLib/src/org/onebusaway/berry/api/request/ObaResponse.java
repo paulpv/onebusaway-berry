@@ -26,20 +26,14 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
 public abstract class ObaResponse implements JSONReceivable {
-    private String version;
-    private int    code;
-    private String text;
-
-    public ObaResponse() {
-        version = ObaApi.VERSION1;
-        code = 0;
-        text = "ERROR";
-    }
+    private String version = ObaApi.VERSION1;
+    private int    code = 0;
+    private String text = "ERROR";
 
     protected void fromError(int obaErrorCode, Throwable err) {
-        this.version = ObaApi.VERSION2;
-        this.code = obaErrorCode;
-        this.text = (err == null) ? "UNKNOWN ERROR" : err.toString();
+        version = ObaApi.VERSION2;
+        code = obaErrorCode;
+        text = (err == null) ? "UNKNOWN ERROR" : err.toString();
     }
 
     /**
@@ -55,9 +49,9 @@ public abstract class ObaResponse implements JSONReceivable {
     public JSONObject fromJSON(String jsonString) throws JSONException, InstantiationException, IllegalAccessException {
         JSONObject json = new JSONObject(jsonString);
 
-        this.version = json.getString("version");
-        this.code = json.getInt("code");
-        this.text = json.getString("text");
+        version = json.getString("version");
+        code = json.getInt("code");
+        text = json.getString("text");
         JSONObject jsonData = json.getJSONObject("data");
         fromJSON(jsonData);
 

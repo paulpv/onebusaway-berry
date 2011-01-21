@@ -15,27 +15,35 @@
  */
 package org.onebusaway.berry.api.elements;
 
+import org.onebusaway.berry.api.JSONReceivable;
+import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.json.me.JSONArray;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
+
 /**
  * @author Paul Watts (paulcwatts@gmail.com)
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public final class ObaStopScheduleElement implements ObaStopSchedule {
+public final class ObaStopScheduleElement implements ObaStopSchedule, JSONReceivable {
     public static final ObaStopScheduleElement EMPTY_OBJECT = new ObaStopScheduleElement();
 
-    private final ObaStopElement               stop;
-    private final String                       timeZone;
-    private final long                         date;
-    private final CalendarDay[]                stopCalendarDays;
-    private final ObaRouteSchedule[]           stopRouteSchedules;
+    private ObaStopElement               stop = ObaStopElement.EMPTY_OBJECT; 
+    private String                       timeZone = "";
+    private long                         date = 0;
+    private CalendarDay[]                stopCalendarDays = CalendarDay.EMPTY_ARRAY;
+    private ObaRouteSchedule[]           stopRouteSchedules = ObaRouteSchedule.EMPTY_ARRAY;
 
-    ObaStopScheduleElement() {
-        stop = ObaStopElement.EMPTY_OBJECT;
-        timeZone = "";
-        date = 0;
-        stopCalendarDays = CalendarDay.EMPTY_ARRAY;
-        stopRouteSchedules = ObaRouteSchedule.EMPTY_ARRAY;
+    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+        stop = (ObaStopElement) ObaApi.fromJSON(json, "stop", new ObaStopElement());
+        timeZone = json.getString("timeZone");
+        date = json.getLong("date");
+        JSONArray jsonStopCalendarDays = json.getJSONArray("stopCalendarDays");
+        stopCalendarDays = (CalendarDay[]) ObaApi.fromJSON(jsonStopCalendarDays, new CalendarDay[jsonStopCalendarDays.length()], CalendarDay.class);
+        JSONArray jsonStopRouteSchedules = json.getJSONArray("stopRouteSchedules");
+        stopRouteSchedules = (ObaRouteSchedule[]) ObaApi.fromJSON(jsonStopRouteSchedules, new ObaRouteSchedule[jsonStopRouteSchedules.length()], ObaRouteSchedule.class);
     }
-
+    
     //@Override
     public ObaStop getStop() {
         return stop;

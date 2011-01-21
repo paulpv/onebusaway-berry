@@ -30,7 +30,6 @@ import org.onebusaway.berry.api.elements.ObaSituation;
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.request.ObaArrivalInfoRequest;
 import org.onebusaway.berry.api.request.ObaArrivalInfoResponse;
-import org.onebusaway.berry.test.ObaTestCase;
 
 
 public class ArrivalInfoRequestTest extends ObaTestCase {

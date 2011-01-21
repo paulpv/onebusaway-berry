@@ -13,23 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.joulespersecond.oba.request.test;
+package org.onebusaway.berry.test.api.request.test;
 
-import com.joulespersecond.oba.elements.ObaAgency;
-import com.joulespersecond.oba.elements.ObaAgencyWithCoverage;
-import com.joulespersecond.oba.request.ObaAgenciesWithCoverageRequest;
-import com.joulespersecond.oba.request.ObaAgenciesWithCoverageResponse;
+import j2meunit.framework.Test;
+import j2meunit.framework.TestSuite;
+
+import org.onebusaway.berry.api.elements.ObaAgency;
+import org.onebusaway.berry.api.elements.ObaAgencyWithCoverage;
+import org.onebusaway.berry.api.request.ObaAgenciesWithCoverageRequest;
+import org.onebusaway.berry.api.request.ObaAgenciesWithCoverageResponse;
 
 
 public class AgenciesWithCoverageTest extends ObaTestCase {
+
+    public AgenciesWithCoverageTest() {
+        super();
+    }
+
+    public AgenciesWithCoverageTest(String testName) {
+        super(testName);
+    }
+    
+    public Test suite() {
+        TestSuite suite = new TestSuite("AgenciesWithCoverageTest");
+
+        suite.addTest(new AgenciesWithCoverageTest("testRequest")
+        {
+            public void runTest() {
+                testRequest();
+            }
+        });
+        suite.addTest(new AgenciesWithCoverageTest("testBuilder")
+        {
+            public void runTest() {
+                testBuilder();
+            }
+        });
+
+        return suite;
+    }
+    
+    
     public void testRequest() {
         ObaAgenciesWithCoverageRequest request =
             ObaAgenciesWithCoverageRequest.newRequest(getContext());
-        ObaAgenciesWithCoverageResponse response = request.call();
+        ObaAgenciesWithCoverageResponse response = (ObaAgenciesWithCoverageResponse) request.call();
         assertOK(response);
         final ObaAgencyWithCoverage[] list = response.getAgencies();
         assertTrue(list.length > 0);
-        for (ObaAgencyWithCoverage agency : list) {
+        for (int i=0; i < list.length; i++) {
+            final ObaAgencyWithCoverage agency = list[i];
             final ObaAgency a = response.getAgency(agency.getId());
             assertNotNull(a);
         }

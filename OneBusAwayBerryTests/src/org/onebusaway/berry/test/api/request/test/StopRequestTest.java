@@ -23,7 +23,6 @@ import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.request.ObaStopRequest;
 import org.onebusaway.berry.api.request.ObaStopResponse;
 import org.onebusaway.berry.test.MoreAsserts;
-import org.onebusaway.berry.test.ObaTestCase;
 
 public class StopRequestTest extends ObaTestCase {
 

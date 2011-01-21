@@ -20,7 +20,6 @@ import j2meunit.framework.TestSuite;
 
 import org.onebusaway.berry.api.request.ObaCurrentTimeRequest;
 import org.onebusaway.berry.api.request.ObaCurrentTimeResponse;
-import org.onebusaway.berry.test.ObaTestCase;
 
 public class CurrentTimeRequestTest extends ObaTestCase {
     public CurrentTimeRequestTest() {

@@ -25,7 +25,6 @@ import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.request.ObaStopsForLocationRequest;
 import org.onebusaway.berry.api.request.ObaStopsForLocationResponse;
 import org.onebusaway.berry.map.GeoPoint;
-import org.onebusaway.berry.test.ObaTestCase;
 
 public class StopsForLocationTest extends ObaTestCase {
 

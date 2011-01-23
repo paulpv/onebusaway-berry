@@ -15,7 +15,6 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
@@ -25,25 +24,28 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public final class ObaStopGroup implements JSONReceivable {
+public final class ObaStopGroup {
     public static final ObaStopGroup   EMPTY_OBJECT = new ObaStopGroup();
     public static final ObaStopGroup[] EMPTY_ARRAY  = new ObaStopGroup[] {};
 
-    private static final class StopGroupName implements JSONReceivable {
+    private static final class StopGroupName {
         private static final StopGroupName EMPTY_OBJECT = new StopGroupName();
 
-        private String                     type;
-        private String[]                   names;
+        private final String               type;
+        private final String[]             names;
 
-        public StopGroupName() {
+        private StopGroupName() {
             type = "";
             names = new String[] {};
         }
 
-        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-            type = json.getString("type");
-            JSONArray jsonNames = json.getJSONArray("names");
-            names = ObaApi.fromJSON(jsonNames, new String[jsonNames.length()]);
+        public StopGroupName(JSONObject json) throws JSONException {
+            this.type = json.getString("type");
+            JSONArray names = json.getJSONArray("names");
+            this.names = new String[names.length()];
+            for (int i = 0; i < this.names.length; i++) {
+                this.names[i] = names.getString(i);
+            }
         }
 
         String getType() {
@@ -55,29 +57,35 @@ public final class ObaStopGroup implements JSONReceivable {
         }
     }
 
-    private String[]           stopIds;
-    private ObaShapeElement[]  polylines;
-    private StopGroupName      name;
+    private final String[]          stopIds;
+    private final ObaShapeElement[] polylines;
+    private final StopGroupName     name;
 
-    public static final String TYPE_DESTINATION = "destination";
+    public static final String      TYPE_DESTINATION = "destination";
 
     /**
      * Constructor.
      */
-    public ObaStopGroup() {
-        stopIds = ObaApi.EMPTY_ARRAY_STRING;
+    ObaStopGroup() {
+        stopIds = new String[] {};
         polylines = ObaShapeElement.EMPTY_ARRAY;
         name = StopGroupName.EMPTY_OBJECT;
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        JSONArray jsonStopIds = json.getJSONArray("stopIds");
-        stopIds = ObaApi.fromJSON(jsonStopIds, new String[jsonStopIds.length()]);
+    public ObaStopGroup(JSONObject json) throws JSONException {
+        JSONArray stopIds = json.getJSONArray("stopIds");
+        this.stopIds = new String[stopIds.length()];
+        for (int i = 0; i < this.stopIds.length; i++) {
+            this.stopIds[i] = stopIds.getString(i);
+        }
 
-        JSONArray jsonPolylines = json.getJSONArray("polylines");
-        polylines = (ObaShapeElement[]) ObaApi.fromJSON(jsonPolylines, new ObaShapeElement[jsonPolylines.length()], ObaShapeElement.class);
+        JSONArray polylines = json.getJSONArray("polylines");
+        this.polylines = new ObaShapeElement[polylines.length()];
+        for (int i = 0; i < this.polylines.length; i++) {
+            this.polylines[i] = new ObaShapeElement(polylines.getJSONObject(i));
+        }
 
-        name = (StopGroupName) ObaApi.fromJSON(json, "name", new StopGroupName());
+        this.name = new StopGroupName(json.getJSONObject("name"));
     }
 
     /**

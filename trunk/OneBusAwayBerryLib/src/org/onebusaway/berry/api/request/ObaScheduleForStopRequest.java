@@ -15,12 +15,12 @@
  */
 package org.onebusaway.berry.api.request;
 
-import java.util.Date;
-
 import org.onebusaway.berry.api.Context;
 import org.onebusaway.berry.api.ObaCallable;
 import org.onebusaway.berry.api.Time;
 import org.onebusaway.berry.net.Uri;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * Retrieve the full schedule for a stop on a particular day
@@ -28,10 +28,9 @@ import org.onebusaway.berry.net.Uri;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaScheduleForStopRequest extends RequestBase
-        implements ObaCallable {
+public final class ObaScheduleForStopRequest extends RequestBase {
     protected ObaScheduleForStopRequest(Uri uri) {
-        super(new ObaScheduleForStopResponse(), uri);
+        super(uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -52,6 +51,14 @@ public final class ObaScheduleForStopRequest extends RequestBase
         public ObaScheduleForStopRequest build() {
             return new ObaScheduleForStopRequest(buildUri());
         }
+    }
+
+    protected ObaResponse createResponse(JSONObject json) throws JSONException {
+        return new ObaScheduleForStopResponse(json);
+    }
+
+    protected ObaResponse createResponseFromError(int obaErrorCode, Throwable err) {
+        return new ObaScheduleForStopResponse(obaErrorCode, err);
     }
 
     /*

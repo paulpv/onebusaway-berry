@@ -8,10 +8,10 @@ import net.rim.device.api.i18n.SimpleDateFormat;
 
 /**
  * Some ideas came from the the following codes:
- *  android.text.format.Time.java
  *  org.apache.catalina.util.Strftime.java
+ *  android.text.format.Time.java
  * 
- * @author pv
+ * @author pv@swooby.com
  *
  */
 public class Time extends Date {
@@ -22,6 +22,11 @@ public class Time extends Date {
         super();
     }
 
+    /**
+     * Year [1970-...] 
+     * Month [0-11]
+     * Day of month [1-31]
+     */
     public Time(int year, int month, int dayOfMonth) {
         super();
         setYear(year, false);
@@ -29,10 +34,18 @@ public class Time extends Date {
         setDayOfMonth(dayOfMonth, true);
     }
 
+    /**
+     * Year [1970-...] 
+     * Updates/computes the resulting internal value
+     */
     public void setYear(int year) {
         setYear(year, true);
     }
 
+    /**
+     * Year [1970-...] 
+     * Optionally updates/computes the resulting internal value
+     */
     public void setYear(int year, boolean update) {
         calendar.set(Calendar.YEAR, year);
         if (update) {
@@ -40,10 +53,18 @@ public class Time extends Date {
         }
     }
 
+    /**
+     * Month [0-11]
+     * Updates/computes the resulting internal value
+     */
     public void setMonth(int month) {
         setMonth(month, true);
     }
 
+    /**
+     * Month [0-11]
+     * Optionally updates/computes the resulting internal value
+     */
     public void setMonth(int month, boolean update) {
         calendar.set(Calendar.MONTH, month);
         if (update) {
@@ -51,10 +72,18 @@ public class Time extends Date {
         }
     }
 
+    /**
+     * Day of month [1-31]
+     * Updates/computes the resulting internal value
+     */
     public void setDayOfMonth(int dayOfMonth) {
         setDayOfMonth(dayOfMonth, true);
     }
 
+    /**
+     * Day of month [1-31]
+     * Optionally updates/computes the resulting internal value
+     */
     public void setDayOfMonth(int dayOfMonth, boolean update) {
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         if (update) {
@@ -63,9 +92,7 @@ public class Time extends Date {
     }
 
     public String format(String origFormat) {
-        String convertedFormat = convertDateFormat(origFormat);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(convertedFormat);
-        return simpleDateFormat.format(this);
+        return new SimpleDateFormat(convertDateFormat(origFormat)).format(this);
     }
 
     protected static final Hashtable translate;

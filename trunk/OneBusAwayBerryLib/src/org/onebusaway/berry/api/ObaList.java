@@ -7,6 +7,7 @@ public class ObaList extends Vector {
     public ObaList() {
         super();
     }
+
     public ObaList(int initialCapacity) {
         super(initialCapacity);
     }

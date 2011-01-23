@@ -15,35 +15,55 @@
  */
 package org.onebusaway.berry.api.request;
 
-import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
-public final class ObaCurrentTimeResponse extends ObaResponse implements JSONReceivable {
-    private long   time;
-    private String readableTime;
+public final class ObaCurrentTimeResponse extends ObaResponse {
+    private static final class Data {
+        private static final Data EMPTY_OBJECT = new Data();
 
-    public ObaCurrentTimeResponse() {
-        time = 0;
-        readableTime = "";
+        private final long        time;
+        private final String      readableTime;
+
+        private Data() {
+            time = 0;
+            readableTime = "";
+        }
+
+        private Data(JSONObject json) throws JSONException {
+            time = json.getLong("time");
+            readableTime = json.getString("readableTime");
+        }
     }
 
-    public void fromJSON(JSONObject json) throws JSONException {
-        time = json.getLong("time");
-        readableTime = json.getString("readableTime");
+    private final Data data;
+
+    private ObaCurrentTimeResponse() {
+        super();
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaCurrentTimeResponse(int obaErrorCode, Throwable err) {
+        super(obaErrorCode, err);
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaCurrentTimeResponse(JSONObject json) throws JSONException {
+        super(json);
+        data = new Data(json.getJSONObject("data"));
     }
 
     /**
      * @return The time as milliseconds past the epoch.
      */
     public long getTime() {
-        return time;
+        return data.time;
     }
 
     /**
      * @return The time in ISO8601 format.
      */
     public String getReadableTime() {
-        return readableTime;
+        return data.readableTime;
     }
 }

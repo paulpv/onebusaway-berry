@@ -15,7 +15,8 @@
  */
 package org.onebusaway.berry.api.request;
 
-import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.elements.ObaReferences;
+import org.onebusaway.berry.api.elements.ObaReferencesElement;
 import org.onebusaway.berry.api.elements.ObaRouteSchedule;
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.elements.ObaStopSchedule;
@@ -27,44 +28,69 @@ import org.onebusaway.json.me.JSONObject;
  * Response object for ObaScheduleForStopRequest requests.
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaScheduleForStopResponse extends ObaResponseWithRefs
-        implements ObaStopSchedule {
+public final class ObaScheduleForStopResponse extends ObaResponseWithRefs implements ObaStopSchedule {
 
-    private ObaStopScheduleElement entry = ObaStopScheduleElement.EMPTY_OBJECT;
-    
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        entry = (ObaStopScheduleElement) ObaApi.fromJSON(json, "entry", new ObaStopScheduleElement());
+    private static final class Data {
+        private static final Data            EMPTY_OBJECT = new Data();
+
+        private final ObaReferencesElement   references;
+        private final ObaStopScheduleElement entry;
+
+        private Data() {
+            references = ObaReferencesElement.EMPTY_OBJECT;
+            entry = ObaStopScheduleElement.EMPTY_OBJECT;
+        }
+
+        public Data(JSONObject json) throws JSONException {
+            references = new ObaReferencesElement(json.getJSONObject("references"));
+            entry = new ObaStopScheduleElement(json.getJSONObject("entry"));
+        }
+    }
+
+    private final Data data;
+
+    private ObaScheduleForStopResponse() {
+        super();
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaScheduleForStopResponse(int obaErrorCode, Throwable err) {
+        super(obaErrorCode, err);
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaScheduleForStopResponse(JSONObject json) throws JSONException {
+        super(json);
+        data = new Data(json.getJSONObject("data"));
     }
 
     //@Override
     public ObaStop getStop() {
-        return entry.getStop();
+        return data.entry.getStop();
     }
 
     //@Override
     public String getTimeZone() {
-        return entry.getTimeZone();
+        return data.entry.getTimeZone();
     }
 
     //@Override
     public long getDate() {
-        return entry.getDate();
+        return data.entry.getDate();
     }
 
     //@Override
     public CalendarDay[] getCalendarDays() {
-        return entry.getCalendarDays();
+        return data.entry.getCalendarDays();
     }
 
     //@Override
     public ObaRouteSchedule[] getRouteSchedules() {
-        return entry.getRouteSchedules();
+        return data.entry.getRouteSchedules();
     }
 
-    /*
-    @Override
+    //@Override
     protected ObaReferences getRefs() {
         return data.references;
     }
-    */
 }

@@ -15,11 +15,11 @@
  */
 package org.onebusaway.berry.api.request;
 
-import org.onebusaway.berry.api.JSONReceivable;
-import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.api.ObaListObaSituation;
 import org.onebusaway.berry.api.ObaListObaStop;
 import org.onebusaway.berry.api.elements.ObaArrivalInfo;
+import org.onebusaway.berry.api.elements.ObaReferences;
+import org.onebusaway.berry.api.elements.ObaReferencesElement;
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
@@ -30,71 +30,102 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  */
 public final class ObaArrivalInfoResponse extends ObaResponseWithRefs {
-    private static final class Entry implements JSONReceivable {
-        private static final Entry EMPTY_OBJECT = new Entry();
+    private static final class Entry {
+        private static final Entry     EMPTY_OBJECT = new Entry();
 
-        private String stopId;
-        private ObaArrivalInfo[] arrivalsAndDepartures;
-        private String[] nearbyStopIds;
-        private String[] situationIds;
+        private final String           stopId;
+        private final ObaArrivalInfo[] arrivalsAndDepartures;
+        private final String[]         nearbyStopIds;
+        private final String[]         situationIds;
 
-        public Entry() {
+        private Entry() {
             stopId = "";
             arrivalsAndDepartures = ObaArrivalInfo.EMPTY_ARRAY;
             nearbyStopIds = new String[] {};
             situationIds = new String[] {};
         }
-        
-        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-            stopId = json.getString("stopId");
-            
-            JSONArray jsonArrivalsAndDepartures = json.getJSONArray("arrivalsAndDepartures");
-            arrivalsAndDepartures = (ObaArrivalInfo[]) ObaApi.fromJSON(jsonArrivalsAndDepartures, new ObaArrivalInfo[jsonArrivalsAndDepartures.length()], ObaArrivalInfo.class);
-            
-            JSONArray jsonNearbyStopIds = json.getJSONArray("nearbyStopIds");
-            nearbyStopIds = ObaApi.fromJSON(jsonNearbyStopIds, new String[jsonNearbyStopIds.length()]);
 
-            JSONArray jsonSituationIds = json.getJSONArray("situationIds");
-            situationIds = ObaApi.fromJSON(jsonSituationIds, new String[jsonSituationIds.length()]);
+        public Entry(JSONObject json) throws JSONException {
+            this.stopId = json.getString("stopId");
+
+            JSONArray arrivalsAndDepartures = json.getJSONArray("arrivalsAndDepartures");
+            this.arrivalsAndDepartures = new ObaArrivalInfo[arrivalsAndDepartures.length()];
+            for (int i = 0; i < this.arrivalsAndDepartures.length; i++) {
+                this.arrivalsAndDepartures[i] = new ObaArrivalInfo(arrivalsAndDepartures.getJSONObject(i));
+            }
+
+            JSONArray nearbyStopIds = json.getJSONArray("nearbyStopIds");
+            this.nearbyStopIds = new String[nearbyStopIds.length()];
+            for (int i = 0; i < this.nearbyStopIds.length; i++) {
+                this.nearbyStopIds[i] = nearbyStopIds.getString(i);
+            }
+
+            JSONArray situationIds = json.getJSONArray("situationIds");
+            this.situationIds = new String[situationIds.length()];
+            for (int i = 0; i < this.situationIds.length; i++) {
+                this.situationIds[i] = situationIds.getString(i);
+            }
         }
     }
 
-    private Entry entry;
+    private static final class Data {
+        private static final Data          EMPTY_OBJECT = new Data();
 
-    public ObaArrivalInfoResponse() {
-        entry = Entry.EMPTY_OBJECT;
+        private final ObaReferencesElement references;
+        private final Entry                entry;
+
+        private Data() {
+            references = ObaReferencesElement.EMPTY_OBJECT;
+            entry = Entry.EMPTY_OBJECT;
+        }
+
+        public Data(JSONObject json) throws JSONException {
+            references = new ObaReferencesElement(json.getJSONObject("references"));
+            entry = new Entry(json.getJSONObject("entry"));
+        }
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        entry = (Entry) ObaApi.fromJSON(json, "entry", new Entry());
+    private final Data data;
+
+    ObaArrivalInfoResponse() {
+        super();
+        data = Data.EMPTY_OBJECT;
     }
-    
+
+    public ObaArrivalInfoResponse(int obaErrorCode, Throwable err) {
+        super(obaErrorCode, err);
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaArrivalInfoResponse(JSONObject json) throws JSONException {
+        super(json);
+        data = new Data(json.getJSONObject("data"));
+    }
+
     /**
      * @return The stop information for this arrival info.
      */
     public ObaStop getStop() {
-        return references.getStop(entry.stopId);
+        return data.references.getStop(data.entry.stopId);
     }
 
     /**
      * @return The list of nearby stops.
      */
     public ObaListObaStop getNearbyStops() {
-        return references.getStops(entry.nearbyStopIds);
+        return data.references.getStops(data.entry.nearbyStopIds);
     }
 
     public ObaArrivalInfo[] getArrivalInfo() {
-        return entry.arrivalsAndDepartures;
+        return data.entry.arrivalsAndDepartures;
     }
 
     public ObaListObaSituation getSituations() {
-        return references.getSituations(entry.situationIds);
+        return data.references.getSituations(data.entry.situationIds);
     }
 
-    /*
-    @Override
+    //@Override
     protected ObaReferences getRefs() {
         return data.references;
     }
-    */
 }

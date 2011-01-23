@@ -15,7 +15,6 @@
  */
 package org.onebusaway.berry.api.request;
 
-import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
@@ -25,37 +24,27 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public abstract class ObaResponse implements JSONReceivable {
-    private String version = ObaApi.VERSION1;
-    private int    code = 0;
-    private String text = "ERROR";
+public abstract class ObaResponse {
+    private final String version;
+    private final int    code;
+    private final String text;
 
-    protected void fromError(int obaErrorCode, Throwable err) {
+    protected ObaResponse() {
+        version = ObaApi.VERSION1;
+        code = 0;
+        text = "ERROR";
+    }
+
+    protected ObaResponse(int obaErrorCode, Throwable err) {
         version = ObaApi.VERSION2;
         code = obaErrorCode;
         text = (err == null) ? "UNKNOWN ERROR" : err.toString();
     }
 
-    /**
-     * Parses the jsonString and populates the required fields "version", "code", "text", and "data".
-     * Returns the response's data field as a JSONObject so that the caller/subclass can retrieve other JSON objects.
-     *  
-     * @param jsonString with fields "version", "code", "text", "data".
-     * @return jsonString's "data" field as a JSONObject  
-     * @throws JSONException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     */
-    public JSONObject fromJSON(String jsonString) throws JSONException, InstantiationException, IllegalAccessException {
-        JSONObject json = new JSONObject(jsonString);
-
+    public ObaResponse(JSONObject json) throws JSONException {
         version = json.getString("version");
         code = json.getInt("code");
         text = json.getString("text");
-        JSONObject jsonData = json.getJSONObject("data");
-        fromJSON(jsonData);
-
-        return jsonData;
     }
 
     /**

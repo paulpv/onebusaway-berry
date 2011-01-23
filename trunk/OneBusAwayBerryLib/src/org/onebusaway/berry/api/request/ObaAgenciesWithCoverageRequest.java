@@ -16,19 +16,19 @@
 package org.onebusaway.berry.api.request;
 
 import org.onebusaway.berry.api.Context;
-import org.onebusaway.berry.api.ObaCallable;
 import org.onebusaway.berry.net.Uri;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * List all supported agencies along with the center of their coverage area.
  * {@link http://code.google.com/p/onebusaway/wiki/OneBusAwayRestApi_AgenciesWithCoverage}
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaAgenciesWithCoverageRequest extends RequestBase implements
-        ObaCallable {
+public final class ObaAgenciesWithCoverageRequest extends RequestBase {
 
     protected ObaAgenciesWithCoverageRequest(Uri uri) {
-        super(new ObaAgenciesWithCoverageResponse(), uri);
+        super(uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -48,6 +48,14 @@ public final class ObaAgenciesWithCoverageRequest extends RequestBase implements
      */
     public static ObaAgenciesWithCoverageRequest newRequest(Context context) {
         return new Builder(context).build();
+    }
+
+    protected ObaResponse createResponse(JSONObject json) throws JSONException {
+        return new ObaAgenciesWithCoverageResponse(json);
+    }
+
+    protected ObaResponse createResponseFromError(int obaErrorCode, Throwable err) {
+        return new ObaAgenciesWithCoverageResponse(obaErrorCode, err);
     }
 
     /*

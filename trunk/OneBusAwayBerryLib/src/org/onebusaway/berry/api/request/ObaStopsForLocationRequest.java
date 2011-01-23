@@ -19,6 +19,8 @@ import org.onebusaway.berry.api.Context;
 import org.onebusaway.berry.api.ObaCallable;
 import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.berry.net.Uri;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * Search for stops near a specific location, optionally by stop code
@@ -26,9 +28,9 @@ import org.onebusaway.berry.net.Uri;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopsForLocationRequest extends RequestBase implements ObaCallable {
+public final class ObaStopsForLocationRequest extends RequestBase {
     protected ObaStopsForLocationRequest(Uri uri) {
-        super(new ObaStopsForLocationResponse(), uri);
+        super(uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -81,6 +83,14 @@ public final class ObaStopsForLocationRequest extends RequestBase implements Oba
         public ObaStopsForLocationRequest build() {
             return new ObaStopsForLocationRequest(buildUri());
         }
+    }
+
+    protected ObaResponse createResponse(JSONObject json) throws JSONException {
+        return new ObaStopsForLocationResponse(json);
+    }
+
+    protected ObaResponse createResponseFromError(int obaErrorCode, Throwable err) {
+        return new ObaStopsForLocationResponse(obaErrorCode, err);
     }
 
     /*

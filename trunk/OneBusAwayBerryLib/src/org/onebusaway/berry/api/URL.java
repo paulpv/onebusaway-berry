@@ -15,9 +15,8 @@ public class URL {
     public Connection openConnection() throws IOException {
         return Connector.open(url);
     }
-    
-    public String toString()
-    {
+
+    public String toString() {
         return url;
     }
 }

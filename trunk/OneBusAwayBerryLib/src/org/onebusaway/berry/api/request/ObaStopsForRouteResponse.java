@@ -15,9 +15,9 @@
  */
 package org.onebusaway.berry.api.request;
 
-import org.onebusaway.berry.api.JSONReceivable;
-import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.api.ObaListObaStop;
+import org.onebusaway.berry.api.elements.ObaReferences;
+import org.onebusaway.berry.api.elements.ObaReferencesElement;
 import org.onebusaway.berry.api.elements.ObaShape;
 import org.onebusaway.berry.api.elements.ObaShapeElement;
 import org.onebusaway.berry.api.elements.ObaStopGrouping;
@@ -29,68 +29,100 @@ import org.onebusaway.json.me.JSONObject;
  * Response object for ObaStopForRouteRequest requests.
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopsForRouteResponse extends ObaResponseWithRefs implements JSONReceivable {
+public final class ObaStopsForRouteResponse extends ObaResponseWithRefs {
 
-    private static final class Entry implements JSONReceivable {
-        private static final Entry EMPTY_OBJECT = new Entry();
+    private static final class Entry {
+        private static final Entry      EMPTY_OBJECT = new Entry();
 
-        private String[]           stopIds;
-        private ObaStopGrouping[]  stopGroupings;
-        private ObaShapeElement[]  polylines;
+        private final String[]          stopIds;
+        private final ObaStopGrouping[] stopGroupings;
+        private final ObaShapeElement[] polylines;
 
-        public Entry() {
+        Entry() {
             stopIds = new String[] {};
             stopGroupings = ObaStopGrouping.EMPTY_ARRAY;
             polylines = ObaShapeElement.EMPTY_ARRAY;
         }
 
-        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-            JSONArray jsonStopIds = json.getJSONArray("stopIds");
-            stopIds = ObaApi.fromJSON(jsonStopIds, new String[jsonStopIds.length()]);
+        public Entry(JSONObject json) throws JSONException {
+            JSONArray stopIds = json.getJSONArray("stopIds");
+            this.stopIds = new String[stopIds.length()];
+            for (int i = 0; i < this.stopIds.length; i++) {
+                this.stopIds[i] = stopIds.getString(i);
+            }
 
-            JSONArray jsonStopGroupings = json.getJSONArray("stopGroupings");
-            stopGroupings = (ObaStopGrouping[]) ObaApi.fromJSON(jsonStopGroupings, new ObaStopGrouping[jsonStopGroupings.length()], ObaStopGrouping.class);
+            JSONArray stopGroupings = json.getJSONArray("stopGroupings");
+            this.stopGroupings = new ObaStopGrouping[stopGroupings.length()];
+            for (int i = 0; i < this.stopGroupings.length; i++) {
+                this.stopGroupings[i] = new ObaStopGrouping(stopGroupings.getJSONObject(i));
+            }
 
-            JSONArray jsonPolylines = json.getJSONArray("polylines");
-            polylines = (ObaShapeElement[]) ObaApi.fromJSON(jsonPolylines, new ObaShapeElement[jsonPolylines.length()], ObaShapeElement.class);
+            JSONArray polylines = json.getJSONArray("polylines");
+            this.polylines = new ObaShapeElement[polylines.length()];
+            for (int i = 0; i < this.polylines.length; i++) {
+                this.polylines[i] = new ObaShapeElement(polylines.getJSONObject(i));
+            }
         }
     }
 
-    private Entry entry;
+    private static final class Data {
+        private static final Data          EMPTY_OBJECT = new Data();
 
-    public ObaStopsForRouteResponse() {
-        entry = Entry.EMPTY_OBJECT;
+        private final ObaReferencesElement references;
+        private final Entry                entry;
+
+        Data() {
+            references = ObaReferencesElement.EMPTY_OBJECT;
+            entry = Entry.EMPTY_OBJECT;
+        }
+
+        public Data(JSONObject json) throws JSONException {
+            references = new ObaReferencesElement(json.getJSONObject("references"));
+            entry = new Entry(json.getJSONObject("entry"));
+        }
+
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        entry = (Entry) ObaApi.fromJSON(json, "entry", new Entry());
+    private final Data data;
+
+    private ObaStopsForRouteResponse() {
+        super();
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaStopsForRouteResponse(int obaErrorCode, Throwable err) {
+        super(obaErrorCode, err);
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaStopsForRouteResponse(JSONObject json) throws JSONException {
+        super(json);
+        data = new Data(json.getJSONObject("data"));
     }
 
     /**
      * Returns the list of dereferenced stops.
      */
     public ObaListObaStop getStops() {
-        return references.getStops(entry.stopIds);
+        return data.references.getStops(data.entry.stopIds);
     }
 
     /**
      * @return The list of shapes, if they exist; otherwise returns an empty list.
      */
     public ObaShape[] getShapes() {
-        return entry.polylines;
+        return data.entry.polylines;
     }
 
     /**
      * @return Returns a collection of stops grouped into useful collections.
      */
     public ObaStopGrouping[] getStopGroupings() {
-        return entry.stopGroupings;
+        return data.entry.stopGroupings;
     }
 
-    /*
-    @Override
+    //@Override
     protected ObaReferences getRefs() {
         return data.references;
     }
-    */
 }

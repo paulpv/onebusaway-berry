@@ -15,7 +15,6 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.json.me.JSONArray;
@@ -29,21 +28,21 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public final class ObaStopElement implements ObaStop, JSONReceivable {
+public final class ObaStopElement implements ObaStop {
     public static final ObaStopElement   EMPTY_OBJECT = new ObaStopElement();
     public static final ObaStopElement[] EMPTY_ARRAY  = new ObaStopElement[] {};
     public static final String[]         EMPTY_ROUTES = new String[] {};
 
-    private String                       id;
-    private double                       lat;
-    private double                       lon;
-    private String                       direction;
-    private int                          locationType;
-    private String                       name;
-    private String                       code;
-    private String[]                     routeIds;
+    private final String                 id;
+    private final double                 lat;
+    private final double                 lon;
+    private final String                 direction;
+    private final int                    locationType;
+    private final String                 name;
+    private final String                 code;
+    private final String[]               routeIds;
 
-    private GeoPoint                     point;
+    private final GeoPoint               point;
 
     public ObaStopElement() {
         id = "";
@@ -54,11 +53,10 @@ public final class ObaStopElement implements ObaStop, JSONReceivable {
         name = "";
         code = "";
         routeIds = EMPTY_ROUTES;
-
         point = ObaApi.makeGeoPoint(lat, lon);
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+    public ObaStopElement(JSONObject json) throws JSONException {
         id = json.getString("id");
         lat = json.getDouble("lat");
         lon = json.getDouble("lon");
@@ -67,8 +65,10 @@ public final class ObaStopElement implements ObaStop, JSONReceivable {
         name = json.getString("name");
         code = json.getString("code");
         JSONArray jsonRouteIds = json.getJSONArray("routeIds");
-        routeIds = ObaApi.fromJSON(jsonRouteIds, new String[jsonRouteIds.length()]);
-
+        routeIds = new String[jsonRouteIds.length()];
+        for (int i = 0; i < routeIds.length; i++) {
+            routeIds[i] = jsonRouteIds.getString(i);
+        }
         point = ObaApi.makeGeoPoint(lat, lon);
     }
 

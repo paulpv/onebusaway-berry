@@ -116,7 +116,7 @@ public abstract class Uri //implements Parcelable, Comparable<Uri>
     */
 
     /** Log tag. */
-    private static final String LOG        = TextUtils.getShortClassName(Uri.class);                                     //.getSimpleName();
+    private static final String LOG        = TextUtils.getShortClassName(Uri.class);                                    //.getSimpleName();
 
     /**
      * NOTE: EMPTY accesses this field during its own initialization, so this

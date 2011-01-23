@@ -15,7 +15,8 @@
  */
 package org.onebusaway.berry.api.request;
 
-import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.elements.ObaReferences;
+import org.onebusaway.berry.api.elements.ObaReferencesElement;
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.elements.ObaStopElement;
 import org.onebusaway.json.me.JSONArray;
@@ -28,49 +29,73 @@ import org.onebusaway.json.me.JSONObject;
  */
 public final class ObaStopsForLocationResponse extends ObaResponseWithRefs {
 
-    private ObaStopElement[] list;
-    private boolean          outOfRange;
-    private boolean          limitExceeded;
+    private static final class Data {
+        private static final Data          EMPTY_OBJECT = new Data();
 
-    public ObaStopsForLocationResponse() {
-        list = ObaStopElement.EMPTY_ARRAY;
-        outOfRange = false;
-        limitExceeded = false;
+        private final ObaReferencesElement references;
+        private final ObaStopElement[]     list;
+        private final boolean              outOfRange;
+        private final boolean              limitExceeded;
+
+        private Data() {
+            references = ObaReferencesElement.EMPTY_OBJECT;
+            list = ObaStopElement.EMPTY_ARRAY;
+            outOfRange = false;
+            limitExceeded = false;
+        }
+
+        public Data(JSONObject json) throws JSONException {
+            this.references = new ObaReferencesElement(json.getJSONObject("references"));
+            JSONArray list = json.getJSONArray("list");
+            this.list = new ObaStopElement[list.length()];
+            for (int i = 0; i < this.list.length; i++) {
+                this.list[i] = new ObaStopElement(list.getJSONObject(i));
+            }
+            this.outOfRange = json.getBoolean("outOfRange");
+            this.limitExceeded = json.getBoolean("limitExceeded");
+        }
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        JSONArray jsonList = json.getJSONArray("list");
-        list = (ObaStopElement[]) ObaApi.fromJSON(jsonList, new ObaStopElement[jsonList.length()], ObaStopElement.class);
+    private final Data data;
 
-        outOfRange = json.getBoolean("outOfRange");
-        limitExceeded = json.getBoolean("limitExceeded");
+    private ObaStopsForLocationResponse() {
+        super();
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaStopsForLocationResponse(int obaErrorCode, Throwable err) {
+        super(obaErrorCode, err);
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaStopsForLocationResponse(JSONObject json) throws JSONException {
+        super(json);
+        data = new Data(json.getJSONObject("data"));
     }
 
     /**
      * @return The list of stops.
      */
     public ObaStop[] getStops() {
-        return list;
+        return data.list;
     }
 
     /**
      * @return Whether the request is out of range of the coverage area.
      */
     public boolean getOutOfRange() {
-        return outOfRange;
+        return data.outOfRange;
     }
 
     /**
      * @return Whether the results exceeded the limits of the response.
      */
     public boolean getLimitExceeded() {
-        return limitExceeded;
+        return data.limitExceeded;
     }
 
-    /*
-    @Override
+    //@Override
     protected ObaReferences getRefs() {
         return data.references;
     }
-    */
 }

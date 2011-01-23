@@ -15,7 +15,6 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaListGeoPoint;
 import org.onebusaway.berry.api.ObaListInteger;
 import org.onebusaway.berry.map.GeoPoint;
@@ -26,22 +25,22 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public final class ObaShapeElement implements ObaShape, JSONReceivable {
+public final class ObaShapeElement implements ObaShape {
 
     public static final ObaShapeElement   EMPTY_OBJECT = new ObaShapeElement();
     public static final ObaShapeElement[] EMPTY_ARRAY  = new ObaShapeElement[] {};
 
-    private String                        points;
-    private int                           length;
-    private String                        levels;
+    private final String                        points;
+    private final int                           length;
+    private final String                        levels;
 
-    public ObaShapeElement() {
+    private ObaShapeElement() {
         points = "";
         length = 0;
         levels = "";
     }
 
-    public void fromJSON(JSONObject json) throws JSONException {
+    public ObaShapeElement(JSONObject json) throws JSONException {
         points = json.getString("points");
         length = json.getInt("length");
         levels = json.getString("levels");
@@ -66,7 +65,7 @@ public final class ObaShapeElement implements ObaShape, JSONReceivable {
 
     //@Override
     public ObaListGeoPoint getPoints() {
-        ObaListGeoPoint points = new ObaListGeoPoint(length); 
+        ObaListGeoPoint points = new ObaListGeoPoint(length);
         decodeLine(this.points, points);
         return points;
     }
@@ -88,7 +87,7 @@ public final class ObaShapeElement implements ObaShape, JSONReceivable {
      *      of points that are contained in the encoded string.
      * @return A list of points from the encoded string.
      */
-    public static void  decodeLine(String encoded, ObaListGeoPoint array) {
+    public static void decodeLine(String encoded, ObaListGeoPoint array) {
         //assert(numPoints >= 0);
 
         final int len = encoded.length();
@@ -106,8 +105,7 @@ public final class ObaShapeElement implements ObaShape, JSONReceivable {
                 result |= (b & 0x1f) << shift;
                 shift += 5;
                 ++i;
-            }
-            while (b >= 0x20);
+            } while (b >= 0x20);
 
             final int dlat = ((result & 1) == 1 ? ~(result >> 1) : (result >> 1));
             lat += dlat;
@@ -120,8 +118,7 @@ public final class ObaShapeElement implements ObaShape, JSONReceivable {
                 result |= (b & 0x1f) << shift;
                 shift += 5;
                 ++i;
-            }
-            while (b >= 0x20);
+            } while (b >= 0x20);
 
             final int dlon = ((result & 1) == 1 ? ~(result >> 1) : (result >> 1));
             lon += dlon;
@@ -157,8 +154,7 @@ public final class ObaShapeElement implements ObaShape, JSONReceivable {
                 result |= (b & 0x1f) << shift;
                 shift += 5;
                 ++i;
-            }
-            while (b >= 0x20);
+            } while (b >= 0x20);
 
             array.addElement(new Integer(result));
         }

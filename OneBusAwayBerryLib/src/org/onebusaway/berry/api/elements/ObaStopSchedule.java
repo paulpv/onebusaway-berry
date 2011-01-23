@@ -15,10 +15,8 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
-
 
 /**
  * @author Paul Watts (paulcwatts@gmail.com)
@@ -28,13 +26,18 @@ public interface ObaStopSchedule {
     /**
      * Element that lists out all the days that a particular stop has service.
      */
-    public static final class CalendarDay implements JSONReceivable {
+    public static final class CalendarDay {
         public static final CalendarDay[] EMPTY_ARRAY = new CalendarDay[] {};
 
-        private long                date = 0;
-        private long                group = 0;
+        private final long                date;
+        private final long                group;
 
-        public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
+        CalendarDay() {
+            date = 0;
+            group = 0;
+        }
+        
+        public CalendarDay(JSONObject json) throws JSONException {
             date = json.getLong("date");
             group = json.getLong("group");
         }

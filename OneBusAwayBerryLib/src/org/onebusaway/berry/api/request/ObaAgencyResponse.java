@@ -15,7 +15,6 @@
  */
 package org.onebusaway.berry.api.request;
 
-import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.elements.ObaAgency;
 import org.onebusaway.berry.api.elements.ObaAgencyElement;
 import org.onebusaway.json.me.JSONException;
@@ -27,51 +26,70 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public final class ObaAgencyResponse extends ObaResponse implements ObaAgency, JSONReceivable {
-    private ObaAgencyElement entry;
+public final class ObaAgencyResponse extends ObaResponse implements ObaAgency {
+    private static final class Data {
+        private static final Data      EMPTY_OBJECT = new Data();
 
-    public ObaAgencyResponse() {
-        entry = ObaAgencyElement.EMPTY_OBJECT;
+        private final ObaAgencyElement entry;
+
+        protected Data() {
+            entry = ObaAgencyElement.EMPTY_OBJECT;
+        }
+
+        public Data(JSONObject json) throws JSONException {
+            entry = new ObaAgencyElement(json.getJSONObject("entry"));
+        }
     }
 
-    public void fromJSON(JSONObject json) throws JSONException {
-        JSONObject jsonEntry = json.getJSONObject("entry");
-        entry = new ObaAgencyElement();
-        entry.fromJSON(jsonEntry);
+    private final Data data;
+
+    private ObaAgencyResponse() {
+        super();
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaAgencyResponse(int obaErrorCode, Throwable err) {
+        super(obaErrorCode, err);
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaAgencyResponse(JSONObject json) throws JSONException {
+        super(json);
+        data = new Data(json.getJSONObject("data"));
     }
 
     //@Override
     public String getId() {
-        return entry.getId();
+        return data.entry.getId();
     }
 
     //@Override
     public String getName() {
-        return entry.getName();
+        return data.entry.getName();
     }
 
     //@Override
     public String getUrl() {
-        return entry.getUrl();
+        return data.entry.getUrl();
     }
 
     //@Override
     public String getTimezone() {
-        return entry.getTimezone();
+        return data.entry.getTimezone();
     }
 
     //@Override
     public String getLang() {
-        return entry.getLang();
+        return data.entry.getLang();
     }
 
     //@Override
     public String getPhone() {
-        return entry.getPhone();
+        return data.entry.getPhone();
     }
 
     //@Override
     public String getDisclaimer() {
-        return entry.getDisclaimer();
+        return data.entry.getDisclaimer();
     }
 }

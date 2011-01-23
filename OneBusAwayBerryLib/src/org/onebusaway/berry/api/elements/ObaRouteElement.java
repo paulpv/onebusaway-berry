@@ -17,7 +17,6 @@ package org.onebusaway.berry.api.elements;
 
 import net.rim.device.api.ui.Color;
 
-import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaInteger;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
@@ -29,19 +28,19 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public final class ObaRouteElement implements ObaRoute, JSONReceivable {
+public final class ObaRouteElement implements ObaRoute {
     public static final ObaRouteElement   EMPTY_OBJECT = new ObaRouteElement();
     public static final ObaRouteElement[] EMPTY_ARRAY  = new ObaRouteElement[] {};
 
-    private String                        id;
-    private String                        shortName;
-    private String                        longName;
-    private String                        description;
-    private int                           type;
-    private String                        url;
-    private String                        color;
-    private String                        textColor;
-    private String                        agencyId;
+    private final String                  id;
+    private final String                  shortName;
+    private final String                  longName;
+    private final String                  description;
+    private final int                     type;
+    private final String                  url;
+    private final String                  color;
+    private final String                  textColor;
+    private final String                  agencyId;
 
     public ObaRouteElement() {
         id = "";
@@ -55,7 +54,7 @@ public final class ObaRouteElement implements ObaRoute, JSONReceivable {
         agencyId = "";
     }
 
-    public void fromJSON(JSONObject json) throws JSONException {
+    public ObaRouteElement(JSONObject json) throws JSONException {
         id = json.getString("id");
         shortName = json.getString("shortName");
         longName = json.getString("longName");

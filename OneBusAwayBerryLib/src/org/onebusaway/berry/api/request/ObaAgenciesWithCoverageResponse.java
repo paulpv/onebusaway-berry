@@ -15,38 +15,69 @@
  */
 package org.onebusaway.berry.api.request;
 
-import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.api.elements.ObaAgencyWithCoverage;
+import org.onebusaway.berry.api.elements.ObaReferences;
+import org.onebusaway.berry.api.elements.ObaReferencesElement;
 import org.onebusaway.json.me.JSONArray;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
 public final class ObaAgenciesWithCoverageResponse extends ObaResponseWithRefs {
-    
-    private ObaAgencyWithCoverage[] list = ObaAgencyWithCoverage.EMPTY_ARRAY;
-    private boolean limitExceeded = false;
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        JSONArray jsonList = json.getJSONArray("list");
-        list = (ObaAgencyWithCoverage[]) ObaApi.fromJSON(jsonList, new ObaAgencyWithCoverage[jsonList.length()], ObaAgencyWithCoverage.class);
-        limitExceeded = json.getBoolean("limitExceeded");
+    private static final class Data {
+        private static final Data             EMPTY_OBJECT = new Data();
+
+        private final ObaReferencesElement    references;
+        private final ObaAgencyWithCoverage[] list;
+        private final boolean                 limitExceeded;
+
+        protected Data() {
+            references = ObaReferencesElement.EMPTY_OBJECT;
+            list = ObaAgencyWithCoverage.EMPTY_ARRAY;
+            limitExceeded = false;
+        }
+
+        public Data(JSONObject json) throws JSONException {
+            this.references = new ObaReferencesElement(json.getJSONObject("references"));
+            JSONArray list = json.getJSONArray("list");
+            this.list = new ObaAgencyWithCoverage[list.length()];
+            for (int i = 0; i < this.list.length; i++) {
+                this.list[i] = new ObaAgencyWithCoverage(list.getJSONObject(i));
+            }
+            this.limitExceeded = json.getBoolean("limitExceeded");
+        }
     }
-    
+
+    private final Data data;
+
+    private ObaAgenciesWithCoverageResponse() {
+        super();
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaAgenciesWithCoverageResponse(int obaErrorCode, Throwable err) {
+        super(obaErrorCode, err);
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaAgenciesWithCoverageResponse(JSONObject json) throws JSONException {
+        super(json);
+        data = new Data(json.getJSONObject("data"));
+    }
+
     public ObaAgencyWithCoverage[] getAgencies() {
-        return list;
+        return data.list;
     }
 
     /**
      * @return Whether the request exceeded the maximum response size.
      */
     public boolean getLimitExceeded() {
-        return limitExceeded;
+        return data.limitExceeded;
     }
 
-    /*
-    @Override
+    //@Override
     protected ObaReferences getRefs() {
         return data.references;
     }
-    */
 }

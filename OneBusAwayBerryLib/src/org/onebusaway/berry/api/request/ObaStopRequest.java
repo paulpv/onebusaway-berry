@@ -18,6 +18,8 @@ package org.onebusaway.berry.api.request;
 import org.onebusaway.berry.api.Context;
 import org.onebusaway.berry.api.ObaCallable;
 import org.onebusaway.berry.net.Uri;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * Retrieve info about a specific stop.
@@ -25,9 +27,9 @@ import org.onebusaway.berry.net.Uri;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopRequest extends RequestBase implements ObaCallable {
+public final class ObaStopRequest extends RequestBase {
     protected ObaStopRequest(Uri uri) {
-        super(new ObaStopResponse(), uri);
+        super(uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -48,6 +50,14 @@ public final class ObaStopRequest extends RequestBase implements ObaCallable {
      */
     public static ObaStopRequest newRequest(Context context, String stopId) {
         return new Builder(context, stopId).build();
+    }
+
+    protected ObaResponse createResponse(JSONObject json) throws JSONException {
+        return new ObaStopResponse(json);
+    }
+
+    protected ObaResponse createResponseFromError(int obaErrorCode, Throwable err) {
+        return new ObaStopResponse(obaErrorCode, err);
     }
 
     /*

@@ -21,7 +21,6 @@ import org.onebusaway.berry.api.ObaListObaSituation;
 import org.onebusaway.berry.api.ObaListObaStop;
 import org.onebusaway.berry.api.ObaListObaTrip;
 
-
 /**
  * Interface representing the <references> object in responses.
  * @author Paul Watts (paulcwatts@gmail.com)

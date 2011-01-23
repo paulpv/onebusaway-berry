@@ -21,33 +21,29 @@ import net.rim.device.api.io.FileNotFoundException;
 
 import org.onebusaway.berry.api.Context;
 import org.onebusaway.berry.api.ObaApi;
+import org.onebusaway.berry.api.ObaCallable;
 import org.onebusaway.berry.api.ObaHelp;
 import org.onebusaway.berry.api.TextUtils;
 import org.onebusaway.berry.net.Uri;
 import org.onebusaway.berry.settings.ObaSettings;
 import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * The base class for Oba requests.
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public class RequestBase {
-    protected final ObaResponse mResponse;
-    protected final Uri         mUri;
+public abstract class RequestBase implements ObaCallable {
+    protected final Uri mUri;
 
-    protected RequestBase(ObaResponse response, Uri uri) {
-        if (response == null) {
-            throw new IllegalArgumentException("response must not be null");
-        }
-
-        mResponse = response;
+    protected RequestBase(Uri uri) {
         mUri = uri;
     }
 
     public String toString() {
         return TextUtils.getShortClassName(this) + //
-                        " { response=" + TextUtils.getShortClassName(mResponse) + //
+                        //" { response=" + TextUtils.getShortClassName(mResponse) + //
                         ", uri=\"" + mUri + "\" }";
     }
 
@@ -114,6 +110,10 @@ public class RequestBase {
         }
     }
 
+    protected abstract ObaResponse createResponse(JSONObject json) throws JSONException;
+
+    protected abstract ObaResponse createResponseFromError(int obaErrorCode, Throwable err);
+
     public ObaResponse call() {
         try {
             // Example requests:
@@ -122,32 +122,24 @@ public class RequestBase {
             // Initial request for Seattle:
             // http://api.onebusaway.org/api/where/stops-for-location.json?version=2&app_ver=11&app_uid=5284047f4ffb4e04824a2fd1d1f0cd62&lat=47.60599&lon=-122.33178&latSpan=0.012441&lonSpan=0.013732&key=v1_BktoDJ2gJlu6nLM6LsT9H8IUbWc%3DcGF1bGN3YXR0c0BnbWFpbC5jb20%3D
 
-            String jsonStringResponse = ObaHelp.getUri(mUri);
+            String response = ObaHelp.getUri(mUri);
 
             // Example responses:
             // ObaCurrentTimeRequest {"text":"OK","data":{"time":1294877371929,"readableTime":"2011-01-12T16:09:31-08:00"},"code":200,"version":1}
 
-            mResponse.fromJSON(jsonStringResponse);
+            return createResponse(new JSONObject(response));
         }
         catch (FileNotFoundException e) {
-            mResponse.fromError(ObaApi.OBA_NOT_FOUND, e);
+            return createResponseFromError(ObaApi.OBA_NOT_FOUND, e);
         }
         catch (IOException e) {
-            mResponse.fromError(ObaApi.OBA_IO_EXCEPTION, e);
+            return createResponseFromError(ObaApi.OBA_IO_EXCEPTION, e);
         }
         catch (JSONException e) {
-            mResponse.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
-        }
-        catch (InstantiationException e) {
-            mResponse.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
-        }
-        catch (IllegalAccessException e) {
-            mResponse.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+            return createResponseFromError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
         catch (Exception e) {
-            mResponse.fromError(ObaApi.OBA_INTERNAL_ERROR, e);
+            return createResponseFromError(ObaApi.OBA_INTERNAL_ERROR, e);
         }
-
-        return mResponse;
     }
 }

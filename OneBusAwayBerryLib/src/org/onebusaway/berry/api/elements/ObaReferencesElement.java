@@ -15,8 +15,6 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import org.onebusaway.berry.api.JSONReceivable;
-import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.api.ObaList;
 import org.onebusaway.berry.api.ObaListObaAgency;
 import org.onebusaway.berry.api.ObaListObaRoute;
@@ -31,15 +29,15 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public final class ObaReferencesElement implements ObaReferences, JSONReceivable {
+public final class ObaReferencesElement implements ObaReferences {
 
     public static final ObaReferencesElement EMPTY_OBJECT = new ObaReferencesElement();
 
-    private ObaStopElement[]                 stops;
-    private ObaRouteElement[]                routes;
-    private ObaTripElement[]                 trips;
-    private ObaAgencyElement[]               agencies;
-    private ObaSituationElement[]            situations;
+    private final ObaStopElement[]           stops;
+    private final ObaRouteElement[]          routes;
+    private final ObaTripElement[]           trips;
+    private final ObaAgencyElement[]         agencies;
+    private final ObaSituationElement[]      situations;
 
     public ObaReferencesElement() {
         stops = ObaStopElement.EMPTY_ARRAY;
@@ -49,21 +47,36 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
         situations = ObaSituationElement.EMPTY_ARRAY;
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        JSONArray jsonStops = json.getJSONArray("stops");
-        stops = (ObaStopElement[]) ObaApi.fromJSON(jsonStops, new ObaStopElement[jsonStops.length()], ObaStopElement.class);
+    public ObaReferencesElement(JSONObject json) throws JSONException {
+        JSONArray stops = json.getJSONArray("stops");
+        this.stops = new ObaStopElement[stops.length()];
+        for (int i = 0; i < this.stops.length; i++) {
+            this.stops[i] = new ObaStopElement(stops.getJSONObject(i));
+        }
 
-        JSONArray jsonRoutes = json.getJSONArray("routes");
-        routes = (ObaRouteElement[]) ObaApi.fromJSON(jsonRoutes, new ObaRouteElement[jsonRoutes.length()], ObaRouteElement.class);
+        JSONArray routes = json.getJSONArray("routes");
+        this.routes = new ObaRouteElement[routes.length()];
+        for (int i = 0; i < this.routes.length; i++) {
+            this.routes[i] = new ObaRouteElement(routes.getJSONObject(i));
+        }
 
-        JSONArray jsonTrips = json.getJSONArray("trips");
-        trips = (ObaTripElement[]) ObaApi.fromJSON(jsonTrips, new ObaTripElement[jsonTrips.length()], ObaTripElement.class);
+        JSONArray trips = json.getJSONArray("trips");
+        this.trips = new ObaTripElement[trips.length()];
+        for (int i = 0; i < this.trips.length; i++) {
+            this.trips[i] = new ObaTripElement(trips.getJSONObject(i));
+        }
 
-        JSONArray jsonAgencies = json.getJSONArray("agencies");
-        agencies = (ObaAgencyElement[]) ObaApi.fromJSON(jsonAgencies, new ObaAgencyElement[jsonAgencies.length()], ObaAgencyElement.class);
+        JSONArray agencies = json.getJSONArray("agencies");
+        this.agencies = new ObaAgencyElement[agencies.length()];
+        for (int i = 0; i < this.agencies.length; i++) {
+            this.agencies[i] = new ObaAgencyElement(agencies.getJSONObject(i));
+        }
 
-        JSONArray jsonSituations = json.getJSONArray("situations");
-        situations = (ObaSituationElement[]) ObaApi.fromJSON(jsonSituations, new ObaSituationElement[jsonSituations.length()], ObaSituationElement.class);
+        JSONArray situations = json.getJSONArray("situations");
+        this.situations = new ObaSituationElement[situations.length()];
+        for (int i = 0; i < this.situations.length; i++) {
+            this.situations[i] = new ObaSituationElement(situations.getJSONObject(i));
+        }
     }
 
     //@Override
@@ -127,7 +140,7 @@ public final class ObaReferencesElement implements ObaReferences, JSONReceivable
     }
 
     //
-    // TODO:(oba) This will be much easier when we convert to HashMap storage.
+    // TODO: This will be much easier when we convert to HashMap storage.
     //
     private static ObaElement findById(ObaElement[] objects, String id) {
         final int len = objects.length;

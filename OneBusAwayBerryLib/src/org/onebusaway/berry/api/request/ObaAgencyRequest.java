@@ -16,8 +16,9 @@
 package org.onebusaway.berry.api.request;
 
 import org.onebusaway.berry.api.Context;
-import org.onebusaway.berry.api.ObaCallable;
 import org.onebusaway.berry.net.Uri;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * Retrieve info for a specific transit agency
@@ -26,9 +27,9 @@ import org.onebusaway.berry.net.Uri;
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public final class ObaAgencyRequest extends RequestBase implements ObaCallable {
+public final class ObaAgencyRequest extends RequestBase {
     protected ObaAgencyRequest(Uri uri) {
-        super(new ObaAgencyResponse(), uri);
+        super(uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -51,13 +52,20 @@ public final class ObaAgencyRequest extends RequestBase implements ObaCallable {
         return new Builder(context, agency).build();
     }
 
-    /*
-    @Override
-    public ObaAgencyResponse call() {
-        return call(ObaAgencyResponse.class);
+    protected ObaResponse createResponse(JSONObject json) throws JSONException {
+        return new ObaAgencyResponse(json);
     }
 
+    protected ObaResponse createResponseFromError(int obaErrorCode, Throwable err) {
+        return new ObaAgencyResponse(obaErrorCode, err);
+    }
 
+    /*
+    @Override
+    public ObaResponse call() {
+        return call();
+    }
+    
     @Override
     public String toString() {
         return "ObaAgencyRequest [mUri=" + mUri + "]";

@@ -73,8 +73,7 @@ public final class ObaHelp {
         InputStream in = conn.openInputStream();
 
         String contentEncoding = conn.getEncoding();
-        if (contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip"))
-        {
+        if (contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip")) {
             useGzip = true;
         }
 
@@ -107,7 +106,7 @@ public final class ObaHelp {
         conn.close();
 
         Log.d(TAG, "getUri: content=" + content);
-        
+
         return content;
     }
 }

@@ -15,7 +15,7 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import org.onebusaway.berry.api.JSONReceivable;
+import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
@@ -24,30 +24,30 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public final class ObaTripStatusElement implements ObaTripStatus, JSONReceivable {
+public final class ObaTripStatusElement implements ObaTripStatus {
     protected static final ObaTripStatusElement EMPTY_OBJECT = new ObaTripStatusElement();
 
-    private long                          serviceDate;
-    private boolean                       predicted;
-    private long                          scheduleDeviation;
-    private String                        vehicleId;
-    private String                        closestStop;
-    private long                          closestStopTimeOffset;
-    private Position                      position;
-    private String                        activeTripId;
-    private Double                        distanceAlongTrip;
-    private Double                        scheduledDistanceAlongTrip;
-    private Double                        totalDistanceAlongTrip;
-    private Double                        orientation;
-    private String                        nextStop;
-    private long                          nextStopTimeOffset;
-    private String                        phase;
-    private String                        status;
-    private Long                          lastUpdateTime;
-    private Position                      lastKnownLocation;
-    private Double                        lastKnownOrientation;
+    private final long                          serviceDate;
+    private final boolean                       predicted;
+    private final long                          scheduleDeviation;
+    private final String                        vehicleId;
+    private final String                        closestStop;
+    private final long                          closestStopTimeOffset;
+    private final Position                      position;
+    private final String                        activeTripId;
+    private final Double                        distanceAlongTrip;
+    private final Double                        scheduledDistanceAlongTrip;
+    private final Double                        totalDistanceAlongTrip;
+    private final Double                        orientation;
+    private final String                        nextStop;
+    private final long                          nextStopTimeOffset;
+    private final String                        phase;
+    private final String                        status;
+    private final Long                          lastUpdateTime;
+    private final Position                      lastKnownLocation;
+    private final Double                        lastKnownOrientation;
 
-    public ObaTripStatusElement() {
+    ObaTripStatusElement() {
         serviceDate = 0;
         predicted = false;
         scheduleDeviation = 0;
@@ -69,29 +69,30 @@ public final class ObaTripStatusElement implements ObaTripStatus, JSONReceivable
         lastKnownOrientation = null;
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        // TODO Auto-generated method stub
-        serviceDate = 0;
-        predicted = false;
-        scheduleDeviation = 0;
-        vehicleId = "";
-        closestStop = "";
-        closestStopTimeOffset = 0;
-        position = null;
-        activeTripId = null;
-        distanceAlongTrip = null;
-        scheduledDistanceAlongTrip = null;
-        totalDistanceAlongTrip = null;
-        orientation = null;
-        nextStop = null;
-        nextStopTimeOffset = 0;
-        phase = null;
-        status = null;
-        lastUpdateTime = null;
-        lastKnownLocation = null;
-        lastKnownOrientation = null;
+    public ObaTripStatusElement(JSONObject json) throws JSONException {
+        this.serviceDate = json.getLong("serviceDate");
+        this.predicted = json.getBoolean("predicted");
+        this.scheduleDeviation = json.getLong("scheduleDeviation");
+        this.vehicleId = json.getString("vehicleId");
+        this.closestStop = json.getString("closestStop");
+        this.closestStopTimeOffset = json.getLong("closestStopTimeOffset");
+        JSONObject position = json.optJSONObject("position"); // optional
+        this.position = (position == null) ? null : new Position(position);
+        this.activeTripId = ObaApi.optString(json, "activeTripId"); // optional
+        this.distanceAlongTrip = ObaApi.optDouble(json, "distanceAlongTrip"); // optional
+        this.scheduledDistanceAlongTrip = ObaApi.optDouble(json, "scheduledDistanceAlongTrip"); // optional
+        this.totalDistanceAlongTrip = ObaApi.optDouble(json, "totalDistanceAlongTrip"); // optional
+        this.orientation = ObaApi.optDouble(json, "orientation"); // optional
+        this.nextStop = ObaApi.optString(json, "nextStop"); // optional
+        this.nextStopTimeOffset = json.getLong("nextStopTimeOffset");
+        this.phase = ObaApi.optString(json, "phase"); // optional
+        this.status = ObaApi.optString(json, "status"); // optional
+        this.lastUpdateTime = ObaApi.optLong(json, "lastUpdateTime"); // optional
+        JSONObject lastKnownLocation = json.optJSONObject("lastKnownLocation"); // optional
+        this.lastKnownLocation = (lastKnownLocation == null) ? null : new Position(lastKnownLocation);
+        this.lastKnownOrientation = ObaApi.optDouble(json, "lastKnownOrientation"); // optional
     }
-    
+
     //@Override
     public long getServiceDate() {
         return serviceDate;

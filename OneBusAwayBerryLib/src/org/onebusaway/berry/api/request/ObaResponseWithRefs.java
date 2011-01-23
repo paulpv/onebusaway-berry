@@ -15,7 +15,6 @@
  */
 package org.onebusaway.berry.api.request;
 
-import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.api.ObaListObaAgency;
 import org.onebusaway.berry.api.ObaListObaRoute;
 import org.onebusaway.berry.api.ObaListObaSituation;
@@ -23,7 +22,6 @@ import org.onebusaway.berry.api.ObaListObaStop;
 import org.onebusaway.berry.api.ObaListObaTrip;
 import org.onebusaway.berry.api.elements.ObaAgency;
 import org.onebusaway.berry.api.elements.ObaReferences;
-import org.onebusaway.berry.api.elements.ObaReferencesElement;
 import org.onebusaway.berry.api.elements.ObaRoute;
 import org.onebusaway.berry.api.elements.ObaSituation;
 import org.onebusaway.berry.api.elements.ObaStop;
@@ -32,71 +30,68 @@ import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
 public abstract class ObaResponseWithRefs extends ObaResponse implements ObaReferences {
-    protected ObaReferencesElement references;
 
-    public ObaResponseWithRefs() {
-        references = ObaReferencesElement.EMPTY_OBJECT;
+    protected ObaResponseWithRefs() {
+        super();
     }
 
-    public JSONObject fromJSON(String jsonString) throws JSONException, InstantiationException, IllegalAccessException {
-        JSONObject jsonData = super.fromJSON(jsonString);
+    protected ObaResponseWithRefs(int obaErrorCode, Throwable err) {
+        super(obaErrorCode, err);
+    }
 
-        references = (ObaReferencesElement) ObaApi.fromJSON(jsonData, "references", new ObaReferencesElement());
-
-        return jsonData;
+    public ObaResponseWithRefs(JSONObject json) throws JSONException {
+        super(json);
     }
 
     //@Override
     public ObaStop getStop(String id) {
-        return references.getStop(id);
+        return getRefs().getStop(id);
     }
 
     //@Override
     public ObaListObaStop getStops(String[] ids) {
-        return references.getStops(ids);
+        return getRefs().getStops(ids);
     }
 
     //@Override
     public ObaRoute getRoute(String id) {
-        return references.getRoute(id);
+        return getRefs().getRoute(id);
     }
 
     //@Override
     public ObaListObaRoute getRoutes(String[] ids) {
-        return references.getRoutes(ids);
+        return getRefs().getRoutes(ids);
     }
 
     //@Override
     public ObaTrip getTrip(String id) {
-        return references.getTrip(id);
+        return getRefs().getTrip(id);
     }
 
     //@Override
     public ObaListObaTrip getTrips(String[] ids) {
-        return references.getTrips(ids);
+        return getRefs().getTrips(ids);
     }
 
     //@Override
     public ObaAgency getAgency(String id) {
-        return references.getAgency(id);
+        return getRefs().getAgency(id);
     }
 
     //@Override
     public ObaListObaAgency getAgencies(String[] ids) {
-        return references.getAgencies(ids);
+        return getRefs().getAgencies(ids);
     }
 
     //@Override
     public ObaSituation getSituation(String id) {
-        return references.getSituation(id);
+        return getRefs().getSituation(id);
     }
 
     //@Override
     public ObaListObaSituation getSituations(String[] ids) {
-        return references.getSituations(ids);
+        return getRefs().getSituations(ids);
     }
 
-    /*
     abstract protected ObaReferences getRefs();
-    */
 }

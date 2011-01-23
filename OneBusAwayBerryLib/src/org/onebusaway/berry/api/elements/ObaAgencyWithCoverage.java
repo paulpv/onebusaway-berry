@@ -15,7 +15,6 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.map.GeoPoint;
 import org.onebusaway.json.me.JSONException;
@@ -25,16 +24,16 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable {
+public final class ObaAgencyWithCoverage implements ObaElement {
     public static final ObaAgencyWithCoverage[] EMPTY_ARRAY = new ObaAgencyWithCoverage[] {};
 
-    private String                              agencyId;
-    private double                              lat;
-    private double                              lon;
-    private double                              latSpan;
-    private double                              lonSpan;
+    private final String                        agencyId;
+    private final double                        lat;
+    private final double                        lon;
+    private final double                        latSpan;
+    private final double                        lonSpan;
 
-    private GeoPoint                            point;
+    private final GeoPoint                      point;
 
     public ObaAgencyWithCoverage() {
         agencyId = "";
@@ -46,7 +45,7 @@ public final class ObaAgencyWithCoverage implements ObaElement, JSONReceivable {
         point = ObaApi.makeGeoPoint(lat, lon);
     }
 
-    public void fromJSON(JSONObject json) throws JSONException {
+    public ObaAgencyWithCoverage(JSONObject json) throws JSONException {
         agencyId = json.getString("agencyId");
         lat = json.getDouble("lat");
         lon = json.getDouble("lon");

@@ -18,12 +18,13 @@ package org.onebusaway.berry.api.request;
 import org.onebusaway.berry.api.Context;
 import org.onebusaway.berry.api.ObaCallable;
 import org.onebusaway.berry.net.Uri;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
-public final class ObaArrivalInfoRequest extends RequestBase implements
-        ObaCallable {
+public final class ObaArrivalInfoRequest extends RequestBase {
 
     protected ObaArrivalInfoRequest(Uri uri) {
-        super(new ObaArrivalInfoResponse(), uri);
+        super(uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -44,6 +45,14 @@ public final class ObaArrivalInfoRequest extends RequestBase implements
      */
     public static ObaArrivalInfoRequest newRequest(Context context, String stopId) {
         return new Builder(context, stopId).build();
+    }
+
+    protected ObaResponse createResponse(JSONObject json) throws JSONException {
+        return new ObaArrivalInfoResponse(json);
+    }
+
+    protected ObaResponse createResponseFromError(int obaErrorCode, Throwable err) {
+        return new ObaArrivalInfoResponse(obaErrorCode, err);
     }
 
     /*

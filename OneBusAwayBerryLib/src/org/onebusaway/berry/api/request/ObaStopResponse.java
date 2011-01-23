@@ -15,8 +15,9 @@
  */
 package org.onebusaway.berry.api.request;
 
-import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.api.ObaListObaRoute;
+import org.onebusaway.berry.api.elements.ObaReferences;
+import org.onebusaway.berry.api.elements.ObaReferencesElement;
 import org.onebusaway.berry.api.elements.ObaStop;
 import org.onebusaway.berry.api.elements.ObaStopElement;
 import org.onebusaway.berry.map.GeoPoint;
@@ -30,72 +31,94 @@ import org.onebusaway.json.me.JSONObject;
  */
 public final class ObaStopResponse extends ObaResponseWithRefs implements ObaStop {
 
-    private ObaStopElement entry;
+    private static final class Data {
+        private static final Data          EMPTY_OBJECT = new Data();
 
-    public ObaStopResponse() {
-        entry = ObaStopElement.EMPTY_OBJECT;
+        private final ObaReferencesElement references;
+        private final ObaStopElement       entry;
+
+        public Data() {
+            references = ObaReferencesElement.EMPTY_OBJECT;
+            entry = ObaStopElement.EMPTY_OBJECT;
+        }
+
+        public Data(JSONObject json) throws JSONException {
+            references = new ObaReferencesElement(json.getJSONObject("references"));
+            entry = new ObaStopElement(json.getJSONObject("entry"));
+        }
     }
 
-    public void fromJSON(JSONObject json) throws JSONException, InstantiationException, IllegalAccessException {
-        entry = (ObaStopElement) ObaApi.fromJSON(json, "entry", new ObaStopElement());
+    private final Data data;
+
+    private ObaStopResponse() {
+        super();
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaStopResponse(int obaErrorCode, Throwable err) {
+        super(obaErrorCode, err);
+        data = Data.EMPTY_OBJECT;
+    }
+
+    public ObaStopResponse(JSONObject json) throws JSONException {
+        super(json);
+        data = new Data(json.getJSONObject("data"));
     }
 
     //@Override
     public String getId() {
-        return entry.getId();
+        return data.entry.getId();
     }
 
     //@Override
     public String getStopCode() {
-        return entry.getStopCode();
+        return data.entry.getStopCode();
     }
 
     //@Override
     public String getName() {
-        return entry.getName();
+        return data.entry.getName();
     }
 
     //@Override
     public GeoPoint getLocation() {
-        return entry.getLocation();
+        return data.entry.getLocation();
     }
 
     //@Override
     public double getLatitude() {
-        return entry.getLatitude();
+        return data.entry.getLatitude();
     }
 
     //@Override
     public double getLongitude() {
-        return entry.getLatitude();
+        return data.entry.getLatitude();
     }
 
     //@Override
     public String getDirection() {
-        return entry.getDirection();
+        return data.entry.getDirection();
     }
 
     //@Override
     public int getLocationType() {
-        return entry.getLocationType();
+        return data.entry.getLocationType();
     }
 
     //@Override
     public String[] getRouteIds() {
-        return entry.getRouteIds();
+        return data.entry.getRouteIds();
     }
 
     /**
      * Returns the list of dereferenced routes.
      */
     public ObaListObaRoute getRoutes() {
-        return references.getRoutes(entry.getRouteIds());
+        return data.references.getRoutes(data.entry.getRouteIds());
     }
 
-    /*
-    @Override
+    //@Override
     protected ObaReferences getRefs() {
         return data.references;
     }
-    */
 }

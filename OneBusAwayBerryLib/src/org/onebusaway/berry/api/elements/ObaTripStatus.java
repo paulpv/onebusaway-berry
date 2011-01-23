@@ -17,6 +17,8 @@ package org.onebusaway.berry.api.elements;
 
 import org.onebusaway.berry.api.ObaApi;
 import org.onebusaway.berry.map.GeoPoint;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * @author Paul Watts (paulcwatts@gmail.com)
@@ -24,8 +26,13 @@ import org.onebusaway.berry.map.GeoPoint;
  */
 public interface ObaTripStatus {
     public static final class Position {
-        private final double lat = 0;
-        private final double lon = 0;
+        private final double lat;
+        private final double lon;
+
+        public Position(JSONObject json) throws JSONException {
+            lat = json.getDouble("lat");
+            lon = json.getDouble("lon");
+        }
 
         public double getLat() {
             return lat;

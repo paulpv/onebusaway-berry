@@ -15,7 +15,6 @@
  */
 package org.onebusaway.berry.api.elements;
 
-import org.onebusaway.berry.api.JSONReceivable;
 import org.onebusaway.json.me.JSONException;
 import org.onebusaway.json.me.JSONObject;
 
@@ -26,18 +25,18 @@ import org.onebusaway.json.me.JSONObject;
  * @author Paul Watts (paulcwatts@gmail.com)
  * @author Paul Peavyhouse (pv@swooby.com) JME BB
  */
-public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
+public final class ObaAgencyElement implements ObaAgency {
 
     public static final ObaAgencyElement   EMPTY_OBJECT = new ObaAgencyElement();
     public static final ObaAgencyElement[] EMPTY_ARRAY  = new ObaAgencyElement[] {};
 
-    private String                         id;
-    private String                         name;
-    private String                         url;
-    private String                         timezone;
-    private String                         lang;
-    private String                         phone;
-    private String                         disclaimer;
+    private final String                         id;
+    private final String                         name;
+    private final String                         url;
+    private final String                         timezone;
+    private final String                         lang;
+    private final String                         phone;
+    private final String                         disclaimer;
 
     public ObaAgencyElement() {
         id = "";
@@ -49,7 +48,7 @@ public final class ObaAgencyElement implements ObaAgency, JSONReceivable {
         disclaimer = "";
     }
 
-    public void fromJSON(JSONObject json) throws JSONException {
+    public ObaAgencyElement(JSONObject json) throws JSONException {
         id = json.getString("id");
         name = json.getString("name");
         url = json.getString("url");

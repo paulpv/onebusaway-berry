@@ -18,6 +18,8 @@ package org.onebusaway.berry.api.request;
 import org.onebusaway.berry.api.Context;
 import org.onebusaway.berry.api.ObaCallable;
 import org.onebusaway.berry.net.Uri;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * Retrieve the set of stops serving a particular route
@@ -25,9 +27,9 @@ import org.onebusaway.berry.net.Uri;
  *
  * @author Paul Watts (paulcwatts@gmail.com)
  */
-public final class ObaStopsForRouteRequest extends RequestBase implements ObaCallable {
+public final class ObaStopsForRouteRequest extends RequestBase {
     protected ObaStopsForRouteRequest(Uri uri) {
-        super(new ObaStopsForRouteResponse(), uri);
+        super(uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -36,13 +38,22 @@ public final class ObaStopsForRouteRequest extends RequestBase implements ObaCal
         }
 
         public Builder setIncludeShapes(boolean includePolylines) {
-            mBuilder.appendQueryParameter("includePolylines", includePolylines ? "true" : "false");
+            mBuilder.appendQueryParameter("includePolylines",
+                            includePolylines ? "true" : "false");
             return this;
         }
 
         public ObaStopsForRouteRequest build() {
             return new ObaStopsForRouteRequest(buildUri());
         }
+    }
+
+    protected ObaResponse createResponse(JSONObject json) throws JSONException {
+        return new ObaStopsForRouteResponse(json);
+    }
+
+    protected ObaResponse createResponseFromError(int obaErrorCode, Throwable err) {
+        return new ObaStopsForRouteResponse(obaErrorCode, err);
     }
 
     /*

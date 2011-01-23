@@ -18,6 +18,8 @@ package org.onebusaway.berry.api.request;
 import org.onebusaway.berry.api.Context;
 import org.onebusaway.berry.api.ObaCallable;
 import org.onebusaway.berry.net.Uri;
+import org.onebusaway.json.me.JSONException;
+import org.onebusaway.json.me.JSONObject;
 
 /**
  * Retrieve the current system time.
@@ -26,9 +28,9 @@ import org.onebusaway.berry.net.Uri;
  * @author Paul Watts (paulcwatts@gmail.com) ORIGINAL
  * @author Paul Peavyhouse (pv@swooby.com) JME
  */
-public final class ObaCurrentTimeRequest extends RequestBase implements ObaCallable {
+public final class ObaCurrentTimeRequest extends RequestBase {
     protected ObaCurrentTimeRequest(Uri uri) {
-        super(new ObaCurrentTimeResponse(), uri);
+        super(uri);
     }
 
     public static class Builder extends RequestBase.BuilderBase {
@@ -48,6 +50,14 @@ public final class ObaCurrentTimeRequest extends RequestBase implements ObaCalla
      */
     public static ObaCurrentTimeRequest newRequest(Context context) {
         return new Builder(context).build();
+    }
+
+    protected ObaResponse createResponse(JSONObject json) throws JSONException {
+        return new ObaCurrentTimeResponse(json);
+    }
+
+    protected ObaResponse createResponseFromError(int obaErrorCode, Throwable err) {
+        return new ObaCurrentTimeResponse(obaErrorCode, err);
     }
 
     /*
